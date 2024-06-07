@@ -1,0 +1,21 @@
+{
+  "name": "lint-pilot",
+  "description": "Your co-pilot for maintaining high code quality with seamless ESLint and Stylelint integration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/01taylop/lint-pilot"
+  },
+  "version": "0.0.1",
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "author": "Patrick Taylor <hello@patricktaylor.dev>",
+  "keywords": [
+    "eslint",
+    "lint",
+    "stylelint"
+  ]
+}
