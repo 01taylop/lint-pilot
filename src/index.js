@@ -2,6 +2,7 @@
 import { Command } from 'commander'
 
 import chalk from 'chalk'
+import notifier from 'node-notifier'
 
 const program = new Command()
 
@@ -23,6 +24,14 @@ program
     console.clear()
     console.log(chalk.cyan(options.title ? options.title : '🛫 Lint Pilot 🛬'))
     console.log()
+
+    notifier.notify({
+      message: 'All lint checks have passed. Your code is clean!',
+      sound: 'Purr',
+      title: '✅ Lint Success',
+    })
+
+    process.exit(0)
   })
 
 program.parse(process.argv)

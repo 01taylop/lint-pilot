@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "chalk": "5.3.0",
-    "commander": "12.1.0"
+    "commander": "12.1.0",
+    "node-notifier": "10.0.1"
   },
   "devDependencies": {
     "rimraf": "5.0.7",
