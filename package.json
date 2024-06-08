@@ -6,12 +6,17 @@
     "url": "https://github.com/01taylop/lint-pilot"
   },
   "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "lint-pilot": "./src/index.js"
+  },
   "scripts": {
+    "start": "node src/index.js"
   },
   "dependencies": {
+    "commander": "12.1.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "author": "Patrick Taylor <hello@patricktaylor.dev>",
   "keywords": [
     "eslint",
