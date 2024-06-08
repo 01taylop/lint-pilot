@@ -8,15 +8,22 @@
   "version": "0.0.1",
   "type": "module",
   "bin": {
-    "lint-pilot": "./src/index.js"
+    "lint-pilot": "./lib/index.js"
   },
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "start": "node src/index.js"
+    "build": "rimraf lib && mkdir lib && terser src/index.js -o lib/index.min.js",
+    "lint": "node src/index.js"
   },
   "dependencies": {
     "commander": "12.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "rimraf": "5.0.7",
+    "terser": "5.31.1"
+  },
   "author": "Patrick Taylor <hello@patricktaylor.dev>",
   "keywords": [
     "eslint",
