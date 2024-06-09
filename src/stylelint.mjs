@@ -21,7 +21,7 @@ const lintFiles = async filePaths => {
     }
 
     results.forEach(({ deprecations, warnings }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations])]
+      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations.map(({ text }) => text)])]
       processedResult.errorCount += warnings.length
       warnings.forEach(({ rule }) => {
         if (ruleMetadata[rule]?.fixable) {

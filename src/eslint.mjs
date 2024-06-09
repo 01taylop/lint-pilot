@@ -7,7 +7,9 @@ const lintFiles = async filePaths => {
       overrideConfigFile: true,
       overrideConfig: {
         rules: {
+          'quotes': [2, 'single'],
           'no-console': 2,
+          'no-ternary': 1,
           'no-unused-vars': 2,
         },
       },
@@ -25,7 +27,7 @@ const lintFiles = async filePaths => {
     }
 
     results.forEach(({ errorCount, fixableErrorCount, fixableWarningCount, usedDeprecatedRules, warningCount }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...usedDeprecatedRules])]
+      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
       processedResult.errorCount += errorCount
       processedResult.fixableErrorCount += fixableErrorCount
       processedResult.fixableWarningCount += fixableWarningCount

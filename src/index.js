@@ -24,7 +24,11 @@ const runESLint = async () => {
 
   const result = await eslint.lintFiles(['./src/**/*.js'])
 
-  colourLog.timer('Finished eslint', startTime)
+  colourLog.result({
+    linter: 'eslint',
+    result,
+    startTime,
+  })
   return result
 }
 
@@ -38,7 +42,11 @@ const runMarkdownLint = async () => {
 
   const result = await markdownlint.lintFiles(['./README.md'])
 
-  colourLog.timer('Finished markdownlint', startTime)
+  colourLog.result({
+    linter: 'markdownlint',
+    result,
+    startTime,
+  })
   return result
 }
 
@@ -52,7 +60,11 @@ const runStylelint = async () => {
 
   const result = await stylelint.lintFiles(['**/*.css', '**/*.scss'])
 
-  colourLog.timer('Finished stylelint', startTime)
+  colourLog.result({
+    linter: 'stylelint',
+    result,
+    startTime,
+  })
   return result
 }
 
