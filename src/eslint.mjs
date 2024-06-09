@@ -1,3 +1,4 @@
+import formatter from 'eslint-formatter-pretty'
 import { ESLint } from 'eslint'
 
 const lintFiles = async filePaths => {
@@ -13,13 +14,14 @@ const lintFiles = async filePaths => {
 
   const results = await eslint.lintFiles(filePaths)
 
-  const formatter = await eslint.loadFormatter('stylish')
-  const resultText = formatter.format(results)
-  console.log(resultText)
+  const formattedResults = formatter(results)
+  console.log(formattedResults)
 
   return
 }
 
-export {
+const eslintLib = {
   lintFiles,
 }
+
+export default eslintLib

@@ -3,7 +3,8 @@ import { Command } from 'commander'
 import notifier from 'node-notifier'
 
 import { colourLog } from './colour-log.mjs'
-import { lintFiles } from './eslint.mjs'
+import eslint from './eslint.mjs'
+import stylelint from './stylelint.mjs'
 
 const program = new Command()
 
@@ -12,14 +13,22 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint and Stylelint integration.')
   .version('0.0.1')
 
+/*
+ * ESLINT
+ */
+
 const runESLint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running eslint...')
 
-  await lintFiles(['./src/**/*.js'])
+  await eslint.lintFiles(['./src/**/*.js'])
 
   colourLog.timer('Finished eslint', startTime)
 }
+
+/*
+ * MARKDOWN LINT
+ */
 
 const runMarkdownLint = () => new Promise(resolve => {
   const startTime = new Date().getTime()
@@ -31,15 +40,18 @@ const runMarkdownLint = () => new Promise(resolve => {
   }, 500)
 })
 
-const runStylelint = () => new Promise(resolve => {
+/*
+ * STYLELINT
+ */
+
+const runStylelint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running stylelint...')
 
-  setTimeout(() => {
-    colourLog.timer('Finished stylelint', startTime)
-    resolve()
-  }, 1000)
-})
+  await stylelint.lintFiles(['**/*.css', '**/*.scss'])
+
+  colourLog.timer('Finished stylelint', startTime)
+}
 
 program
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
