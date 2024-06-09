@@ -4,6 +4,7 @@ import notifier from 'node-notifier'
 
 import { colourLog } from './colour-log.mjs'
 import eslint from './eslint.mjs'
+import markdownlint from './markdownlint.mjs'
 import stylelint from './stylelint.mjs'
 
 const program = new Command()
@@ -30,15 +31,14 @@ const runESLint = async () => {
  * MARKDOWN LINT
  */
 
-const runMarkdownLint = () => new Promise(resolve => {
+const runMarkdownLint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running markdownlint...')
 
-  setTimeout(() => {
-    colourLog.timer('Finished markdownlint', startTime)
-    resolve()
-  }, 500)
-})
+  await markdownlint.lintFiles(['./README.md'])
+
+  colourLog.timer('Finished markdownlint', startTime)
+}
 
 /*
  * STYLELINT

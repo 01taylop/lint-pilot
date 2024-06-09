@@ -25,6 +25,7 @@
     "commander": "12.1.0",
     "eslint": "9.4.0",
     "eslint-formatter-pretty": "6.0.1",
+    "markdownlint": "0.34.0",
     "node-notifier": "10.0.1",
     "stylelint": "16.6.1",
     "stylelint-formatter-pretty": "4.0.0"
