@@ -3,6 +3,7 @@ import { Command } from 'commander'
 import notifier from 'node-notifier'
 
 import { colourLog } from './colour-log.mjs'
+import { lintFiles } from './eslint.mjs'
 
 const program = new Command()
 
@@ -11,20 +12,19 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint and Stylelint integration.')
   .version('0.0.1')
 
-const runESLint = () => new Promise(resolve => {
+const runESLint = async () => {
   const startTime = new Date().getTime()
-
   colourLog.info('Running eslint...')
-  setTimeout(() => {
-    colourLog.timer('Finished eslint', startTime)
-    resolve()
-  }, 2000)
-})
+
+  await lintFiles(['./src/**/*.js'])
+
+  colourLog.timer('Finished eslint', startTime)
+}
 
 const runMarkdownLint = () => new Promise(resolve => {
   const startTime = new Date().getTime()
-
   colourLog.info('Running markdownlint...')
+
   setTimeout(() => {
     colourLog.timer('Finished markdownlint', startTime)
     resolve()
@@ -33,8 +33,8 @@ const runMarkdownLint = () => new Promise(resolve => {
 
 const runStylelint = () => new Promise(resolve => {
   const startTime = new Date().getTime()
-
   colourLog.info('Running stylelint...')
+
   setTimeout(() => {
     colourLog.timer('Finished stylelint', startTime)
     resolve()
@@ -59,6 +59,7 @@ program
         title: '✅ Lint Success',
       })
 
+      console.log()
       process.exit(0)
     })
   })

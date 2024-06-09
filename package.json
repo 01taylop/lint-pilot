@@ -7,6 +7,9 @@
   },
   "version": "0.0.1",
   "type": "module",
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "bin": {
     "lint-pilot": "./lib/index.js"
   },
@@ -20,6 +23,7 @@
   "dependencies": {
     "chalk": "5.3.0",
     "commander": "12.1.0",
+    "eslint": "9.4.0",
     "node-notifier": "10.0.1"
   },
   "devDependencies": {
