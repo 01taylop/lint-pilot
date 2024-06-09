@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-
-import chalk from 'chalk'
 import notifier from 'node-notifier'
+
+import { colourLog } from './colour-log.mjs'
 
 const program = new Command()
 
@@ -22,7 +22,7 @@ program
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
   .action(options => {
     console.clear()
-    console.log(chalk.cyan(options.title ? options.title : '🛫 Lint Pilot 🛬'))
+    colourLog.title(options.title ? options.title : '🛫 Lint Pilot 🛬')
     console.log()
 
     notifier.notify({
