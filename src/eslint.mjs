@@ -1,23 +1,46 @@
-import formatter from 'eslint-formatter-pretty'
+// import formatter from 'eslint-formatter-pretty'
 import { ESLint } from 'eslint'
 
 const lintFiles = async filePaths => {
-  const eslint = new ESLint({
-    overrideConfigFile: true,
-    overrideConfig: {
-      rules: {
-        'no-console': 2,
-        'no-unused-vars': 2,
+  try {
+    const eslint = new ESLint({
+      overrideConfigFile: true,
+      overrideConfig: {
+        rules: {
+          'no-console': 2,
+          'no-unused-vars': 2,
+        },
       },
-    },
-  })
+    })
 
-  const results = await eslint.lintFiles(filePaths)
+    const results = await eslint.lintFiles(filePaths)
 
-  const formattedResults = formatter(results)
-  console.log(formattedResults)
+    const processedResult = {
+      deprecatedRules: [],
+      errorCount: 0,
+      files: results.length,
+      fixableErrorCount: 0,
+      fixableWarningCount: 0,
+      warningCount: 0,
+    }
 
-  return
+    results.forEach(({ errorCount, fixableErrorCount, fixableWarningCount, usedDeprecatedRules, warningCount }) => {
+      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...usedDeprecatedRules])]
+      processedResult.errorCount += errorCount
+      processedResult.fixableErrorCount += fixableErrorCount
+      processedResult.fixableWarningCount += fixableWarningCount
+      processedResult.warningCount += warningCount
+    })
+
+    // const formattedResults = formatter(results)
+    // console.log(formattedResults)
+
+    return {
+      processedResult,
+    }
+  } catch (error) {
+    console.error(error.stack)
+  }
 }
 
 const eslintLib = {

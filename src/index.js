@@ -22,9 +22,10 @@ const runESLint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running eslint...')
 
-  await eslint.lintFiles(['./src/**/*.js'])
+  const result = await eslint.lintFiles(['./src/**/*.js'])
 
   colourLog.timer('Finished eslint', startTime)
+  return result
 }
 
 /*
@@ -35,9 +36,10 @@ const runMarkdownLint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running markdownlint...')
 
-  await markdownlint.lintFiles(['./README.md'])
+  const result = await markdownlint.lintFiles(['./README.md'])
 
   colourLog.timer('Finished markdownlint', startTime)
+  return result
 }
 
 /*
@@ -48,9 +50,10 @@ const runStylelint = async () => {
   const startTime = new Date().getTime()
   colourLog.info('Running stylelint...')
 
-  await stylelint.lintFiles(['**/*.css', '**/*.scss'])
+  const result = await stylelint.lintFiles(['**/*.css', '**/*.scss'])
 
   colourLog.timer('Finished stylelint', startTime)
+  return result
 }
 
 program
@@ -64,7 +67,9 @@ program
       runESLint(),
       runMarkdownLint(),
       runStylelint(),
-    ]).then(() => {
+    ]).then(([eslintResult, markdownlintResult, stylelintResult]) => {
+      console.log(eslintResult, stylelintResult, markdownlintResult)
+
       notifier.notify({
         message: 'All lint checks have passed. Your code is clean!',
         sound: 'Purr',

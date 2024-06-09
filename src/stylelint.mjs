@@ -1,9 +1,9 @@
-import formatter from 'stylelint-formatter-pretty'
+// import formatter from 'stylelint-formatter-pretty'
 import stylelint from 'stylelint'
 
 const lintFiles = async filePaths => {
   try {
-    const { results } = await stylelint.lint({
+    const { results, ruleMetadata } = await stylelint.lint({
       allowEmptyInput: true,
       config: {
         rules: {
@@ -13,10 +13,30 @@ const lintFiles = async filePaths => {
       files: filePaths,
     })
 
-    const formattedResults = formatter(results)
-    console.log(formattedResults)
-  }
-  catch (error) {
+    const processedResult = {
+      deprecatedRules: [],
+      errorCount: 0,
+      files: results.length,
+      fixableErrorCount: 0,
+    }
+
+    results.forEach(({ deprecations, warnings }) => {
+      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations])]
+      processedResult.errorCount += warnings.length
+      warnings.forEach(({ rule }) => {
+        if (ruleMetadata[rule]?.fixable) {
+          processedResult.fixableErrorCount += 1
+        }
+      })
+    })
+
+    // const formattedResults = formatter(results)
+    // console.log(formattedResults)
+
+    return {
+      processedResult,
+    }
+  } catch (error) {
     console.error(error.stack)
   }
 }
