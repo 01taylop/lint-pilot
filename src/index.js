@@ -11,12 +11,35 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint and Stylelint integration.')
   .version('0.0.1')
 
-program
-  .command('greet')
-  .description('Log a greeting message')
-  .action(() => {
-    console.log('Hello, welcome to LintPilot!')
-  })
+const runESLint = () => new Promise(resolve => {
+  const startTime = new Date().getTime()
+
+  colourLog.info('Running eslint...')
+  setTimeout(() => {
+    colourLog.timer('Finished eslint', startTime)
+    resolve()
+  }, 2000)
+})
+
+const runMarkdownLint = () => new Promise(resolve => {
+  const startTime = new Date().getTime()
+
+  colourLog.info('Running markdownlint...')
+  setTimeout(() => {
+    colourLog.timer('Finished markdownlint', startTime)
+    resolve()
+  }, 500)
+})
+
+const runStylelint = () => new Promise(resolve => {
+  const startTime = new Date().getTime()
+
+  colourLog.info('Running stylelint...')
+  setTimeout(() => {
+    colourLog.timer('Finished stylelint', startTime)
+    resolve()
+  }, 1000)
+})
 
 program
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
@@ -25,13 +48,19 @@ program
     colourLog.title(options.title ? options.title : '🛫 Lint Pilot 🛬')
     console.log()
 
-    notifier.notify({
-      message: 'All lint checks have passed. Your code is clean!',
-      sound: 'Purr',
-      title: '✅ Lint Success',
-    })
+    Promise.all([
+      runESLint(),
+      runMarkdownLint(),
+      runStylelint(),
+    ]).then(() => {
+      notifier.notify({
+        message: 'All lint checks have passed. Your code is clean!',
+        sound: 'Purr',
+        title: '✅ Lint Success',
+      })
 
-    process.exit(0)
+      process.exit(0)
+    })
   })
 
 program.parse(process.argv)
