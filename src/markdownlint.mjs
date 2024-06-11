@@ -16,6 +16,7 @@ const lintFiles = filePaths => new Promise((resolve, reject) => {
       errorCount: 0,
       files: Object.keys(results).length,
       fixableErrorCount: 0,
+      linter: 'Markdownlint',
     }
 
     Object.entries(results).forEach(([_file, errors]) => {

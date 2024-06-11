@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import notifier from 'node-notifier'
 
 import { colourLog } from './colour-log.mjs'
 import eslint from './eslint.mjs'
 import markdownlint from './markdownlint.mjs'
+import { notifyResults } from './notifier.mjs'
 import stylelint from './stylelint.mjs'
 
 const program = new Command()
@@ -79,27 +79,18 @@ program
       runESLint(),
       runMarkdownLint(),
       runStylelint(),
-    ]).then(([eslintResult, markdownlintResult, stylelintResult]) => {
-      console.log(eslintResult, stylelintResult, markdownlintResult)
+    ]).then((results) => {
+      console.log()
 
-      colourLog.resultBlock({
-        linter: 'ESLint',
-        result: eslintResult,
-      })
-      colourLog.resultBlock({
-        linter: 'Markdownlint',
-        result: markdownlintResult,
-      })
-      colourLog.resultBlock({
-        linter: 'Stylelint',
-        result: stylelintResult,
+      results.forEach(({ processedResult: { errorCount, linter, warningCount} }) => {
+        colourLog.resultBlock({
+          errorCount,
+          linter,
+          warningCount,
+        })
       })
 
-      notifier.notify({
-        message: 'All lint checks have passed. Your code is clean!',
-        sound: 'Purr',
-        title: '✅ Lint Success',
-      })
+      notifyResults(results)
 
       console.log()
       process.exit(0)

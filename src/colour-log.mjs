@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-const pluralise = (message, count) => count === 1 ? message : `${message}s`
+import { pluralise } from './utils.mjs'
 
 const colourLog = {
   config: (key, configArray) => {
@@ -47,9 +47,7 @@ const colourLog = {
     log.length && console.log(log.join('\n'))
   },
 
-  resultBlock: ({ linter, result }) => {
-    const { errorCount, warningCount } = result.processedResult
-
+  resultBlock: ({ errorCount, linter, warningCount }) => {
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
       console.log(`💔 ${message}\n`)

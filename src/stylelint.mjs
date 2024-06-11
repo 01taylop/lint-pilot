@@ -18,6 +18,7 @@ const lintFiles = async filePaths => {
       errorCount: 0,
       files: results.length,
       fixableErrorCount: 0,
+      linter: 'Stylelint',
     }
 
     results.forEach(({ deprecations, warnings }) => {

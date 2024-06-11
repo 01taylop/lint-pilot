@@ -23,6 +23,7 @@ const lintFiles = async filePaths => {
       files: results.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
+      linter: 'ESLint',
       warningCount: 0,
     }
 
