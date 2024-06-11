@@ -72,7 +72,7 @@ program
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
   .action(options => {
     console.clear()
-    colourLog.title(options.title ? options.title : '🛫 Lint Pilot 🛬')
+    colourLog.title(options.title ? options.title : '✈️ Lint Pilot ✈️')
     console.log()
 
     Promise.all([
@@ -81,6 +81,19 @@ program
       runStylelint(),
     ]).then(([eslintResult, markdownlintResult, stylelintResult]) => {
       console.log(eslintResult, stylelintResult, markdownlintResult)
+
+      colourLog.resultBlock({
+        linter: 'ESLint',
+        result: eslintResult,
+      })
+      colourLog.resultBlock({
+        linter: 'Markdownlint',
+        result: markdownlintResult,
+      })
+      colourLog.resultBlock({
+        linter: 'Stylelint',
+        result: stylelintResult,
+      })
 
       notifier.notify({
         message: 'All lint checks have passed. Your code is clean!',
