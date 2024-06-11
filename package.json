@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "build": "rimraf lib && mkdir lib && rollup -c",
-    "lint": "node src/index.js"
+    "lint": "node src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest"
   },
   "dependencies": {
     "chalk": "5.3.0",
@@ -31,6 +32,7 @@
     "stylelint-formatter-pretty": "4.0.0"
   },
   "devDependencies": {
+    "jest": "29.7.0",
     "rimraf": "5.0.7",
     "rollup": "4.18.0",
     "rollup-plugin-terser": "7.0.2"

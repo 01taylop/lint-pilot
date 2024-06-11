@@ -92,7 +92,6 @@ program
 
       const exitCode = notifyResults(results)
 
-      console.log()
       process.exit(exitCode)
     })
   })
