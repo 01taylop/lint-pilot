@@ -67,6 +67,4 @@ const colourLog = {
   title: title => console.log(chalk.cyan(title)),
 }
 
-export {
-  colourLog,
-}
+export default colourLog

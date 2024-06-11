@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 
-import { colourLog } from './colour-log.mjs'
+import colourLog from './colour-log.mjs'
 import eslint from './eslint.mjs'
 import markdownlint from './markdownlint.mjs'
 import { notifyResults } from './notifier.mjs'
