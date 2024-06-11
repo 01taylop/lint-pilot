@@ -17,15 +17,19 @@ program
  * ESLINT
  */
 
-const runESLint = async () => {
+const runESLint = async debug => {
   const startTime = new Date().getTime()
   colourLog.info('Running eslint...')
 
-  const files = await sourceFiles('**/*.{cjs,js,jsx,mjs,ts,tsx}', '**/+(coverage|node_modules)/**')
-  console.log(files)
+  const files = await sourceFiles('**/*.{cjs,js,jsx,mjs,ts,tsx}', {
+    debug,
+    ignore: '**/+(coverage|node_modules)/**',
+    linter: 'eslint',
+  })
   const result = await eslint.lintFiles(files)
 
   colourLog.result({
+    fileCount: files.length,
     linter: 'eslint',
     result,
     startTime,
@@ -37,15 +41,19 @@ const runESLint = async () => {
  * MARKDOWN LINT
  */
 
-const runMarkdownLint = async () => {
+const runMarkdownLint = async debug => {
   const startTime = new Date().getTime()
   colourLog.info('Running markdownlint...')
 
-  const files = await sourceFiles('**/*.{md,mdx}', '**/+(coverage|node_modules)/**')
-  console.log(files)
+  const files = await sourceFiles('**/*.{md,mdx}', {
+    debug,
+    ignore: '**/+(coverage|node_modules)/**',
+    linter: 'markdownlint',
+  })
   const result = await markdownlint.lintFiles(files)
 
   colourLog.result({
+    fileCount: files.length,
     linter: 'markdownlint',
     result,
     startTime,
@@ -57,15 +65,19 @@ const runMarkdownLint = async () => {
  * STYLELINT
  */
 
-const runStylelint = async () => {
+const runStylelint = async debug => {
   const startTime = new Date().getTime()
   colourLog.info('Running stylelint...')
 
-  const files = await sourceFiles('**/*.{css,scss,less,sass,styl,stylus}', '**/+(coverage|node_modules)/**')
-  console.log(files)
+  const files = await sourceFiles('**/*.{css,scss,less,sass,styl,stylus}', {
+    debug,
+    ignore: '**/+(coverage|node_modules)/**',
+    linter: 'stylelint',
+  })
   const result = await stylelint.lintFiles(files)
 
   colourLog.result({
+    fileCount: files.length,
     linter: 'stylelint',
     result,
     startTime,
@@ -75,15 +87,16 @@ const runStylelint = async () => {
 
 program
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
-  .action(options => {
+  .option('--debug', 'output additional debug information including the list of files being linted')
+  .action(({ debug, title }) => {
     console.clear()
-    colourLog.title(options.title ? options.title : '✈️ Lint Pilot ✈️')
+    colourLog.title(title ? title : '✈️ Lint Pilot ✈️')
     console.log()
 
     Promise.all([
-      runESLint(),
-      runMarkdownLint(),
-      runStylelint(),
+      runESLint(debug),
+      runMarkdownLint(debug),
+      runStylelint(debug),
     ]).then((results) => {
       console.log()
 

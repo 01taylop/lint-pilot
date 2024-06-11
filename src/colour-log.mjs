@@ -8,9 +8,14 @@ const colourLog = {
     console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
   },
 
+  files: (linter, pattern, files) => {
+    console.log(`\n${files.length} files matching "${pattern}" for ${linter}:`)
+    console.log(files)
+  },
+
   info: text => console.log(chalk.blue(text)),
 
-  result: ({ linter, result, startTime }) => {
+  result: ({ fileCount, linter, result, startTime }) => {
     const { deprecatedRules, errorCount, fixableErrorCount, fixableWarningCount, warningCount } = result.processedResult
 
     const log = []
@@ -42,8 +47,10 @@ const colourLog = {
     }
 
     // Output
+    const files = `${fileCount} ${pluralise('file', fileCount)}`
+    const endTime = `${new Date().getTime() - startTime}ms`
     console.log()
-    console.log(chalk.cyan(`Finished ${linter}`), chalk.yellow(`[${new Date().getTime() - startTime}ms]`))
+    console.log(chalk.cyan(`Finished ${linter}`), chalk.yellow(`[${files}, ${endTime}]`))
     log.length && console.log(log.join('\n'))
   },
 
