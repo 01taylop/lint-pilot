@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "paths": {
+      "@Constants": ["./src/constants/index.ts"],
+      "@Utils": ["./src/utils/index.ts"],
+      "@Utils/*": ["./src/utils/*"],
+    },
+    "rootDir": "./src",
+    "strict": true,
+    "target": "ESNext"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/types/global.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

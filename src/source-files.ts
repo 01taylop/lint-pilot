@@ -1,8 +1,16 @@
 import { glob } from 'glob'
 
-import { pluralise } from './utils.mjs'
+import { Linter } from '@Constants'
+import { pluralise } from '@Utils'
 
-const sourceFiles = async ({ debug, filePattern, ignore, linter }) => {
+interface SourceFiles {
+  debug: boolean
+  filePattern: string
+  ignore: string
+  linter: Linter
+}
+
+const sourceFiles = async ({ debug, filePattern, ignore, linter }: SourceFiles) => {
   try {
     const files = await glob(filePattern, { ignore })
     if (debug) {

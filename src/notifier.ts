@@ -1,8 +1,8 @@
 import notifier from 'node-notifier'
 
-import { pluralise } from './utils.mjs'
+import { pluralise } from '@Utils'
 
-const notifyResults = results => {
+const notifyResults = (results: Array<LinterResult>) => {
   let totalErrorCount = results.reduce((total, { processedResult: { errorCount = 0 } }) => total + errorCount, 0)
   let totalWarningCount = results.reduce((total, { processedResult: { warningCount = 0 } }) => total + warningCount, 0)
 

@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 
-import colourLog from '../colour-log.mjs'
+import { Linter } from '@Constants'
+import colourLog from '@Utils/colourLog'
 
 jest.mock('chalk', () => ({
   bgGreen: {
@@ -70,7 +71,7 @@ describe('colourLog', () => {
     it('logs the error count in a red background', () => {
       colourLog.resultBlock({
         errorCount: 1,
-        linter: 'ESLint',
+        linter: Linter.ESLint,
         warningCount: 0,
       })
 
@@ -83,7 +84,7 @@ describe('colourLog', () => {
     it('logs the warning count in a yellow background', () => {
       colourLog.resultBlock({
         errorCount: 0,
-        linter: 'ESLint',
+        linter: Linter.ESLint,
         warningCount: 1,
       })
 
@@ -96,7 +97,7 @@ describe('colourLog', () => {
     it('logs the both the error and warning counts if both are present', () => {
       colourLog.resultBlock({
         errorCount: 1,
-        linter: 'ESLint',
+        linter: Linter.ESLint,
         warningCount: 1,
       })
 
@@ -112,7 +113,7 @@ describe('colourLog', () => {
     it('logs a success message if there are no errors or warnings', () => {
       colourLog.resultBlock({
         errorCount: 0,
-        linter: 'ESLint',
+        linter: Linter.ESLint,
         warningCount: 0,
       })
 

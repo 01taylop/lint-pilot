@@ -1,7 +1,9 @@
 import { jest } from '@jest/globals'
 import notifier from 'node-notifier'
 
-import { notifyResults } from '../notifier.mjs'
+import { Linter } from '@Constants'
+
+import { notifyResults } from '../notifier'
 
 jest.mock('node-notifier', () => ({
   notify: jest.fn(),
@@ -13,7 +15,12 @@ describe('notifier', () => {
 
     const generateResult = (errorCount = 0, warningCount = 0) => ({
       processedResult: {
+        deprecatedRules: [],
         errorCount,
+        files: 0,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: Linter.ESLint,
         warningCount,
       },
     })

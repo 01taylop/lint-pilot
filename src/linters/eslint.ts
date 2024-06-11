@@ -1,9 +1,12 @@
 // import formatter from 'eslint-formatter-pretty'
 import { ESLint } from 'eslint'
 
-const lintFiles = async filePaths => {
+import { Linter } from '@Constants'
+
+const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
   try {
     const eslint = new ESLint({
+      // @ts-expect-error
       overrideConfigFile: true,
       overrideConfig: {
         rules: {
@@ -17,13 +20,13 @@ const lintFiles = async filePaths => {
 
     const results = await eslint.lintFiles(filePaths)
 
-    const processedResult = {
+    const processedResult: ProcessedResult = {
       deprecatedRules: [],
       errorCount: 0,
       files: results.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
-      linter: 'ESLint',
+      linter: Linter.ESLint,
       warningCount: 0,
     }
 
@@ -41,8 +44,9 @@ const lintFiles = async filePaths => {
     return {
       processedResult,
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.stack)
+    throw error
   }
 }
 

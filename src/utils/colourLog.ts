@@ -1,16 +1,30 @@
 import chalk from 'chalk'
 
-import { pluralise } from './utils.mjs'
+import { Linter } from '@Constants'
+import { pluralise } from '@Utils'
+
+interface ResultType {
+  fileCount: number
+  linter: Linter
+  result: LinterResult
+  startTime: number
+}
+
+interface ResultBlockType {
+  errorCount: number
+  linter: Linter
+  warningCount: number
+}
 
 const colourLog = {
-  config: (key, configArray) => {
+  config: (key: string, configArray: Array<string>) => {
     const configString = configArray.length >= 2 ? `[${configArray.join(', ')}]` : configArray[0]
     console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
   },
 
-  info: text => console.log(chalk.blue(text)),
+  info: (text: string) => console.log(chalk.blue(text)),
 
-  result: ({ fileCount, linter, result, startTime }) => {
+  result: ({ fileCount, linter, result, startTime }: ResultType) => {
     const { deprecatedRules, errorCount, fixableErrorCount, fixableWarningCount, warningCount } = result.processedResult
 
     const log = []
@@ -45,11 +59,11 @@ const colourLog = {
     const files = `${fileCount} ${pluralise('file', fileCount)}`
     const endTime = `${new Date().getTime() - startTime}ms`
     console.log()
-    console.log(chalk.cyan(`Finished ${linter}`), chalk.yellow(`[${files}, ${endTime}]`))
+    console.log(chalk.cyan(`Finished ${linter.toLowerCase()}`), chalk.yellow(`[${files}, ${endTime}]`))
     log.length && console.log(log.join('\n'))
   },
 
-  resultBlock: ({ errorCount, linter, warningCount }) => {
+  resultBlock: ({ errorCount, linter, warningCount }: ResultBlockType) => {
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
       console.log(`💔 ${message}\n`)
@@ -66,7 +80,7 @@ const colourLog = {
     console.log(`✅ ${message}\n`)
   },
 
-  title: title => console.log(chalk.cyan(title)),
+  title: (title: string) => console.log(chalk.cyan(title)),
 }
 
 export default colourLog

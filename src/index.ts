@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 
-import colourLog from './colour-log.mjs'
-import linters from './linters/index.mjs'
-import { notifyResults } from './notifier.mjs'
-import { sourceFiles } from './source-files.mjs'
+import { Linter } from '@Constants'
+import colourLog from '@Utils/colourLog'
+
+import linters from './linters/index'
+import { notifyResults } from './notifier'
+import { sourceFiles } from './source-files'
 
 const program = new Command()
 
@@ -13,9 +15,15 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
   .version('0.0.1')
 
-const runLinter = async ({ debug, filePattern, linter }) => {
+interface RunLinter {
+  debug: boolean
+  filePattern: string
+  linter: Linter
+}
+
+const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
   const startTime = new Date().getTime()
-  colourLog.info(`Running ${linter}...`)
+  colourLog.info(`Running ${linter.toLowerCase()}...`)
 
   const files = await sourceFiles({
     debug,
@@ -24,7 +32,7 @@ const runLinter = async ({ debug, filePattern, linter }) => {
     linter,
   })
 
-  const result = await linters[linter].lintFiles(files)
+  const result: LinterResult = await linters[linter].lintFiles(files)
 
   colourLog.result({
     fileCount: files.length,
@@ -48,17 +56,17 @@ program
       runLinter({
         debug,
         filePattern: '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-        linter: 'eslint',
+        linter: Linter.ESLint,
       }),
       runLinter({
         debug,
         filePattern: '**/*.{md,mdx}',
-        linter: 'markdownlint',
+        linter: Linter.Markdownlint,
       }),
       runLinter({
         debug,
         filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
-        linter: 'stylelint',
+        linter: Linter.Stylelint,
       }),
     ]).then((results) => {
       console.log()

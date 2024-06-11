@@ -1,4 +1,4 @@
-import { pluralise } from '../utils.mjs'
+import { pluralise } from '..'
 
 describe('utils', () => {
 
