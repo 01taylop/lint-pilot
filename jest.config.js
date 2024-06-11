@@ -13,5 +13,7 @@ export default {
     },
   },
   testMatch: ['**/*.spec.js'],
-  transform: {},
+  transform: {
+    '\\.m?js$': 'babel-jest',
+  },
 }
