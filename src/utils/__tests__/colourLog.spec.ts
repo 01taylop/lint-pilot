@@ -1,7 +1,8 @@
 import chalk from 'chalk'
 
 import { Linter } from '@Constants'
-import colourLog from '@Utils/colourLog'
+
+import colourLog from '../colourLog'
 
 jest.mock('chalk', () => ({
   bgGreen: {
