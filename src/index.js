@@ -2,10 +2,8 @@
 import { Command } from 'commander'
 
 import colourLog from './colour-log.mjs'
-import eslint from './eslint.mjs'
-import markdownlint from './markdownlint.mjs'
+import { eslint, stylelint, markdownlint } from './linters/index.mjs'
 import { notifyResults } from './notifier.mjs'
-import stylelint from './stylelint.mjs'
 
 const program = new Command()
 
