@@ -90,10 +90,10 @@ program
         })
       })
 
-      notifyResults(results)
+      const exitCode = notifyResults(results)
 
       console.log()
-      process.exit(0)
+      process.exit(exitCode)
     })
   })
 

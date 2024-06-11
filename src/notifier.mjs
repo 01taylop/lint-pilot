@@ -12,7 +12,7 @@ const notifyResults = results => {
       sound: 'Frog',
       title: '🚨 Lint Pilot 🚨',
     })
-    return
+    return 1
   }
 
   if (totalWarningCount > 0) {
@@ -21,7 +21,7 @@ const notifyResults = results => {
       sound: 'Frog',
       title: '🚧 Lint Pilot 🚧',
     })
-    return
+    return 0
   }
 
   notifier.notify({
@@ -29,6 +29,7 @@ const notifyResults = results => {
     sound: 'Purr',
     title: '✅ Lint Pilot ✅',
   })
+  return 0
 }
 
 export {
