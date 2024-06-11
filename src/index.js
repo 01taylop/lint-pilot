@@ -2,7 +2,7 @@
 import { Command } from 'commander'
 
 import colourLog from './colour-log.mjs'
-import { eslint, stylelint, markdownlint } from './linters/index.mjs'
+import linters from './linters/index.mjs'
 import { notifyResults } from './notifier.mjs'
 import { sourceFiles } from './source-files.mjs'
 
@@ -13,75 +13,26 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
   .version('0.0.1')
 
-/*
- * ESLINT
- */
-
-const runESLint = async debug => {
+const runLinter = async ({ debug, filePattern, linter }) => {
   const startTime = new Date().getTime()
-  colourLog.info('Running eslint...')
+  colourLog.info(`Running ${linter}...`)
 
-  const files = await sourceFiles('**/*.{cjs,js,jsx,mjs,ts,tsx}', {
+  const files = await sourceFiles({
     debug,
+    filePattern,
     ignore: '**/+(coverage|node_modules)/**',
-    linter: 'eslint',
+    linter,
   })
-  const result = await eslint.lintFiles(files)
+
+  const result = await linters[linter].lintFiles(files)
 
   colourLog.result({
     fileCount: files.length,
-    linter: 'eslint',
+    linter,
     result,
     startTime,
   })
-  return result
-}
 
-/*
- * MARKDOWN LINT
- */
-
-const runMarkdownLint = async debug => {
-  const startTime = new Date().getTime()
-  colourLog.info('Running markdownlint...')
-
-  const files = await sourceFiles('**/*.{md,mdx}', {
-    debug,
-    ignore: '**/+(coverage|node_modules)/**',
-    linter: 'markdownlint',
-  })
-  const result = await markdownlint.lintFiles(files)
-
-  colourLog.result({
-    fileCount: files.length,
-    linter: 'markdownlint',
-    result,
-    startTime,
-  })
-  return result
-}
-
-/*
- * STYLELINT
- */
-
-const runStylelint = async debug => {
-  const startTime = new Date().getTime()
-  colourLog.info('Running stylelint...')
-
-  const files = await sourceFiles('**/*.{css,scss,less,sass,styl,stylus}', {
-    debug,
-    ignore: '**/+(coverage|node_modules)/**',
-    linter: 'stylelint',
-  })
-  const result = await stylelint.lintFiles(files)
-
-  colourLog.result({
-    fileCount: files.length,
-    linter: 'stylelint',
-    result,
-    startTime,
-  })
   return result
 }
 
@@ -94,9 +45,21 @@ program
     console.log()
 
     Promise.all([
-      runESLint(debug),
-      runMarkdownLint(debug),
-      runStylelint(debug),
+      runLinter({
+        debug,
+        filePattern: '**/*.{cjs,js,jsx,mjs,ts,tsx}',
+        linter: 'eslint',
+      }),
+      runLinter({
+        debug,
+        filePattern: '**/*.{md,mdx}',
+        linter: 'markdownlint',
+      }),
+      runLinter({
+        debug,
+        filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
+        linter: 'stylelint',
+      }),
     ]).then((results) => {
       console.log()
 

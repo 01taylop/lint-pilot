@@ -8,11 +8,6 @@ const colourLog = {
     console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
   },
 
-  files: (linter, pattern, files) => {
-    console.log(`\n${files.length} files matching "${pattern}" for ${linter}:`)
-    console.log(files)
-  },
-
   info: text => console.log(chalk.blue(text)),
 
   result: ({ fileCount, linter, result, startTime }) => {
