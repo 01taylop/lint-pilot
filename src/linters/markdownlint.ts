@@ -1,6 +1,6 @@
 import markdownlint, { type LintResults } from 'markdownlint'
 
-import { Linter } from '@Constants'
+import { Linter, type LinterResult, type ProcessedResult } from '@Types'
 
 const lintFiles = (filePaths: Array<string>): Promise<LinterResult> => new Promise((resolve, reject) => {
   markdownlint({
@@ -18,7 +18,7 @@ const lintFiles = (filePaths: Array<string>): Promise<LinterResult> => new Promi
       const processedResult: ProcessedResult = {
         deprecatedRules: [],
         errorCount: 0,
-        files: results ? Object.keys(results).length : 0,
+        fileCount: Object.keys(results).length,
         fixableErrorCount: 0,
         fixableWarningCount: 0,
         linter: Linter.Markdownlint,

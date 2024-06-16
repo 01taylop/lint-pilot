@@ -1,6 +1,6 @@
-import { pluralise } from '..'
+import { pluralise } from '../transform'
 
-describe('utils', () => {
+describe('transform', () => {
 
   describe('pluralise', () => {
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 
-import { Linter } from '@Constants'
+import { Linter, type LinterResult } from '@Types'
 import colourLog from '@Utils/colourLog'
+import { notifyResults } from '@Utils/notifier'
 
 import linters from './linters/index'
-import { notifyResults } from './notifier'
 import { sourceFiles } from './source-files'
 
 const program = new Command()
@@ -34,12 +34,7 @@ const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
 
   const result: LinterResult = await linters[linter].lintFiles(files)
 
-  colourLog.result({
-    fileCount: files.length,
-    linter,
-    result,
-    startTime,
-  })
+  colourLog.result(result.processedResult, startTime)
 
   return result
 }
@@ -71,12 +66,8 @@ program
     ]).then((results) => {
       console.log()
 
-      results.forEach(({ processedResult: { errorCount, linter, warningCount} }) => {
-        colourLog.resultBlock({
-          errorCount,
-          linter,
-          warningCount,
-        })
+      results.forEach(({ processedResult }) => {
+        colourLog.resultBlock(processedResult)
       })
 
       const exitCode = notifyResults(results)

@@ -1,20 +1,7 @@
 import chalk from 'chalk'
 
-import { Linter } from '@Constants'
-import { pluralise } from '@Utils'
-
-interface ResultType {
-  fileCount: number
-  linter: Linter
-  result: LinterResult
-  startTime: number
-}
-
-interface ResultBlockType {
-  errorCount: number
-  linter: Linter
-  warningCount: number
-}
+import { type ProcessedResult } from '@Types'
+import { pluralise } from '@Utils/transform'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {
@@ -24,8 +11,8 @@ const colourLog = {
 
   info: (text: string) => console.log(chalk.blue(text)),
 
-  result: ({ fileCount, linter, result, startTime }: ResultType) => {
-    const { deprecatedRules, errorCount, fixableErrorCount, fixableWarningCount, warningCount } = result.processedResult
+  result: (processedResult: ProcessedResult, startTime: number) => {
+    const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = processedResult
 
     const log = []
 
@@ -63,7 +50,7 @@ const colourLog = {
     log.length && console.log(log.join('\n'))
   },
 
-  resultBlock: ({ errorCount, linter, warningCount }: ResultBlockType) => {
+  resultBlock: ({ errorCount, linter, warningCount }: ProcessedResult) => {
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
       console.log(`💔 ${message}\n`)

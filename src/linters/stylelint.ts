@@ -1,7 +1,6 @@
-// import formatter from 'stylelint-formatter-pretty'
 import stylelint from 'stylelint'
 
-import { Linter } from '@Constants'
+import { Linter, type LinterResult, type ProcessedResult } from '@Types'
 
 const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
   try {
@@ -18,7 +17,7 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
     const processedResult: ProcessedResult = {
       deprecatedRules: [],
       errorCount: 0,
-      files: results.length,
+      fileCount: results.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.Stylelint,
@@ -34,9 +33,6 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
         }
       })
     })
-
-    // const formattedResults = formatter(results)
-    // console.log(formattedResults)
 
     return {
       processedResult,

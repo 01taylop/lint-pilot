@@ -1,7 +1,6 @@
-// import formatter from 'eslint-formatter-pretty'
 import { ESLint } from 'eslint'
 
-import { Linter } from '@Constants'
+import { Linter, type LinterResult, type ProcessedResult } from '@Types'
 
 const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
   try {
@@ -23,7 +22,7 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
     const processedResult: ProcessedResult = {
       deprecatedRules: [],
       errorCount: 0,
-      files: results.length,
+      fileCount: results.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.ESLint,
@@ -37,9 +36,6 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
       processedResult.fixableWarningCount += fixableWarningCount
       processedResult.warningCount += warningCount
     })
-
-    // const formattedResults = formatter(results)
-    // console.log(formattedResults)
 
     return {
       processedResult,

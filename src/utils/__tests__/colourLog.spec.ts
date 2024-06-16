@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { Linter } from '@Constants'
+import { Linter } from '@Types'
 
 import colourLog from '../colourLog'
 
@@ -69,11 +69,20 @@ describe('colourLog', () => {
 
   describe('resultBlock', () => {
 
+    const commonResult = {
+      deprecatedRules: [],
+      errorCount: 0,
+      fileCount: 1,
+      fixableErrorCount: 0,
+      fixableWarningCount: 0,
+      linter: Linter.ESLint,
+      warningCount: 0,
+    }
+
     it('logs the error count in a red background', () => {
       colourLog.resultBlock({
+        ...commonResult,
         errorCount: 1,
-        linter: Linter.ESLint,
-        warningCount: 0,
       })
 
       expect(chalk.bgRed.black).toHaveBeenCalledTimes(1)
@@ -84,8 +93,7 @@ describe('colourLog', () => {
 
     it('logs the warning count in a yellow background', () => {
       colourLog.resultBlock({
-        errorCount: 0,
-        linter: Linter.ESLint,
+        ...commonResult,
         warningCount: 1,
       })
 
@@ -97,26 +105,22 @@ describe('colourLog', () => {
 
     it('logs the both the error and warning counts if both are present', () => {
       colourLog.resultBlock({
-        errorCount: 1,
-        linter: Linter.ESLint,
-        warningCount: 1,
+        ...commonResult,
+        errorCount: 2,
+        warningCount: 3,
       })
 
       expect(chalk.bgRed.black).toHaveBeenCalledTimes(1)
-      expect(chalk.bgRed.black).toHaveBeenCalledWith(' 1 ESLint Error ')
+      expect(chalk.bgRed.black).toHaveBeenCalledWith(' 2 ESLint Errors ')
       expect(chalk.bgYellow.black).toHaveBeenCalledTimes(1)
-      expect(chalk.bgYellow.black).toHaveBeenCalledWith(' 1 ESLint Warning ')
+      expect(chalk.bgYellow.black).toHaveBeenCalledWith(' 3 ESLint Warnings ')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('💔  1 ESLint Error \n')
-      expect(mockedConsoleLog).toHaveBeenCalledWith('🚧  1 ESLint Warning \n')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('💔  2 ESLint Errors \n')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('🚧  3 ESLint Warnings \n')
     })
 
     it('logs a success message if there are no errors or warnings', () => {
-      colourLog.resultBlock({
-        errorCount: 0,
-        linter: Linter.ESLint,
-        warningCount: 0,
-      })
+      colourLog.resultBlock(commonResult)
 
       expect(chalk.bgGreen.black).toHaveBeenCalledTimes(1)
       expect(chalk.bgGreen.black).toHaveBeenCalledWith(' ESLint Success! ')

@@ -7,7 +7,7 @@
     "outDir": "./lib",
     "paths": {
       "@Constants": ["./src/constants/index.ts"],
-      "@Utils": ["./src/utils/index.ts"],
+      "@Types": ["./src/types/index.ts"],
       "@Utils/*": ["./src/utils/*"],
     },
     "rootDir": "./src",

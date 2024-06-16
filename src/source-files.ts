@@ -1,7 +1,7 @@
 import { glob } from 'glob'
 
-import { Linter } from '@Constants'
-import { pluralise } from '@Utils'
+import { Linter } from '@Types'
+import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {
   debug: boolean

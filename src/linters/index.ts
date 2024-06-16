@@ -2,7 +2,7 @@ import eslint from './eslint'
 import stylelint from './stylelint'
 import markdownlint from './markdownlint'
 
-import { Linter } from '@Constants'
+import { Linter } from '@Types'
 
 const linters = {
   [Linter.ESLint]: eslint,
