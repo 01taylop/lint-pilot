@@ -42,7 +42,7 @@ const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
 program
   .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
-  .option('--debug', 'output additional debug information including the list of files being linted')
+  .option('--debug', 'output additional debug information including the list of files being linted', false)
   .action(({ debug, emoji, title }) => {
     console.clear()
     colourLog.title(`${emoji} ${title} ${emoji}`)

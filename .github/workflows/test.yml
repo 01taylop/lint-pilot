@@ -30,5 +30,8 @@ jobs:
     - name: Run Tests
       run: yarn test --coverage
 
+    - name: Run Build
+      run: yarn build
+
     - name: Depcheck
       run: npx depcheck

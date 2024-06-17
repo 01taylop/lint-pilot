@@ -35,7 +35,7 @@ const colourLog = {
     }
 
     // Deprecations
-    const deprecationCount = deprecatedRules?.length
+    const deprecationCount = deprecatedRules.length
     if (deprecationCount) {
       let deprecationMessage = chalk.magenta(`  ${deprecationCount} ${pluralise('deprecation', deprecationCount)}`)
       deprecationMessage += chalk.dim(` [${deprecatedRules.sort((a, b) => a.localeCompare(b)).join(', ')}]`)

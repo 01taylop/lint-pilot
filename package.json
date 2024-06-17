@@ -3,7 +3,7 @@
   "description": "Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/01taylop/lint-pilot"
+    "url": "git+https://github.com/01taylop/lint-pilot.git"
   },
   "version": "0.0.1-beta.1",
   "type": "module",
@@ -11,7 +11,7 @@
     "node": ">=18.18.0"
   },
   "bin": {
-    "lint-pilot": "./lib/index.min.js"
+    "lint-pilot": "lib/index.min.js"
   },
   "files": [
     "lib"
