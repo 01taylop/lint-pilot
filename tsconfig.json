@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "outDir": "./lib",
     "paths": {
-      "@Constants": ["./src/constants/index.ts"],
       "@Types": ["./src/types/index.ts"],
       "@Utils/*": ["./src/utils/*"],
     },

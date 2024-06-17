@@ -6,6 +6,7 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*.ts',
+    // TODO: Write tests for these files when they are less likely to change
     '!src/index.ts',
     '!src/linters/*.ts',
   ],
@@ -20,7 +21,6 @@ const config: JestConfigWithTsJest = {
   },
   moduleFileExtensions: ['ts', ...defaults.moduleFileExtensions],
   moduleNameMapper: {
-    '^@Constants(.*)$': '<rootDir>/src/constants$1',
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },

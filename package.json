@@ -19,6 +19,7 @@
   "scripts": {
     "build": "rimraf lib && mkdir lib && rollup -c",
     "lint": "tsx src/index.js",
+    "prepublishOnly": "yarn test --coverage && yarn build",
     "test": "jest"
   },
   "dependencies": {

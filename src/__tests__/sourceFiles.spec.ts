@@ -26,6 +26,7 @@ describe('sourceFiles', () => {
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual(['file1.ts', 'file2.ts'])
+    expect(console.log).not.toHaveBeenCalled()
   })
 
   it('logs the files sourced if debug is true (single file)', async () => {
@@ -61,7 +62,7 @@ describe('sourceFiles', () => {
 
     await sourceFiles(commonArgs)
 
-    expect(console.error).toHaveBeenCalledWith('Error occurred while trying to source files matching *.ts', new Error('Test error'))
+    expect(console.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', new Error('Test error'))
     expect(process.exit).toHaveBeenCalledWith(1)
   })
 

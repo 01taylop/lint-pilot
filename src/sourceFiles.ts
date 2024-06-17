@@ -19,7 +19,7 @@ const sourceFiles = async ({ debug, filePattern, ignore, linter }: SourceFiles) 
     }
     return files
   } catch (error) {
-    console.error(`Error occurred while trying to source files matching ${filePattern}`, error)
+    console.error(`An error occurred while trying to source files matching ${filePattern}`, error)
     process.exit(1)
   }
 }
