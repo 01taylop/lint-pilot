@@ -6,7 +6,7 @@ import colourLog from '@Utils/colourLog'
 import { notifyResults } from '@Utils/notifier'
 
 import linters from './linters/index'
-import { sourceFiles } from './source-files'
+import sourceFiles from './sourceFiles'
 
 const program = new Command()
 

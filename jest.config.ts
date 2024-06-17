@@ -6,6 +6,8 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*.ts',
+    '!src/index.ts',
+    '!src/linters/*.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
@@ -17,6 +19,11 @@ const config: JestConfigWithTsJest = {
     },
   },
   moduleFileExtensions: ['ts', ...defaults.moduleFileExtensions],
+  moduleNameMapper: {
+    '^@Constants(.*)$': '<rootDir>/src/constants$1',
+    '^@Types(.*)$': '<rootDir>/src/types$1',
+    '^@Utils(.*)$': '<rootDir>/src/utils$1',
+  },
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
   },

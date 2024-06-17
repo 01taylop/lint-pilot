@@ -24,6 +24,4 @@ const sourceFiles = async ({ debug, filePattern, ignore, linter }: SourceFiles) 
   }
 }
 
-export {
-  sourceFiles,
-}
+export default sourceFiles
