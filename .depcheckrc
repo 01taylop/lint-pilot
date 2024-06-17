@@ -1,3 +1,5 @@
 ignores: [
+  "rimraf",
+  "@types/jest"
 ]
 skip-missing: true
