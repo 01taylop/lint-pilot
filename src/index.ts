@@ -40,11 +40,12 @@ const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
 }
 
 program
-  .option('-t, --title <string>', 'customise the title displayed when running lint-pilot')
+  .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
+  .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
   .option('--debug', 'output additional debug information including the list of files being linted')
-  .action(({ debug, title }) => {
+  .action(({ debug, emoji, title }) => {
     console.clear()
-    colourLog.title(title ? title : '✈️ Lint Pilot ✈️')
+    colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
 
     Promise.all([
@@ -70,7 +71,7 @@ program
         colourLog.resultBlock(processedResult)
       })
 
-      const exitCode = notifyResults(results)
+      const exitCode = notifyResults(results, title)
 
       process.exit(exitCode)
     })

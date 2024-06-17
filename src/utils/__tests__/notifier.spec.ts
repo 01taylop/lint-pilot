@@ -30,7 +30,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(1, 0),
         generateResult(0, 1),
-      ])
+      ], 'Lint Pilot')
 
       expect(exitCode).toBe(1)
     })
@@ -40,7 +40,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(0, 0),
         generateResult(0, 1),
-      ])
+      ], 'Lint Pilot')
 
       expect(exitCode).toBe(0)
     })
@@ -49,7 +49,7 @@ describe('notifier', () => {
       const exitCode = notifyResults([
         generateResult(0, 0),
         generateResult(0, 0),
-      ])
+      ], 'Lint Pilot')
 
       expect(exitCode).toBe(0)
     })
@@ -59,7 +59,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(1, 1),
         generateResult(0, 1),
-      ])
+      ], 'Lint Pilot')
 
       expect(notifier.notify).toHaveBeenCalledTimes(1)
       expect(notifier.notify).toHaveBeenCalledWith({
@@ -74,7 +74,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(5, 0),
         generateResult(2, 1),
-      ])
+      ], 'Lint Pilot')
 
       expect(notifier.notify).toHaveBeenCalledTimes(1)
       expect(notifier.notify).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(0, 0),
         generateResult(0, 1),
-      ])
+      ], 'Lint Pilot')
 
       expect(notifier.notify).toHaveBeenCalledTimes(1)
       expect(notifier.notify).toHaveBeenCalledWith({
@@ -104,7 +104,7 @@ describe('notifier', () => {
         generateResult(0, 0),
         generateResult(0, 7),
         generateResult(0, 2),
-      ])
+      ], 'Lint Pilot')
 
       expect(notifier.notify).toHaveBeenCalledTimes(1)
       expect(notifier.notify).toHaveBeenCalledWith({
@@ -118,7 +118,7 @@ describe('notifier', () => {
       notifyResults([
         generateResult(0, 0),
         generateResult(0, 0),
-      ])
+      ], 'Lint Pilot')
 
       expect(notifier.notify).toHaveBeenCalledTimes(1)
       expect(notifier.notify).toHaveBeenCalledWith({

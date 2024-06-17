@@ -57,6 +57,20 @@ describe('sourceFiles', () => {
     expect(console.log).toHaveBeenCalledWith(['file1.ts', 'file2.ts'])
   })
 
+  it('logs the files sourced if debug is true (no sourced files)', async () => {
+    jest.mocked(glob).mockResolvedValue([])
+
+    const files = await sourceFiles({
+      ...commonArgs,
+      debug: true,
+    })
+
+    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(files).toEqual([])
+    expect(console.log).toHaveBeenCalledWith('\nSourced 0 files matching "*.ts" for ESLint:')
+    expect(console.log).toHaveBeenCalledWith([])
+  })
+
   it('catches any errors and exists the process', async () => {
     jest.mocked(glob).mockRejectedValue(new Error('Test error'))
 
