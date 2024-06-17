@@ -104,9 +104,10 @@ program
         ignorePatterns: ['**/+(coverage|node_modules)/**'],
       })
 
-      fileChangeEvent.on(Events.FILE_CHANGED, path => {
+      fileChangeEvent.on(Events.FILE_CHANGED, ({ message }) => {
         clearTerminal()
-        colourLog.info(`File \`${path}\` has been changed.\n`)
+        colourLog.info(message)
+        console.log()
         runLintPilot({ debug, title, watch })
       })
     }

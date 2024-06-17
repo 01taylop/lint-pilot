@@ -50,11 +50,14 @@ describe('watchFiles', () => {
   it('emits a "FILE_CHANGED" event when saving the file for the first time', done => {
     expect.assertions(1)
 
-    const mockPath = 'mock/new-file.ts'
+    const mockPath = 'mock/existing-file.ts'
     mockReadFile('first-time-save')
 
-    fileChangeEvent.on(Events.FILE_CHANGED, path => {
-      expect(path).toBe(mockPath)
+    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+      expect(params).toStrictEqual({
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      })
       done()
     })
 
@@ -70,8 +73,11 @@ describe('watchFiles', () => {
     const mockPath = 'mock/old-file.ts'
     mockReadFile('old-content')
 
-    fileChangeEvent.on(Events.FILE_CHANGED, path => {
-      expect(path).toBe(mockPath)
+    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+      expect(params).toStrictEqual({
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      })
     })
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
@@ -93,8 +99,11 @@ describe('watchFiles', () => {
     const mockPath = 'mock/old-file.ts'
     mockReadFile('old-content')
 
-    fileChangeEvent.on(Events.FILE_CHANGED, path => {
-      expect(path).toBe(mockPath)
+    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+      expect(params).toStrictEqual({
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      })
     })
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
@@ -108,4 +117,45 @@ describe('watchFiles', () => {
       done()
     }, 100)
   })
+
+  it('emits a "FILE_CHANGED" event if a file is added', done => {
+    expect.assertions(1)
+
+    const mockPath = 'mock/new-file.ts'
+    mockReadFile('new-content')
+
+    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+      expect(params).toStrictEqual({
+        message: `File \`${mockPath}\` has been added.`,
+        path: mockPath,
+      })
+      done()
+    })
+
+    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+
+    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'add')[1]
+    changeHandler(mockPath)
+  })
+
+  it('emits a "FILE_CHANGED" event if a file is removed', done => {
+    expect.assertions(1)
+
+    const mockPath = 'mock/legacy-file.ts'
+    mockReadFile('legacy-content')
+
+    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+      expect(params).toStrictEqual({
+        message: `File \`${mockPath}\` has been removed.`,
+        path: mockPath,
+      })
+      done()
+    })
+
+    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+
+    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'unlink')[1]
+    changeHandler(mockPath)
+  })
+
 })

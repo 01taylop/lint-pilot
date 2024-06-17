@@ -23,13 +23,30 @@ const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
     persistent: true,
   })
 
+  watcher.on('add', (path, _stats) => {
+    fileChangeEvent.emit(Events.FILE_CHANGED, {
+      message: `File \`${path}\` has been added.`,
+      path,
+    })
+  })
+
   watcher.on('change', (path, _stats) => {
     readFile(path, 'utf8', (_error, data) => {
       const newHash = getHash(data)
       if (fileHashes.get(path) !== newHash) {
         fileHashes.set(path, newHash)
-        fileChangeEvent.emit(Events.FILE_CHANGED, path)
+        fileChangeEvent.emit(Events.FILE_CHANGED, {
+          message: `File \`${path}\` has been changed.`,
+          path,
+        })
       }
+    })
+  })
+
+  watcher.on('unlink', path => {
+    fileChangeEvent.emit(Events.FILE_CHANGED, {
+      message: `File \`${path}\` has been removed.`,
+      path,
     })
   })
 }
