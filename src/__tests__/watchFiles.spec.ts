@@ -47,11 +47,11 @@ describe('watchFiles', () => {
     })
   })
 
-  it('emits a "FILE_CHANGED" event when saving the file for the first time', done => {
+  it('emits a "FILE_CHANGED" event when saving an existing file (because there is no hash map yet)', done => {
     expect.assertions(1)
 
     const mockPath = 'mock/existing-file.ts'
-    mockReadFile('first-time-save')
+    mockReadFile('open-and-save')
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
