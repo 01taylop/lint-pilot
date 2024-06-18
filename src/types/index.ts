@@ -1,3 +1,7 @@
+enum Events {
+  FILE_CHANGED = 'FILE_CHANGED',
+}
+
 enum Linter {
   ESLint = 'ESLint',
   Markdownlint = 'MarkdownLint',
@@ -24,5 +28,6 @@ export type {
 }
 
 export {
+  Events,
   Linter,
 }
