@@ -43,6 +43,7 @@ describe('watchFiles', () => {
 
     expect(chokidar.watch).toHaveBeenCalledWith(filePatterns, {
       ignored: ignorePatterns,
+      ignoreInitial: true,
       persistent: true,
     })
   })

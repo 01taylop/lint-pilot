@@ -20,6 +20,7 @@ const getHash = (data: string) => createHash('md5').update(data).digest('hex')
 const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
   const watcher = chokidar.watch(filePatterns, {
     ignored: ignorePatterns,
+    ignoreInitial: true,
     persistent: true,
   })
 
