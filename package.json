@@ -11,15 +11,13 @@
     "node": ">=18.18.0"
   },
   "bin": {
-    "lint-pilot": "lib/index.min.js"
+    "lint-pilot": "index.min.js"
   },
-  "files": [
-    "lib"
-  ],
   "scripts": {
-    "build": "rimraf lib && mkdir lib && rollup -c",
+    "build": "rimraf lib && mkdir lib && rollup -c && yarn buildConfig",
+    "buildConfig": "tsx ./scripts/build-config.ts",
     "lint": "tsx src/index.js",
-    "prepublishOnly": "yarn test --coverage && yarn build",
+    "publishLib": "yarn test --coverage && yarn build && cd lib && npm publish",
     "test": "jest"
   },
   "dependencies": {
