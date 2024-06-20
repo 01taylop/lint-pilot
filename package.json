@@ -11,15 +11,13 @@
     "node": ">=18.18.0"
   },
   "bin": {
-    "lint-pilot": "lib/index.min.js"
+    "lint-pilot": "index.min.js"
   },
-  "files": [
-    "lib"
-  ],
   "scripts": {
-    "build": "rimraf lib && mkdir lib && rollup -c",
+    "build": "rimraf lib && mkdir lib && rollup -c && yarn buildConfig",
+    "buildConfig": "tsx ./scripts/build-config.ts",
     "lint": "tsx src/index.js",
-    "prepublishOnly": "yarn test --coverage && yarn build",
+    "publishLib": "yarn test --coverage && yarn build && cd lib && npm publish",
     "test": "jest"
   },
   "dependencies": {
@@ -27,6 +25,7 @@
     "chokidar": "3.6.0",
     "commander": "12.1.0",
     "eslint": "9.4.0",
+    "eslint-plugin-inclusive-language": "2.2.1",
     "glob": "10.4.1",
     "markdownlint": "0.34.0",
     "node-notifier": "10.0.1",

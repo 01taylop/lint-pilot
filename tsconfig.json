@@ -9,11 +9,12 @@
       "@Types": ["./src/types/index.ts"],
       "@Utils/*": ["./src/utils/*"],
     },
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "target": "ESNext"
   },
   "include": [
+    "config/**/*.ts",
     "src/**/*.ts",
     "src/types/global.d.ts"
   ],
