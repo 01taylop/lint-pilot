@@ -1,4 +1,5 @@
 ignores: [
+  "eslint-plugin-import",
   "eslint-plugin-inclusive-language",
   "rimraf",
   "@types/jest"
