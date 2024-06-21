@@ -28,7 +28,7 @@ const compileLintConfiguration = async (): Promise<void> => {
     const files = await fs.promises.readdir(configFolder)
 
     for (const file of files) {
-      const filePath = path.join(configFolder, file)
+      const filePath = path.join(process.cwd(), configFolder, file)
 
       if ((await fs.promises.stat(filePath)).isFile()) {
         const filename = path.parse(file).name
