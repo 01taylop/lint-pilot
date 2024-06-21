@@ -25,6 +25,7 @@
     "chokidar": "3.6.0",
     "commander": "12.1.0",
     "eslint": "9.4.0",
+    "eslint-plugin-import": "2.29.1",
     "eslint-plugin-inclusive-language": "2.2.1",
     "glob": "10.4.1",
     "markdownlint": "0.34.0",
