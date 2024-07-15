@@ -15,12 +15,13 @@ const colourLog = {
 
   configDebug: (message: string, config: any) => {
     if (global.debug) {
-      console.log('\n', chalk.blue(message), '\n', config)
+      console.log(`\n${chalk.blue(message)}`)
+      console.log(config)
     }
   },
 
   error: (text: string, error?: Error | unknown) => {
-    console.log('\n', chalk.red(text))
+    console.log(`\n${chalk.red(text)}`)
     if (error && global.debug === true) {
       console.log(error)
     }
@@ -60,10 +61,11 @@ const colourLog = {
     }
 
     // Output
+    const finishedLinter = chalk.cyan(`Finished ${linter.toLowerCase()}`)
     const files = `${fileCount} ${pluralise('file', fileCount)}`
     const endTime = `${new Date().getTime() - startTime}ms`
 
-    console.log('\n', chalk.cyan(`Finished ${linter.toLowerCase()}`), chalk.yellow(`[${files}, ${endTime}]`))
+    console.log(`\n${finishedLinter}`, chalk.yellow(`[${files}, ${endTime}]`))
     if (log.length) {
       console.log(log.join('\n'))
     }

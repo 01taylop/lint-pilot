@@ -65,7 +65,9 @@ describe('colourLog', () => {
       colourLog.configDebug('Debug message', 'config')
 
       expect(chalk.blue).toHaveBeenCalledOnceWith('Debug message')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\n', 'Debug message', '\n', 'config')
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nDebug message')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, 'config')
     })
 
   })
@@ -78,7 +80,7 @@ describe('colourLog', () => {
       colourLog.error('An error occurred')
 
       expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\n', 'An error occurred')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred')
     })
 
     it('logs the text in red but does not log the error if global.debug is false', () => {
@@ -88,7 +90,7 @@ describe('colourLog', () => {
 
       expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'An error occurred')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred')
     })
 
     it('logs the text in red and logs the error if global.debug is true', () => {
@@ -98,7 +100,7 @@ describe('colourLog', () => {
 
       expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'An error occurred')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred')
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, error)
     })
 
@@ -134,7 +136,7 @@ describe('colourLog', () => {
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledWith('[1 file, 1000ms]')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'Finished eslint', '[1 file, 1000ms]')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nFinished eslint', '[1 file, 1000ms]')
     }
 
     it('logs the finished lint message along with the file count and duration (single file)', () => {
@@ -142,7 +144,7 @@ describe('colourLog', () => {
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledOnceWith('[1 file, 1000ms]')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\n', 'Finished eslint', '[1 file, 1000ms]')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nFinished eslint', '[1 file, 1000ms]')
     })
 
     it('logs the finished lint message along with the file count and duration (multiple files)', () => {
@@ -153,7 +155,7 @@ describe('colourLog', () => {
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledOnceWith('[7 files, 1000ms]')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\n', 'Finished eslint', '[7 files, 1000ms]')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nFinished eslint', '[7 files, 1000ms]')
     })
 
     it('logs the error count in red (single error)', () => {
