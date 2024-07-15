@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
+import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
 import { terser } from 'rollup-plugin-terser'
 
@@ -14,6 +15,10 @@ export default {
     format: 'es',
   },
   plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      preventAssignment: true,
+    }),
     terser(),
     typescript(),
   ],

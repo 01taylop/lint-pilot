@@ -1,9 +1,11 @@
 import notifier from 'node-notifier'
 
-import { type LinterResult } from '@Types'
 import { pluralise } from '@Utils/transform'
 
+import type { LinterResult } from '@Types'
+
 const notifyResults = (results: Array<LinterResult>, title: string) => {
+  // Errors
   let totalErrorCount = results.reduce((total, { processedResult: { errorCount } }) => total + errorCount, 0)
   if (totalErrorCount > 0) {
     notifier.notify({
@@ -14,6 +16,7 @@ const notifyResults = (results: Array<LinterResult>, title: string) => {
     return 1
   }
 
+  // Warnings
   let totalWarningCount = results.reduce((total, { processedResult: { warningCount } }) => total + warningCount, 0)
   if (totalWarningCount > 0) {
     notifier.notify({
@@ -24,6 +27,7 @@ const notifyResults = (results: Array<LinterResult>, title: string) => {
     return 0
   }
 
+  // Success
   notifier.notify({
     message: 'All lint checks have passed. Your code is clean!',
     sound: 'Purr',

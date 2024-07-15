@@ -2,7 +2,7 @@ import stylelint from 'stylelint'
 
 import { Linter, type LinterResult, type ProcessedResult } from '@Types'
 
-const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
+const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
   try {
     const { results, ruleMetadata } = await stylelint.lint({
       allowEmptyInput: true,
@@ -11,7 +11,7 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
           'declaration-block-no-duplicate-properties': true,
         },
       },
-      files: filePaths,
+      files,
     })
 
     const processedResult: ProcessedResult = {
