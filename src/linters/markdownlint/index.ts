@@ -1,7 +1,7 @@
 import markdownlint, { type LintResults } from 'markdownlint'
 
-import colourLog from '@Utils/colourLog'
 import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import colourLog from '@Utils/colourLog'
 
 import loadConfig from './loadConfig'
 

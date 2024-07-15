@@ -57,12 +57,12 @@ describe('colourLog', () => {
   describe('error', () => {
 
     it('logs the text in red', () => {
-      colourLog.error('An error occurred.')
+      colourLog.error('An error occurred')
 
       expect(chalk.red).toHaveBeenCalledTimes(1)
-      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred')
     })
 
     it('logs the text in red but does not log the error if global.debug is false', () => {
@@ -70,12 +70,12 @@ describe('colourLog', () => {
       global.debug = false
 
       const error = new Error('Oops')
-      colourLog.error('An error occurred.', error)
+      colourLog.error('An error occurred', error)
 
       expect(chalk.red).toHaveBeenCalledTimes(1)
-      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred')
       expect(mockedConsoleError).toHaveBeenCalledTimes(0)
     })
 
@@ -84,12 +84,12 @@ describe('colourLog', () => {
       global.debug = true
 
       const error = new Error('Oops')
-      colourLog.error('An error occurred.', error)
+      colourLog.error('An error occurred', error)
 
       expect(chalk.red).toHaveBeenCalledTimes(1)
-      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred')
       expect(mockedConsoleError).toHaveBeenCalledTimes(1)
       expect(mockedConsoleError).toHaveBeenCalledWith(error)
     })
