@@ -2,7 +2,7 @@ import { ESLint } from 'eslint'
 
 import { Linter, type LinterResult, type ProcessedResult } from '@Types'
 
-const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
+const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
   try {
     const eslint = new ESLint({
       // @ts-expect-error
@@ -17,7 +17,7 @@ const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
       },
     })
 
-    const results = await eslint.lintFiles(filePaths)
+    const results = await eslint.lintFiles(files)
 
     const processedResult: ProcessedResult = {
       deprecatedRules: [],
