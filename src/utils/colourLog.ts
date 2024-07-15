@@ -13,7 +13,7 @@ const colourLog = {
     console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
   },
 
-  configDebug: (message: string, config: string) => {
+  configDebug: (message: string, config: string | Array<string>) => {
     if (global.debug) {
       console.log('\n', chalk.blue(message), '\n', config)
     }

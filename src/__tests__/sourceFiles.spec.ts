@@ -9,9 +9,8 @@ jest.mock('glob')
 
 describe('sourceFiles', () => {
 
+  jest.spyOn(colourLog, 'configDebug').mockImplementation(() => {})
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
-  jest.spyOn(colourLog, 'info').mockImplementation(() => {})
-  jest.spyOn(console, 'log').mockImplementation(() => {})
   jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
   const commonArgs = {
@@ -20,57 +19,43 @@ describe('sourceFiles', () => {
     linter: Linter.ESLint,
   }
 
-  it('returns files matching the file pattern', async () => {
-    jest.mocked(glob).mockResolvedValue(['file1.ts', 'file2.ts'])
-
-    const files = await sourceFiles(commonArgs)
-
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
-    expect(files).toEqual(['file1.ts', 'file2.ts'])
-    expect(console.log).not.toHaveBeenCalled()
-  })
-
-  it('logs the files sourced if global.debug is true (single file)', async () => {
-    global.debug = true
-
-    jest.mocked(glob).mockResolvedValue(['file1.ts'])
-
-    const files = await sourceFiles(commonArgs)
-
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
-    expect(files).toEqual(['file1.ts'])
-    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 1 file matching "*.ts" for ESLint:')
-    expect(console.log).toHaveBeenCalledWith(['file1.ts'])
-  })
-
-  it('logs the files sourced if global.debug is true (multiple files)', async () => {
-    global.debug = true
-
-    jest.mocked(glob).mockResolvedValue(['file1.ts', 'file2.ts'])
-
-    const files = await sourceFiles(commonArgs)
-
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
-    expect(files).toEqual(['file1.ts', 'file2.ts'])
-    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 2 files matching "*.ts" for ESLint:')
-    expect(console.log).toHaveBeenCalledWith(['file1.ts', 'file2.ts'])
-  })
-
-  it('logs the files sourced if global.debug is true (no sourced files)', async () => {
-    global.debug = true
-
+  it('returns an empty array when no files match the file pattern', async () => {
     jest.mocked(glob).mockResolvedValue([])
 
     const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual([])
-    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 0 files matching "*.ts" for ESLint:')
-    expect(console.log).toHaveBeenCalledWith([])
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 0 files matching "*.ts" for ESLint:', [])
+  })
+
+  it('returns files matching the file pattern (single file)', async () => {
+    const mockedFiles = ['file1.ts']
+
+    jest.mocked(glob).mockResolvedValue(mockedFiles)
+
+    const files = await sourceFiles(commonArgs)
+
+    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(files).toEqual(mockedFiles)
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 1 file matching "*.ts" for ESLint:', mockedFiles)
+  })
+
+  it('returns files matching the file pattern (multiple files)', async () => {
+    const mockedFiles = ['file1.ts', 'file2.ts']
+
+    jest.mocked(glob).mockResolvedValue(mockedFiles)
+
+    const files = await sourceFiles(commonArgs)
+
+    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(files).toEqual(mockedFiles)
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 2 files matching "*.ts" for ESLint:', mockedFiles)
   })
 
   it('catches any errors and exists the process', async () => {
     const error = new Error('Test error')
+
     jest.mocked(glob).mockRejectedValue(error)
 
     await sourceFiles(commonArgs)

@@ -271,6 +271,7 @@ describe('colourLog', () => {
       expect(chalk.dim).toHaveBeenCalledWith(' [bar, baz, foo]')
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, '  2 errors (1 fixable)\n  3 warnings (2 fixable)\n  3 deprecations [bar, baz, foo]')
     })
+
   })
 
   describe('resultBlock', () => {

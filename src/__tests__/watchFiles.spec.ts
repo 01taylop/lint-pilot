@@ -12,12 +12,17 @@ jest.mock('chokidar')
 describe('watchFiles', () => {
   let mockWatcher: chokidar.FSWatcher
 
-  const mockReadFile = (content: string) => {
+  const saveFile = (path: string, content: string, event: 'add' | 'change' | 'unlink') => {
     jest.mocked(readFile).mockImplementationOnce((_path: any, _encoding: any, callback?: (error: any, data: any) => void): void => {
       if (callback) {
         callback(null, content)
       }
     })
+
+    const changeEvent = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === event)
+    if (changeEvent && changeEvent[1]) {
+      changeEvent[1](path)
+    }
   }
 
   beforeEach(() => {
@@ -52,7 +57,6 @@ describe('watchFiles', () => {
     expect.assertions(1)
 
     const mockPath = 'mock/existing-file.ts'
-    mockReadFile('open-and-save')
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
@@ -64,15 +68,13 @@ describe('watchFiles', () => {
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
 
-    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'change')[1]
-    changeHandler(mockPath)
+    saveFile(mockPath, 'hello-world', 'change')
   })
 
   it('emits a "FILE_CHANGED" event if the file content changes', done => {
     expect.assertions(2)
 
-    const mockPath = 'mock/old-file.ts'
-    mockReadFile('old-content')
+    const mockPath = 'mock/update-file.ts'
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
@@ -83,11 +85,8 @@ describe('watchFiles', () => {
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
 
-    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'change')[1]
-    changeHandler(mockPath)
-
-    mockReadFile('new-content')
-    changeHandler(mockPath)
+    saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
+    saveFile(mockPath, 'new-content', 'change') // Second save - content hash is different
 
     setTimeout(() => {
       done()
@@ -97,8 +96,7 @@ describe('watchFiles', () => {
   it('does not emit a "FILE_CHANGED" event if the file content did not change', done => {
     expect.assertions(1)
 
-    const mockPath = 'mock/old-file.ts'
-    mockReadFile('old-content')
+    const mockPath = 'mock/unchanged-file.ts'
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
@@ -109,10 +107,9 @@ describe('watchFiles', () => {
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
 
-    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'change')[1]
-    changeHandler(mockPath)
-    changeHandler(mockPath)
-    changeHandler(mockPath)
+    saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
+    saveFile(mockPath, 'old-content', 'change') // Second save - content hash is the same
+    saveFile(mockPath, 'old-content', 'change') // Third save - content hash is still the same
 
     setTimeout(() => {
       done()
@@ -123,7 +120,6 @@ describe('watchFiles', () => {
     expect.assertions(1)
 
     const mockPath = 'mock/new-file.ts'
-    mockReadFile('new-content')
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
@@ -135,15 +131,13 @@ describe('watchFiles', () => {
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
 
-    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'add')[1]
-    changeHandler(mockPath)
+    saveFile(mockPath, 'new-content', 'add')
   })
 
   it('emits a "FILE_CHANGED" event if a file is removed', done => {
     expect.assertions(1)
 
     const mockPath = 'mock/legacy-file.ts'
-    mockReadFile('legacy-content')
 
     fileChangeEvent.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
@@ -155,8 +149,7 @@ describe('watchFiles', () => {
 
     watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
 
-    const changeHandler = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === 'unlink')[1]
-    changeHandler(mockPath)
+    saveFile(mockPath, 'legacy-content', 'unlink')
   })
 
 })

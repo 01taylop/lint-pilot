@@ -13,10 +13,7 @@ interface SourceFiles {
 const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
   try {
     const files = await glob(filePattern, { ignore })
-    if (global.debug) {
-      colourLog.info(`\nSourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`)
-      console.log(files)
-    }
+    colourLog.configDebug(`Sourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`, files)
     return files
   } catch (error) {
     colourLog.error(`An error occurred while trying to source files matching ${filePattern}`, error)
