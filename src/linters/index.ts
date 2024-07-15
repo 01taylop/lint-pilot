@@ -2,9 +2,15 @@ import eslint from './eslint'
 import stylelint from './stylelint'
 import markdownlint from './markdownlint'
 
-import { Linter } from '@Types'
+import { Linter, type LinterResult } from '@Types'
 
-const linters = {
+type Linters = {
+  [key in Linter]: {
+    lintFiles: (files: Array<string>) => Promise<LinterResult>
+  }
+}
+
+const linters: Linters = {
   [Linter.ESLint]: eslint,
   [Linter.Markdownlint]: markdownlint,
   [Linter.Stylelint]: stylelint,
