@@ -19,13 +19,12 @@ program
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information')
 
-const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
+const runLinter = async ({ filePattern, linter }: RunLinter) => {
   // TODO: Handle case where no files are sourced
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
   const files = await sourceFiles({
-    debug,
     filePattern,
     ignore: '**/+(coverage|node_modules)/**',
     linter,
@@ -38,20 +37,17 @@ const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
   return result
 }
 
-const runLintPilot = ({ debug, title, watch }: RunLintPilot) => {
+const runLintPilot = ({ title, watch }: RunLintPilot) => {
   Promise.all([
     runLinter({
-      debug,
       filePattern: '**/*.{cjs,js,jsx,mjs,ts,tsx}',
       linter: Linter.ESLint,
     }),
     runLinter({
-      debug,
       filePattern: '**/*.{md,mdx}',
       linter: Linter.Markdownlint,
     }),
     runLinter({
-      debug,
       filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
       linter: Linter.Stylelint,
     }),
@@ -82,7 +78,9 @@ program
     colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
 
-    runLintPilot({ debug, title, watch })
+    global.debug = debug
+
+    runLintPilot({ title, watch })
 
     if (watch) {
       watchFiles({
@@ -98,7 +96,7 @@ program
         clearTerminal()
         colourLog.info(message)
         console.log()
-        runLintPilot({ debug, title, watch })
+        runLintPilot({ title, watch })
       })
     }
   })

@@ -54,6 +54,48 @@ describe('colourLog', () => {
 
   })
 
+  describe('error', () => {
+
+    it('logs the text in red', () => {
+      colourLog.error('An error occurred.')
+
+      expect(chalk.red).toHaveBeenCalledTimes(1)
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+    })
+
+    it('logs the text in red but does not log the error if global.debug is false', () => {
+      const mockedConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+      global.debug = false
+
+      const error = new Error('Oops')
+      colourLog.error('An error occurred.', error)
+
+      expect(chalk.red).toHaveBeenCalledTimes(1)
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleError).toHaveBeenCalledTimes(0)
+    })
+
+    it('logs the text in red and logs the error if global.debug is true', () => {
+      const mockedConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+      global.debug = true
+
+      const error = new Error('Oops')
+      colourLog.error('An error occurred.', error)
+
+      expect(chalk.red).toHaveBeenCalledTimes(1)
+      expect(chalk.red).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
+      expect(mockedConsoleLog).toHaveBeenCalledWith('An error occurred.')
+      expect(mockedConsoleError).toHaveBeenCalledTimes(1)
+      expect(mockedConsoleError).toHaveBeenCalledWith(error)
+    })
+
+  })
+
   describe('info', () => {
 
     it('logs the text in blue', () => {

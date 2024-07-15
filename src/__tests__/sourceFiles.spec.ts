@@ -13,7 +13,6 @@ describe('sourceFiles', () => {
   jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
   const commonArgs = {
-    debug: false,
     filePattern: '*.ts',
     ignore: 'node_modules',
     linter: Linter.ESLint,
@@ -29,13 +28,12 @@ describe('sourceFiles', () => {
     expect(console.log).not.toHaveBeenCalled()
   })
 
-  it('logs the files sourced if debug is true (single file)', async () => {
+  it('logs the files sourced if global.debug is true (single file)', async () => {
+    global.debug = true
+
     jest.mocked(glob).mockResolvedValue(['file1.ts'])
 
-    const files = await sourceFiles({
-      ...commonArgs,
-      debug: true,
-    })
+    const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual(['file1.ts'])
@@ -43,13 +41,12 @@ describe('sourceFiles', () => {
     expect(console.log).toHaveBeenCalledWith(['file1.ts'])
   })
 
-  it('logs the files sourced if debug is true (multiple files)', async () => {
+  it('logs the files sourced if global.debug is true (multiple files)', async () => {
+    global.debug = true
+
     jest.mocked(glob).mockResolvedValue(['file1.ts', 'file2.ts'])
 
-    const files = await sourceFiles({
-      ...commonArgs,
-      debug: true,
-    })
+    const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual(['file1.ts', 'file2.ts'])
@@ -57,13 +54,12 @@ describe('sourceFiles', () => {
     expect(console.log).toHaveBeenCalledWith(['file1.ts', 'file2.ts'])
   })
 
-  it('logs the files sourced if debug is true (no sourced files)', async () => {
+  it('logs the files sourced if global.debug is true (no sourced files)', async () => {
+    global.debug = true
+
     jest.mocked(glob).mockResolvedValue([])
 
-    const files = await sourceFiles({
-      ...commonArgs,
-      debug: true,
-    })
+    const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual([])

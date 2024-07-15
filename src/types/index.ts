@@ -35,13 +35,11 @@ interface LinterResult {
  */
 
 interface RunLinter {
-  debug: boolean
   filePattern: string
   linter: Linter
 }
 
 interface RunLintPilot {
-  debug: boolean
   title: string
   watch: boolean
 }

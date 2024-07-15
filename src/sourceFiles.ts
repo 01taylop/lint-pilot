@@ -4,16 +4,15 @@ import { Linter } from '@Types'
 import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {
-  debug: boolean
   filePattern: string
   ignore: string
   linter: Linter
 }
 
-const sourceFiles = async ({ debug, filePattern, ignore, linter }: SourceFiles) => {
+const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
   try {
     const files = await glob(filePattern, { ignore })
-    if (debug) {
+    if (global.debug) {
       console.log(`\nSourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`)
       console.log(files)
     }
