@@ -8,10 +8,7 @@ import loadConfig from './loadConfig'
 const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((resolve, reject) => {
   const [configName, config] = loadConfig()
 
-  if (global.debug) {
-    colourLog.info(`\nUsing ${configName} markdownlint config:`)
-    console.log(config)
-  }
+  colourLog.configDebug(`Using ${configName} markdownlint config:`, config)
 
   markdownlint({
     config,

@@ -47,6 +47,7 @@ describe('loadConfig', () => {
 
   it('catches and logs any errors', () => {
     const error = new Error('Test error')
+
     jest.mocked(fs.existsSync).mockImplementationOnce(() => {
       throw error
     })

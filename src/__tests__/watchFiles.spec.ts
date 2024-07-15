@@ -71,7 +71,7 @@ describe('watchFiles', () => {
     saveFile(mockPath, 'hello-world', 'change')
   })
 
-  it('emits a "FILE_CHANGED" event if the file content changes', done => {
+  it('emits a "FILE_CHANGED" event when saving a file if the file content changes', done => {
     expect.assertions(2)
 
     const mockPath = 'mock/update-file.ts'
@@ -93,7 +93,7 @@ describe('watchFiles', () => {
     }, 100)
   })
 
-  it('does not emit a "FILE_CHANGED" event if the file content did not change', done => {
+  it('does not emit a "FILE_CHANGED" event when saving a file if the file content did not change', done => {
     expect.assertions(1)
 
     const mockPath = 'mock/unchanged-file.ts'
@@ -116,7 +116,7 @@ describe('watchFiles', () => {
     }, 100)
   })
 
-  it('emits a "FILE_CHANGED" event if a file is added', done => {
+  it('emits a "FILE_CHANGED" event when a new file is added', done => {
     expect.assertions(1)
 
     const mockPath = 'mock/new-file.ts'
@@ -134,7 +134,7 @@ describe('watchFiles', () => {
     saveFile(mockPath, 'new-content', 'add')
   })
 
-  it('emits a "FILE_CHANGED" event if a file is removed', done => {
+  it('emits a "FILE_CHANGED" event when a file is removed', done => {
     expect.assertions(1)
 
     const mockPath = 'mock/legacy-file.ts'
