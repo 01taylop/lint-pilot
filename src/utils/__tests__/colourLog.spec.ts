@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { Linter } from '@Types'
+import { Linter, type ProcessedResult } from '@Types'
 
 import colourLog from '../colourLog'
 
@@ -34,22 +34,22 @@ describe('colourLog', () => {
       colourLog.config('setting', ['foo'])
 
       expect(chalk.magenta).toHaveBeenCalledTimes(1)
-      expect(chalk.magenta).toHaveBeenCalledWith('setting:')
+      expect(chalk.magenta).toHaveBeenCalledWith('setting: ')
       expect(chalk.dim).toHaveBeenCalledTimes(1)
       expect(chalk.dim).toHaveBeenCalledWith('foo')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('setting:', 'foo')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('setting: ', 'foo')
     })
 
     it('logs the key in magenta and the config array in dim', () => {
       colourLog.config('setting', ['foo', 'bar', 'baz'])
 
       expect(chalk.magenta).toHaveBeenCalledTimes(1)
-      expect(chalk.magenta).toHaveBeenCalledWith('setting:')
+      expect(chalk.magenta).toHaveBeenCalledWith('setting: ')
       expect(chalk.dim).toHaveBeenCalledTimes(1)
       expect(chalk.dim).toHaveBeenCalledWith('[foo, bar, baz]')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('setting:', '[foo, bar, baz]')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('setting: ', '[foo, bar, baz]')
     })
 
   })
@@ -69,7 +69,7 @@ describe('colourLog', () => {
 
   describe('result', () => {
 
-    const commonResult = {
+    const commonResult: ProcessedResult = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: 1,
@@ -79,7 +79,8 @@ describe('colourLog', () => {
       warningCount: 0,
     }
 
-    const now = new Date().getTime()
+    const startTime = new Date().getTime()
+    jest.advanceTimersByTime(1000)
 
     const expectResult = () => {
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
@@ -90,8 +91,7 @@ describe('colourLog', () => {
     }
 
     it('logs the finished lint message along with the file count and duration (single file)', () => {
-      jest.advanceTimersByTime(1000)
-      colourLog.result(commonResult, now)
+      colourLog.result(commonResult, startTime)
 
       expect(chalk.cyan).toHaveBeenCalledTimes(1)
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
@@ -106,7 +106,7 @@ describe('colourLog', () => {
       colourLog.result({
         ...commonResult,
         fileCount: 7,
-      }, now)
+      }, startTime)
 
       expect(chalk.cyan).toHaveBeenCalledTimes(1)
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
@@ -121,7 +121,7 @@ describe('colourLog', () => {
       colourLog.result({
         ...commonResult,
         errorCount: 1,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.red).toHaveBeenCalledWith('  1 error')
@@ -132,7 +132,7 @@ describe('colourLog', () => {
       colourLog.result({
         ...commonResult,
         errorCount: 2,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.red).toHaveBeenCalledWith('  2 errors')
@@ -144,7 +144,7 @@ describe('colourLog', () => {
         ...commonResult,
         errorCount: 3,
         fixableErrorCount: 2,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.red).toHaveBeenCalledWith('  3 errors')
@@ -156,7 +156,7 @@ describe('colourLog', () => {
       colourLog.result({
         ...commonResult,
         warningCount: 1,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.yellow).toHaveBeenCalledWith('  1 warning')
@@ -167,7 +167,7 @@ describe('colourLog', () => {
       colourLog.result({
         ...commonResult,
         warningCount: 5,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.yellow).toHaveBeenCalledWith('  5 warnings')
@@ -179,7 +179,7 @@ describe('colourLog', () => {
         ...commonResult,
         warningCount: 6,
         fixableWarningCount: 3,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.yellow).toHaveBeenCalledWith('  6 warnings')
@@ -187,11 +187,23 @@ describe('colourLog', () => {
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, '  6 warnings (3 fixable)')
     })
 
-    it('logs the deprecated rules which are being used', () => {
+    it('logs the deprecated rule count in magenta and the list in dim (single deprecation)', () => {
+      colourLog.result({
+        ...commonResult,
+        deprecatedRules: ['foo'],
+      }, startTime)
+
+      expectResult()
+      expect(chalk.magenta).toHaveBeenCalledWith('  1 deprecation')
+      expect(chalk.dim).toHaveBeenCalledWith(' [foo]')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, '  1 deprecation [foo]')
+    })
+
+    it('logs the deprecated rule count in magenta and the list alphabetised in dim (multiple deprecations)', () => {
       colourLog.result({
         ...commonResult,
         deprecatedRules: ['foo', 'bar', 'baz'],
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.magenta).toHaveBeenCalledWith('  3 deprecations')
@@ -207,7 +219,7 @@ describe('colourLog', () => {
         fixableErrorCount: 1,
         warningCount: 3,
         fixableWarningCount: 2,
-      }, now)
+      }, startTime)
 
       expectResult()
       expect(chalk.red).toHaveBeenCalledWith('  2 errors')
@@ -222,7 +234,7 @@ describe('colourLog', () => {
 
   describe('resultBlock', () => {
 
-    const commonResult = {
+    const commonResult: ProcessedResult = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: 1,
@@ -241,7 +253,7 @@ describe('colourLog', () => {
       expect(chalk.bgRed.black).toHaveBeenCalledTimes(1)
       expect(chalk.bgRed.black).toHaveBeenCalledWith(' 1 ESLint Error ')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('💔  1 ESLint Error \n')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('🚨  1 ESLint Error \n')
     })
 
     it('logs the warning count in a yellow background', () => {
@@ -268,7 +280,7 @@ describe('colourLog', () => {
       expect(chalk.bgYellow.black).toHaveBeenCalledTimes(1)
       expect(chalk.bgYellow.black).toHaveBeenCalledWith(' 3 ESLint Warnings ')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('💔  2 ESLint Errors \n')
+      expect(mockedConsoleLog).toHaveBeenCalledWith('🚨  2 ESLint Errors \n')
       expect(mockedConsoleLog).toHaveBeenCalledWith('🚧  3 ESLint Warnings \n')
     })
 

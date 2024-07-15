@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import notifier from 'node-notifier'
 
-import { Linter } from '@Types'
+import { Linter, type LinterResult } from '@Types'
 
 import { notifyResults } from '../notifier'
 
@@ -13,7 +13,7 @@ describe('notifier', () => {
 
   describe('notifyResults', () => {
 
-    const generateResult = (errorCount = 0, warningCount = 0) => ({
+    const generateResult = (errorCount = 0, warningCount = 0): LinterResult => ({
       processedResult: {
         deprecatedRules: [],
         errorCount,

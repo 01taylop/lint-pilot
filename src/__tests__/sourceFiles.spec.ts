@@ -19,7 +19,7 @@ describe('sourceFiles', () => {
     linter: Linter.ESLint,
   }
 
-  it('returns files matching the pattern', async () => {
+  it('returns files matching the file pattern', async () => {
     jest.mocked(glob).mockResolvedValue(['file1.ts', 'file2.ts'])
 
     const files = await sourceFiles(commonArgs)

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 
-import { Events, Linter, type LinterResult } from '@Types'
+import { Events, Linter, type LinterResult, type RunLinter, type RunLintPilot } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
@@ -16,18 +16,8 @@ program
   .name('lint-pilot')
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
   .version('0.0.1')
-
-interface RunLinter {
-  debug: boolean
-  filePattern: string
-  linter: Linter
-}
-
-interface RunLintPilot {
-  debug: boolean
-  title: string
-  watch: boolean
-}
+  .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
+  .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information')
 
 const runLinter = async ({ debug, filePattern, linter }: RunLinter) => {
   // TODO: Handle case where no files are sourced

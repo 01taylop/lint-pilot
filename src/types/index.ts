@@ -1,3 +1,7 @@
+/*
+ * ENUMS
+ */
+
 enum Events {
   FILE_CHANGED = 'FILE_CHANGED',
 }
@@ -7,6 +11,10 @@ enum Linter {
   Markdownlint = 'MarkdownLint',
   Stylelint = 'Stylelint',
 }
+
+/*
+ * LINT RESULTS
+ */
 
 interface ProcessedResult {
   deprecatedRules: Array<string>
@@ -22,9 +30,31 @@ interface LinterResult {
   processedResult: ProcessedResult
 }
 
+/*
+ * LINT PILOT
+ */
+
+interface RunLinter {
+  debug: boolean
+  filePattern: string
+  linter: Linter
+}
+
+interface RunLintPilot {
+  debug: boolean
+  title: string
+  watch: boolean
+}
+
+/*
+ * EXPORT
+ */
+
 export type {
   LinterResult,
   ProcessedResult,
+  RunLinter,
+  RunLintPilot,
 }
 
 export {
