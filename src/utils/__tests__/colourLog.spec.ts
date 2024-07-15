@@ -134,7 +134,7 @@ describe('colourLog', () => {
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledWith('[1 file, 1000ms]')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'Finished eslint', `[1 file, 1000ms]`)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'Finished eslint', '[1 file, 1000ms]')
     }
 
     it('logs the finished lint message along with the file count and duration (single file)', () => {
@@ -142,8 +142,7 @@ describe('colourLog', () => {
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledOnceWith('[1 file, 1000ms]')
-      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'Finished eslint', '[1 file, 1000ms]')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith(1, '\n', 'Finished eslint', '[1 file, 1000ms]')
     })
 
     it('logs the finished lint message along with the file count and duration (multiple files)', () => {
@@ -154,8 +153,7 @@ describe('colourLog', () => {
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledOnceWith('[7 files, 1000ms]')
-      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n', 'Finished eslint', '[7 files, 1000ms]')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith(1, '\n', 'Finished eslint', '[7 files, 1000ms]')
     })
 
     it('logs the error count in red (single error)', () => {
@@ -316,8 +314,8 @@ describe('colourLog', () => {
       expect(chalk.bgRed.black).toHaveBeenCalledOnceWith(' 2 ESLint Errors ')
       expect(chalk.bgYellow.black).toHaveBeenCalledOnceWith(' 3 ESLint Warnings ')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenCalledWith('\n🚨  2 ESLint Errors ')
-      expect(mockedConsoleLog).toHaveBeenCalledWith('\n🚧  3 ESLint Warnings ')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\n🚨  2 ESLint Errors ')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, '\n🚧  3 ESLint Warnings ')
     })
 
     it('logs a success message if there are no errors or warnings', () => {
