@@ -1,3 +1,0 @@
-beforeEach(() => {
-  global.debug = false
-})

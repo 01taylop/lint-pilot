@@ -52,8 +52,6 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       linter: Linter.Stylelint,
     }),
   ]).then((results) => {
-    console.log()
-
     results.forEach(({ processedResult }) => {
       colourLog.resultBlock(processedResult)
     })
@@ -63,6 +61,7 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
     if (watch) {
       colourLog.info('Watching for changes...')
     } else {
+      console.log()
       process.exit(exitCode)
     }
   })

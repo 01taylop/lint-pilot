@@ -6,17 +6,23 @@ import type { ProcessedResult } from '@Types'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {
-    const configString = configArray.length >= 2
+    const configString = configArray.length > 1
       ? `[${configArray.join(', ')}]`
       : configArray[0]
 
     console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
   },
 
+  configDebug: (message: string, config: string) => {
+    if (global.debug) {
+      console.log('\n', chalk.blue(message), '\n', config)
+    }
+  },
+
   error: (text: string, error?: Error | unknown) => {
-    console.log(chalk.red(text))
+    console.log('\n', chalk.red(text))
     if (error && global.debug === true) {
-      console.error(error)
+      console.log(error)
     }
   },
 
@@ -57,8 +63,7 @@ const colourLog = {
     const files = `${fileCount} ${pluralise('file', fileCount)}`
     const endTime = `${new Date().getTime() - startTime}ms`
 
-    console.log()
-    console.log(chalk.cyan(`Finished ${linter.toLowerCase()}`), chalk.yellow(`[${files}, ${endTime}]`))
+    console.log('\n', chalk.cyan(`Finished ${linter.toLowerCase()}`), chalk.yellow(`[${files}, ${endTime}]`))
     if (log.length) {
       console.log(log.join('\n'))
     }
@@ -68,19 +73,19 @@ const colourLog = {
     // Errors
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
-      console.log(`🚨 ${message}\n`)
+      console.log(`\n🚨 ${message}`)
     }
 
     // Warnings
     if (warningCount > 0) {
       const message = chalk.bgYellow.black(` ${warningCount} ${linter} ${pluralise('Warning', warningCount)} `)
-      console.log(`🚧 ${message}\n`)
+      console.log(`\n🚧 ${message}`)
     }
 
     // Success
     if (errorCount === 0 && warningCount === 0) {
       const message = chalk.bgGreen.black(` ${linter} Success! `)
-      console.log(`✅ ${message}\n`)
+      console.log(`\n✅ ${message}`)
     }
   },
 
