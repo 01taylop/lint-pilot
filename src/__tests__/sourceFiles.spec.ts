@@ -1,5 +1,6 @@
 import { glob } from 'glob'
 
+import colourLog from '@Utils/colourLog'
 import { Linter } from '@Types'
 
 import sourceFiles from '../sourceFiles'
@@ -8,8 +9,8 @@ jest.mock('glob')
 
 describe('sourceFiles', () => {
 
+  jest.spyOn(colourLog, 'error').mockImplementation(() => {})
   jest.spyOn(console, 'log').mockImplementation(() => {})
-  jest.spyOn(console, 'error').mockImplementation(() => {})
   jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
   const commonArgs = {
@@ -72,7 +73,7 @@ describe('sourceFiles', () => {
 
     await sourceFiles(commonArgs)
 
-    expect(console.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', new Error('Test error'))
+    expect(colourLog.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', new Error('Test error'))
     expect(process.exit).toHaveBeenCalledWith(1)
   })
 

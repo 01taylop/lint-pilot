@@ -1,5 +1,6 @@
 import { glob } from 'glob'
 
+import colourLog from '@Utils/colourLog'
 import { Linter } from '@Types'
 import { pluralise } from '@Utils/transform'
 
@@ -18,7 +19,7 @@ const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
     }
     return files
   } catch (error) {
-    console.error(`An error occurred while trying to source files matching ${filePattern}`, error)
+    colourLog.error(`An error occurred while trying to source files matching ${filePattern}`, error)
     process.exit(1)
   }
 }

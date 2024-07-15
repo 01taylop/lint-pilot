@@ -13,7 +13,7 @@ const colourLog = {
     console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
   },
 
-  error: (text: string, error?: Error) => {
+  error: (text: string, error?: Error | unknown) => {
     console.log(chalk.red(text))
     if (error && global.debug === true) {
       console.error(error)
