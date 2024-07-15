@@ -10,6 +10,7 @@ jest.mock('glob')
 describe('sourceFiles', () => {
 
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
+  jest.spyOn(colourLog, 'info').mockImplementation(() => {})
   jest.spyOn(console, 'log').mockImplementation(() => {})
   jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
@@ -38,7 +39,7 @@ describe('sourceFiles', () => {
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual(['file1.ts'])
-    expect(console.log).toHaveBeenCalledWith('\nSourced 1 file matching "*.ts" for ESLint:')
+    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 1 file matching "*.ts" for ESLint:')
     expect(console.log).toHaveBeenCalledWith(['file1.ts'])
   })
 
@@ -51,7 +52,7 @@ describe('sourceFiles', () => {
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual(['file1.ts', 'file2.ts'])
-    expect(console.log).toHaveBeenCalledWith('\nSourced 2 files matching "*.ts" for ESLint:')
+    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 2 files matching "*.ts" for ESLint:')
     expect(console.log).toHaveBeenCalledWith(['file1.ts', 'file2.ts'])
   })
 
@@ -64,16 +65,17 @@ describe('sourceFiles', () => {
 
     expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
     expect(files).toEqual([])
-    expect(console.log).toHaveBeenCalledWith('\nSourced 0 files matching "*.ts" for ESLint:')
+    expect(colourLog.info).toHaveBeenCalledWith('\nSourced 0 files matching "*.ts" for ESLint:')
     expect(console.log).toHaveBeenCalledWith([])
   })
 
   it('catches any errors and exists the process', async () => {
-    jest.mocked(glob).mockRejectedValue(new Error('Test error'))
+    const error = new Error('Test error')
+    jest.mocked(glob).mockRejectedValue(error)
 
     await sourceFiles(commonArgs)
 
-    expect(colourLog.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', new Error('Test error'))
+    expect(colourLog.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', error)
     expect(process.exit).toHaveBeenCalledWith(1)
   })
 

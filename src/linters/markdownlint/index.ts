@@ -9,7 +9,8 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
   const [configName, config] = loadConfig()
 
   if (global.debug) {
-    console.log(`Using ${configName} markdownlint config:`, config)
+    colourLog.info(`\nUsing ${configName} markdownlint config:`)
+    console.log(config)
   }
 
   markdownlint({
@@ -23,7 +24,7 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
 
     if (!results) {
       colourLog.error('An error occurred while running markdownlint: no results')
-      return reject(error)
+      return reject(new Error('No results'))
     }
 
     const processedResult: ProcessedResult = {

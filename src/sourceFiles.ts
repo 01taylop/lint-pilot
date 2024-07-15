@@ -14,7 +14,7 @@ const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
   try {
     const files = await glob(filePattern, { ignore })
     if (global.debug) {
-      console.log(`\nSourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`)
+      colourLog.info(`\nSourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`)
       console.log(files)
     }
     return files

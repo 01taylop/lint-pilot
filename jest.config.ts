@@ -24,6 +24,9 @@ const config: JestConfigWithTsJest = {
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },
+  setupFilesAfterEnv: [
+    '<rootDir>/jest-setup.ts',
+  ],
   transform: {
     '^.+\\.(js|ts)$': 'babel-jest',
   },
