@@ -1,14 +1,14 @@
 import markdownlint, { type LintResults } from 'markdownlint'
 
-import { Linter, LogType } from '@Types'
+import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
-import { formatFileLog } from '@Utils/transform'
+import { formatResult } from '@Utils/transform'
 
-import type { LinterResult, ResultLogs, ResultSummary } from '@Types'
+import type { LintReport, ReportResults, ReportSummary } from '@Types'
 
 import loadConfig from './loadConfig'
 
-const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((resolve, reject) => {
+const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((resolve, reject) => {
   const [configName, config] = loadConfig()
 
   colourLog.configDebug(`Using ${configName} markdownlint config:`, config)
@@ -27,9 +27,9 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
       return reject(new Error('No results'))
     }
 
-    const logs: ResultLogs = {}
+    const reportResults: ReportResults = {}
 
-    const summary: ResultSummary = {
+    const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: Object.keys(results).length,
@@ -44,30 +44,30 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
         return
       }
 
-      logs[file] = []
+      reportResults[file] = []
 
-      summary.errorCount += errors.length
+      reportSummary.errorCount += errors.length
 
       errors
         .sort((a, b) => a.lineNumber - b.lineNumber || a.ruleNames[1].localeCompare(b.ruleNames[1]))
         .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
-          logs[file].push(formatFileLog({
+          reportResults[file].push(formatResult({
             column: errorRange?.length ? errorRange[0] : undefined,
             lineNumber,
             message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
             rule: ruleNames[1],
-            type: LogType.ERROR,
+            severity: RuleSeverity.ERROR,
           }))
 
           if (fixInfo) {
-            summary.fixableErrorCount += 1
+            reportSummary.fixableErrorCount += 1
           }
         })
     })
 
     resolve({
-      logs,
-      summary,
+      results: reportResults,
+      summary: reportSummary,
     })
   })
 })

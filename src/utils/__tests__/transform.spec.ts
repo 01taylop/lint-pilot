@@ -1,87 +1,87 @@
 import chalk from 'chalk'
 
-import { LogType } from '@Types'
+import { RuleSeverity } from '@Types'
 
-import { formatFileLog, pluralise } from '../transform'
+import { formatResult, pluralise } from '../transform'
 
-describe('formatFileLog', () => {
+describe('formatResult', () => {
 
-  const commonLog = {
+  const commonResult = {
     column: 1,
     lineNumber: 1,
     message: 'This is an error message',
     rule: 'no-error',
-    type: LogType.ERROR,
+    severity: RuleSeverity.ERROR,
   }
 
-  it('formats the file log with a padded message and theme', () => {
-    const result = formatFileLog(commonLog)
+  it('formats the result with a message and theme', () => {
+    const formattedResult = formatResult(commonResult)
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      message: ' This is an error message ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      message: 'This is an error message',
       messageTheme: chalk.white,
     }))
   })
 
   it('truncates the message when it exceeds 72 characters', () => {
-    const result = formatFileLog({
-      ...commonLog,
+    const formattedResult = formatResult({
+      ...commonResult,
       message: 'This is a very long error message. So long that it exceeds 72 characters.',
     })
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      message: ' This is a very long error message. So long that it exceeds 72 charact... ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      message: 'This is a very long error message. So long that it exceeds 72 charact...',
       messageTheme: chalk.white,
     }))
   })
 
-  it('formats the file log with a padded position: line number and column number', () => {
-    const result = formatFileLog(commonLog)
+  it('formats the result with a position: line number and column number', () => {
+    const formattedResult = formatResult(commonResult)
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      position: ' 1:1 ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      position: '1:1',
       positionTheme: chalk.dim,
     }))
   })
 
-  it('formats the file log with a padded position: only line number', () => {
-    const result = formatFileLog({
-      ...commonLog,
+  it('formats the result with a position: only line number', () => {
+    const formattedResult = formatResult({
+      ...commonResult,
       column: undefined,
       lineNumber: 7,
     })
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      position: ' 7 ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      position: '7',
       positionTheme: chalk.dim,
     }))
   })
 
-  it('formats the file log with a padded rule', () => {
-    const result = formatFileLog(commonLog)
+  it('formats the result with a rule', () => {
+    const formattedResult = formatResult(commonResult)
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      rule: ' no-error',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      rule: 'no-error',
       ruleTheme: chalk.dim,
     }))
   })
 
-  it('formats the file log with padded type for an error', () => {
-    const result = formatFileLog(commonLog)
+  it('formats the result with a rule severity of error', () => {
+    const formattedResult = formatResult(commonResult)
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      type: 'X ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      severity: 'X',
     }))
   })
 
-  it('formats the file log with padded type for a warning', () => {
-    const result = formatFileLog({
-      ...commonLog,
-      type: LogType.WARNING,
+  it('formats the result with a rule severity of warning', () => {
+    const formattedResult = formatResult({
+      ...commonResult,
+      severity: RuleSeverity.WARNING,
     })
 
-    expect(result).toStrictEqual(expect.objectContaining({
-      type: '! ',
+    expect(formattedResult).toStrictEqual(expect.objectContaining({
+      severity: '!',
     }))
   })
 })

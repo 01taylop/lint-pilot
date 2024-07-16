@@ -67,7 +67,7 @@ describe('markdownlint', () => {
     expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint: no results')
   })
 
-  it('resolves with logs and a summary when markdownlint successfully lints (no errors)', async () => {
+  it('resolves with results and a summary when markdownlint successfully lints (no errors)', async () => {
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
       callback(null, {
         'README.md': []
@@ -75,7 +75,7 @@ describe('markdownlint', () => {
     })
 
     expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
-      logs: {},
+      results: {},
       summary: {
         deprecatedRules: [],
         errorCount: 0,
@@ -111,6 +111,7 @@ describe('markdownlint', () => {
       'README.md': [{
         ...commonError,
         lineNumber: 7,
+        errorRange: [],
         fixInfo: {
           lineNumber: 7,
         },
@@ -135,48 +136,48 @@ describe('markdownlint', () => {
       })
 
       expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
-        logs: {
+        results: {
           'CHANGELOG.md': [{
-            message: ' test-rule-description: test-error-detail ',
+            message: 'test-rule-description: test-error-detail',
             messageTheme: expect.any(Function),
-            position: ' 1:1 ',
+            position: '1:1',
             positionTheme: expect.any(Function),
-            rule: ' test-rule',
+            rule: 'test-rule',
             ruleTheme: expect.any(Function),
-            type: 'X ',
+            severity: 'X',
           }],
           'README.md': [{
-            message: ' test-rule-description: test-error-detail ',
+            message: 'test-rule-description: test-error-detail',
             messageTheme: expect.any(Function),
-            position: ' 7:1 ',
+            position: '7',
             positionTheme: expect.any(Function),
-            rule: ' test-rule',
+            rule: 'test-rule',
             ruleTheme: expect.any(Function),
-            type: 'X ',
+            severity: 'X',
           }, {
-            message: ' test-rule-description: test-error-detail ',
+            message: 'test-rule-description: test-error-detail',
             messageTheme: expect.any(Function),
-            position: ' 13:1 ',
+            position: '13:1',
             positionTheme: expect.any(Function),
-            rule: ' test-rule-a',
+            rule: 'test-rule-a',
             ruleTheme: expect.any(Function),
-            type: 'X ',
+            severity: 'X',
           }, {
-            message: ' test-rule-description: test-error-detail ',
+            message: 'test-rule-description: test-error-detail',
             messageTheme: expect.any(Function),
-            position: ' 13:1 ',
+            position: '13:1',
             positionTheme: expect.any(Function),
-            rule: ' test-rule-b',
+            rule: 'test-rule-b',
             ruleTheme: expect.any(Function),
-            type: 'X ',
+            severity: 'X',
           }, {
-            message: ' test-rule-description ',
+            message: 'test-rule-description',
             messageTheme: expect.any(Function),
-            position: ' 18:1 ',
+            position: '18:1',
             positionTheme: expect.any(Function),
-            rule: ' test-rule',
+            rule: 'test-rule',
             ruleTheme: expect.any(Function),
-            type: 'X ',
+            severity: 'X',
           }],
         },
         summary: expect.any(Object),
@@ -189,7 +190,7 @@ describe('markdownlint', () => {
       })
 
       expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
-        logs: expect.any(Object),
+        results: expect.any(Object),
         summary: {
           deprecatedRules: [],
           errorCount: 5,

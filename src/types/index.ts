@@ -16,26 +16,26 @@ enum Linter {
  * LINT RESULTS
  */
 
-enum LogType {
+enum RuleSeverity {
   ERROR = 'error',
   WARNING = 'warning',
 }
 
-interface FileLog {
+interface FormattedResult {
   message: string
   messageTheme: Function
   position: string
   positionTheme: Function
   rule: string
   ruleTheme: Function
-  type: string
+  severity: string
 }
 
-interface ResultLogs {
-  [file: string]: Array<FileLog>
+interface ReportResults {
+  [file: string]: Array<FormattedResult>
 }
 
-interface ResultSummary {
+interface ReportSummary {
   deprecatedRules: Array<string>
   errorCount: number
   fileCount: number
@@ -45,9 +45,9 @@ interface ResultSummary {
   warningCount: number
 }
 
-interface LinterResult {
-  logs: ResultLogs
-  summary: ResultSummary
+interface LintReport {
+  results: ReportResults
+  summary: ReportSummary
 }
 
 /*
@@ -69,10 +69,10 @@ interface RunLintPilot {
  */
 
 export type {
-  FileLog,
-  LinterResult,
-  ResultLogs,
-  ResultSummary,
+  FormattedResult,
+  LintReport,
+  ReportResults,
+  ReportSummary,
   RunLinter,
   RunLintPilot,
 }
@@ -80,5 +80,5 @@ export type {
 export {
   Events,
   Linter,
-  LogType,
+  RuleSeverity,
 }

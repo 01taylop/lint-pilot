@@ -3,10 +3,12 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 import { spaceLog } from 'space-log'
 
-import { Events, Linter, type LinterResult, type RunLinter, type RunLintPilot } from '@Types'
+import { Events, Linter } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
+
+import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 
 import linters from './linters/index'
 import sourceFiles from './sourceFiles'
@@ -31,11 +33,11 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
     linter,
   })
 
-  const result: LinterResult = await linters[linter].lintFiles(files)
+  const report: LintReport = await linters[linter].lintFiles(files)
 
-  colourLog.result(result.summary, startTime)
+  colourLog.result(report.summary, startTime)
 
-  return result
+  return report
 }
 
 const runLintPilot = ({ title, watch }: RunLintPilot) => {
@@ -52,29 +54,29 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
       linter: Linter.Stylelint,
     }),
-  ]).then((results) => {
-    results.forEach(({ logs, summary }) => {
-      if (Object.keys(logs).length === 0) {
+  ]).then((reports) => {
+    reports.forEach(({ results, summary }) => {
+      if (Object.keys(results).length === 0) {
         return
       }
 
       colourLog.info(`\nLogging ${summary.linter.toLowerCase()} results:`)
 
-      Object.entries(logs).forEach(([file, log]) => {
+      Object.entries(results).forEach(([file, formattedResults]) => {
         console.log()
         console.log(chalk.underline(`${process.cwd()}/${file}`))
         spaceLog({
-          columnKeys: ['type', 'position', 'message', 'rule'],
+          columnKeys: ['severity', 'position', 'message', 'rule'],
           spaceSize: 2,
-        }, log)
+        }, formattedResults)
       })
     })
 
-    results.forEach(({ summary }) => {
+    reports.forEach(({ summary }) => {
       colourLog.resultBlock(summary)
     })
 
-    const exitCode = notifyResults(results, title)
+    const exitCode = notifyResults(reports, title)
 
     if (watch) {
       colourLog.info('Watching for changes...')
