@@ -20,7 +20,7 @@ To customise or extend the default rules provided by Lint Pilot or markdownlint,
 
 The default rules set by Lint Pilot are located at `node_modules/lint-pilot/markdownlint.json`. To extend these rules, reference them in your `.markdownlint.json` file and then override or add to them as needed. For example:
 
-```json
+```jsonc
 {
   "extends": "./node_modules/lint-pilot/markdownlint.json",
   "MD013": true, // Enable line length check
@@ -28,7 +28,7 @@ The default rules set by Lint Pilot are located at `node_modules/lint-pilot/mark
 
 If you prefer to start with the default settings from markdownlint, ensure your configuration file includes `"default": true`. This will apply markdownlint's standard rules, which you can then extend or override:
 
-```json
+```jsonc
 {
   "default": true,
   "MD013": false, // Disable line length check
