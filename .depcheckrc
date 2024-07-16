@@ -1,6 +1,7 @@
 ignores: [
   "eslint-plugin-inclusive-language",
   "eslint-plugin-sort-destructure-keys",
+  "eslint-plugin-sort-exports",
   "rimraf",
   "@types/jest"
 ]
