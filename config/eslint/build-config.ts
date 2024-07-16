@@ -1,14 +1,17 @@
-import InclusiveLanguageRules from './rules/inclusive-language'
-import SortDestructureKeysRules from './rules/sort-destructure-keys'
+import InclusiveLanguage from './rules/inclusive-language'
+import SortDestructureKeys from './rules/sort-destructure-keys'
+import SortExports from './rules/sort-exports'
 
 const buildConfig = () => ({
   plugins: [
     'inclusive-language',
     'sort-destructure-keys',
+    'sort-exports',
   ],
   rules: {
-    ...InclusiveLanguageRules,
-    ...SortDestructureKeysRules,
+    ...InclusiveLanguage,
+    ...SortDestructureKeys,
+    ...SortExports,
   },
 })
 
