@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import chalk from 'chalk'
 import { Command } from 'commander'
+import { spaceLog } from 'space-log'
 
 import { Events, Linter, type LinterResult, type RunLinter, type RunLintPilot } from '@Types'
 import colourLog from '@Utils/colourLog'
@@ -20,7 +22,6 @@ program
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
 const runLinter = async ({ filePattern, linter }: RunLinter) => {
-  // TODO: Handle case where no files are sourced
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -52,6 +53,23 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       linter: Linter.Stylelint,
     }),
   ]).then((results) => {
+    results.forEach(({ logs, summary }) => {
+      if (Object.keys(logs).length === 0) {
+        return
+      }
+
+      colourLog.info(`\nLogging ${summary.linter.toLowerCase()} results:`)
+
+      Object.entries(logs).forEach(([file, log]) => {
+        console.log()
+        console.log(chalk.underline(`${process.cwd()}/${file}`))
+        spaceLog({
+          columnKeys: ['type', 'position', 'message', 'rule'],
+          spaceSize: 2,
+        }, log)
+      })
+    })
+
     results.forEach(({ summary }) => {
       colourLog.resultBlock(summary)
     })

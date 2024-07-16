@@ -52,7 +52,7 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
         .sort((a, b) => a.lineNumber - b.lineNumber || a.ruleNames[1].localeCompare(b.ruleNames[1]))
         .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
           logs[file].push(formatFileLog({
-            column: errorRange[0],
+            column: errorRange?.length ? errorRange[0] : undefined,
             lineNumber,
             message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
             rule: ruleNames[1],
