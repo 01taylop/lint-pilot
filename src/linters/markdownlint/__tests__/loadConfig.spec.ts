@@ -20,7 +20,7 @@ describe('loadConfig', () => {
     expect(loadConfig()).toStrictEqual(['custom', {
       default: true,
     }])
-    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(`${process.cwd()}/markdownlint.json`)
+    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(`${process.cwd()}/.markdownlint.json`)
   })
 
   it('returns the development config when NODE_ENV is development', () => {
