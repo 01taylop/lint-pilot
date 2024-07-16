@@ -1,6 +1,6 @@
 import stylelint from 'stylelint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, type LinterResult, type ResultSummary } from '@Types'
 
 const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
   try {
@@ -14,7 +14,7 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
       files,
     })
 
-    const processedResult: ProcessedResult = {
+    const summary: ResultSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: results.length,
@@ -25,17 +25,19 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
     }
 
     results.forEach(({ deprecations, warnings }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations.map(({ text }) => text)])]
-      processedResult.errorCount += warnings.length
+      summary.deprecatedRules = [...new Set([...summary.deprecatedRules, ...deprecations.map(({ text }) => text)])]
+      summary.errorCount += warnings.length
+
       warnings.forEach(({ rule }) => {
         if (ruleMetadata[rule]?.fixable) {
-          processedResult.fixableErrorCount += 1
+          summary.fixableErrorCount += 1
         }
       })
     })
 
     return {
-      processedResult,
+      logs: {},
+      summary,
     }
   } catch (error: any) {
     console.error(error.stack)

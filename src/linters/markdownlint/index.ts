@@ -1,6 +1,6 @@
 import markdownlint, { type LintResults } from 'markdownlint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, type LinterResult, type ResultLogs, type ResultSummary } from '@Types'
 import colourLog from '@Utils/colourLog'
 
 import loadConfig from './loadConfig'
@@ -24,7 +24,9 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
       return reject(new Error('No results'))
     }
 
-    const processedResult: ProcessedResult = {
+    const logs: ResultLogs = {}
+
+    const summary: ResultSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: Object.keys(results).length,
@@ -44,7 +46,8 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
     })
 
     resolve({
-      processedResult,
+      logs,
+      summary,
     })
   })
 })

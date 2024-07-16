@@ -16,7 +16,16 @@ enum Linter {
  * LINT RESULTS
  */
 
-interface ProcessedResult {
+interface ResultLogs {
+  [file: string]: Array<{
+    message: string
+    position: string
+    rule: string
+    type: 'error' | 'warning'
+  }>
+}
+
+interface ResultSummary {
   deprecatedRules: Array<string>
   errorCount: number
   fileCount: number
@@ -27,7 +36,8 @@ interface ProcessedResult {
 }
 
 interface LinterResult {
-  processedResult: ProcessedResult
+  logs: ResultLogs
+  summary: ResultSummary
 }
 
 /*
@@ -50,7 +60,8 @@ interface RunLintPilot {
 
 export type {
   LinterResult,
-  ProcessedResult,
+  ResultLogs,
+  ResultSummary,
   RunLinter,
   RunLintPilot,
 }

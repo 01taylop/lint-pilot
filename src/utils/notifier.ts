@@ -6,7 +6,7 @@ import type { LinterResult } from '@Types'
 
 const notifyResults = (results: Array<LinterResult>, title: string) => {
   // Errors
-  let totalErrorCount = results.reduce((total, { processedResult: { errorCount } }) => total + errorCount, 0)
+  let totalErrorCount = results.reduce((total, { summary: { errorCount } }) => total + errorCount, 0)
   if (totalErrorCount > 0) {
     notifier.notify({
       message: `${totalErrorCount} ${pluralise('error', totalErrorCount)} found. Please fix ${totalErrorCount > 1 ? 'them ' : 'it '}before continuing.`,
@@ -17,7 +17,7 @@ const notifyResults = (results: Array<LinterResult>, title: string) => {
   }
 
   // Warnings
-  let totalWarningCount = results.reduce((total, { processedResult: { warningCount } }) => total + warningCount, 0)
+  let totalWarningCount = results.reduce((total, { summary: { warningCount } }) => total + warningCount, 0)
   if (totalWarningCount > 0) {
     notifier.notify({
       message: `${totalWarningCount} ${pluralise('warning', totalWarningCount)} found. Please review ${totalWarningCount > 1 ? 'them ' : ''}before continuing.`,

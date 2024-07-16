@@ -1,6 +1,6 @@
 import { ESLint } from 'eslint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, type LinterResult, type ResultSummary } from '@Types'
 
 const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
   try {
@@ -19,7 +19,7 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
 
     const results = await eslint.lintFiles(files)
 
-    const processedResult: ProcessedResult = {
+    const summary: ResultSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: results.length,
@@ -30,15 +30,16 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
     }
 
     results.forEach(({ errorCount, fixableErrorCount, fixableWarningCount, usedDeprecatedRules, warningCount }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
-      processedResult.errorCount += errorCount
-      processedResult.fixableErrorCount += fixableErrorCount
-      processedResult.fixableWarningCount += fixableWarningCount
-      processedResult.warningCount += warningCount
+      summary.deprecatedRules = [...new Set([...summary.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
+      summary.errorCount += errorCount
+      summary.fixableErrorCount += fixableErrorCount
+      summary.fixableWarningCount += fixableWarningCount
+      summary.warningCount += warningCount
     })
 
     return {
-      processedResult,
+      logs: {},
+      summary,
     }
   } catch (error: any) {
     console.error(error.stack)

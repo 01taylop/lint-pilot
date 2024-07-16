@@ -12,7 +12,8 @@ jest.mock('node-notifier', () => ({
 describe('notifyResults', () => {
 
   const generateResult = (errorCount = 0, warningCount = 0): LinterResult => ({
-    processedResult: {
+    logs: {},
+    summary: {
       deprecatedRules: [],
       errorCount,
       fileCount: 0,

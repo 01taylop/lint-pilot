@@ -61,7 +61,7 @@ describe('markdownlint', () => {
     })
 
     expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
-      processedResult: {
+      summary: {
         deprecatedRules: [],
         errorCount: 0,
         fileCount: 1,
@@ -110,7 +110,7 @@ describe('markdownlint', () => {
     })
 
     expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
-      processedResult: {
+      summary: {
         deprecatedRules: [],
         errorCount: 4,
         fileCount: 3,

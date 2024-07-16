@@ -2,7 +2,7 @@ import chalk from 'chalk'
 
 import { pluralise } from '@Utils/transform'
 
-import type { ProcessedResult } from '@Types'
+import type { ResultSummary } from '@Types'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {
@@ -29,8 +29,8 @@ const colourLog = {
 
   info: (text: string) => console.log(chalk.blue(text)),
 
-  result: (processedResult: ProcessedResult, startTime: number) => {
-    const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = processedResult
+  result: (summary: ResultSummary, startTime: number) => {
+    const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = summary
 
     const log = []
 
@@ -71,7 +71,7 @@ const colourLog = {
     }
   },
 
-  resultBlock: ({ errorCount, linter, warningCount }: ProcessedResult) => {
+  resultBlock: ({ errorCount, linter, warningCount }: ResultSummary) => {
     // Errors
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)

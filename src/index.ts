@@ -32,7 +32,7 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
 
   const result: LinterResult = await linters[linter].lintFiles(files)
 
-  colourLog.result(result.processedResult, startTime)
+  colourLog.result(result.summary, startTime)
 
   return result
 }
@@ -52,8 +52,8 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       linter: Linter.Stylelint,
     }),
   ]).then((results) => {
-    results.forEach(({ processedResult }) => {
-      colourLog.resultBlock(processedResult)
+    results.forEach(({ summary }) => {
+      colourLog.resultBlock(summary)
     })
 
     const exitCode = notifyResults(results, title)
