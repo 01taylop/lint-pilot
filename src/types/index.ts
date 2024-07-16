@@ -16,13 +16,23 @@ enum Linter {
  * LINT RESULTS
  */
 
+enum LogType {
+  ERROR = 'error',
+  WARNING = 'warning',
+}
+
+interface FileLog {
+  message: string
+  messageTheme: Function
+  position: string
+  positionTheme: Function
+  rule: string
+  ruleTheme: Function
+  type: string
+}
+
 interface ResultLogs {
-  [file: string]: Array<{
-    message: string
-    position: string
-    rule: string
-    type: 'error' | 'warning'
-  }>
+  [file: string]: Array<FileLog>
 }
 
 interface ResultSummary {
@@ -59,6 +69,7 @@ interface RunLintPilot {
  */
 
 export type {
+  FileLog,
   LinterResult,
   ResultLogs,
   ResultSummary,
@@ -69,4 +80,5 @@ export type {
 export {
   Events,
   Linter,
+  LogType,
 }

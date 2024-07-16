@@ -29,8 +29,10 @@
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-exports": "0.9.1",
     "glob": "10.4.1",
+    "log-symbols": "6.0.0",
     "markdownlint": "0.34.0",
     "node-notifier": "10.0.1",
+    "space-log": "1.1.1",
     "stylelint": "16.6.1"
   },
   "devDependencies": {
