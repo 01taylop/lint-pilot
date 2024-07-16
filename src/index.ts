@@ -17,7 +17,7 @@ program
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
   .version('0.0.1')
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
-  .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information')
+  .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
 const runLinter = async ({ filePattern, linter }: RunLinter) => {
   // TODO: Handle case where no files are sourced
