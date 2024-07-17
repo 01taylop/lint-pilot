@@ -1,7 +1,5 @@
 #!/usr/bin/env node
-import chalk from 'chalk'
 import { Command } from 'commander'
-import { spaceLog } from 'space-log'
 
 import { Events, Linter } from '@Types'
 import colourLog from '@Utils/colourLog'
@@ -55,21 +53,8 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       linter: Linter.Stylelint,
     }),
   ]).then((reports) => {
-    reports.forEach(({ results, summary }) => {
-      if (Object.keys(results).length === 0) {
-        return
-      }
-
-      colourLog.info(`\nLogging ${summary.linter.toLowerCase()} results:`)
-
-      Object.entries(results).forEach(([file, formattedResults]) => {
-        console.log()
-        console.log(chalk.underline(`${process.cwd()}/${file}`))
-        spaceLog({
-          columnKeys: ['severity', 'position', 'message', 'rule'],
-          spaceSize: 2,
-        }, formattedResults)
-      })
+    reports.forEach(report => {
+      colourLog.results(report)
     })
 
     reports.forEach(({ summary }) => {

@@ -1,8 +1,9 @@
 import chalk from 'chalk'
+import { spaceLog } from 'space-log'
 
 import { pluralise } from '@Utils/transform'
 
-import type { ReportSummary } from '@Types'
+import type { LintReport, ReportSummary } from '@Types'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {
@@ -28,6 +29,23 @@ const colourLog = {
   },
 
   info: (text: string) => console.log(chalk.blue(text)),
+
+  results: ({ results, summary }: LintReport) => {
+    if (Object.keys(results).length === 0) {
+      return
+    }
+
+    console.log(chalk.blue(`\nLogging ${summary.linter.toLowerCase()} results:`))
+
+    Object.entries(results).forEach(([file, formattedResults]) => {
+      console.log()
+      console.log(chalk.underline(`${process.cwd()}/${file}`))
+      spaceLog({
+        columnKeys: ['severity', 'position', 'message', 'rule'],
+        spaceSize: 2,
+      }, formattedResults)
+    })
+  },
 
   summary: (summary: ReportSummary, startTime: number) => {
     const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = summary

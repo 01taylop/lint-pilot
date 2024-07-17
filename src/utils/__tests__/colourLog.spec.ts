@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import spaceLog from 'space-log'
 
 import { Linter, type ReportSummary } from '@Types'
 
@@ -19,14 +20,27 @@ jest.mock('chalk', () => ({
   dim: jest.fn().mockImplementation(text => text),
   magenta: jest.fn().mockImplementation(text => text),
   red: jest.fn().mockImplementation(text => text),
+  underline: jest.fn().mockImplementation(text => `_${text}_`),
   yellow: jest.fn().mockImplementation(text => text),
 }))
+
+jest.mock('space-log')
 
 jest.useFakeTimers().setSystemTime(1718971200)
 
 describe('colourLog', () => {
 
   const mockedConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+
+  const commonSummary: ReportSummary = {
+    deprecatedRules: [],
+    errorCount: 0,
+    fileCount: 1,
+    fixableErrorCount: 0,
+    fixableWarningCount: 0,
+    linter: Linter.ESLint,
+    warningCount: 0,
+  }
 
   describe('config', () => {
 
@@ -117,17 +131,67 @@ describe('colourLog', () => {
 
   })
 
-  describe('summary', () => {
+  describe('results', () => {
 
-    const commonSummary: ReportSummary = {
-      deprecatedRules: [],
-      errorCount: 0,
-      fileCount: 1,
-      fixableErrorCount: 0,
-      fixableWarningCount: 0,
-      linter: Linter.ESLint,
-      warningCount: 0,
-    }
+    it('returns if there are no results', () => {
+      colourLog.results({
+        results: {},
+        summary: commonSummary,
+      })
+
+      expect(mockedConsoleLog).not.toHaveBeenCalled()
+    })
+
+    it('logs the results', () => {
+      const commonResult = {
+        message: 'Foo',
+        messageTheme: () => {},
+        position: '1:1',
+        positionTheme: () => {},
+        rule: 'bar',
+        ruleTheme: () => {},
+        severity: 'X',
+      }
+
+      colourLog.results({
+        results: {
+          'CONTRIBUTING.md': [commonResult],
+          'README.md': [commonResult, commonResult],
+        },
+        summary: commonSummary,
+      })
+
+      // Info
+      expect(chalk.blue).toHaveBeenCalledOnceWith('\nLogging eslint results:')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nLogging eslint results:')
+
+      // File 1
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
+      expect(chalk.underline).toHaveBeenNthCalledWith(1, `${process.cwd()}/CONTRIBUTING.md`)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, `_${process.cwd()}/CONTRIBUTING.md_`)
+      expect(spaceLog).toHaveBeenNthCalledWith(1, {
+        columnKeys: ['severity', 'position', 'message', 'rule'],
+        spaceSize: 2,
+      }, [commonResult])
+
+      // File 2
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(4)
+      expect(chalk.underline).toHaveBeenNthCalledWith(2, `${process.cwd()}/README.md`)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(5, `_${process.cwd()}/README.md_`)
+      expect(spaceLog).toHaveBeenNthCalledWith(2, {
+        columnKeys: ['severity', 'position', 'message', 'rule'],
+        spaceSize: 2,
+      }, [commonResult, commonResult])
+
+      // Log Count
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(5)
+      expect(chalk.underline).toHaveBeenCalledTimes(2)
+      expect(spaceLog).toHaveBeenCalledTimes(2)
+    })
+
+  })
+
+  describe('summary', () => {
 
     const startTime = new Date().getTime()
     jest.advanceTimersByTime(1000)
@@ -275,16 +339,6 @@ describe('colourLog', () => {
   })
 
   describe('summaryBlock', () => {
-
-    const commonSummary: ReportSummary = {
-      deprecatedRules: [],
-      errorCount: 0,
-      fileCount: 1,
-      fixableErrorCount: 0,
-      fixableWarningCount: 0,
-      linter: Linter.ESLint,
-      warningCount: 0,
-    }
 
     it('logs the error count in a red background', () => {
       colourLog.summaryBlock({
