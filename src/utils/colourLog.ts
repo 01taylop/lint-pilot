@@ -22,9 +22,14 @@ const colourLog = {
   },
 
   error: (text: string, error?: Error | unknown) => {
-    console.log(`\n${chalk.red(text)}`)
-    if (error && global.debug === true) {
-      console.log(error)
+    if (error) {
+      console.log(chalk.red(`\n${text}. Run with --debug for more information.`))
+      if (global.debug === true) {
+        console.log()
+        console.log(error)
+      }
+    } else {
+      console.log(chalk.red(`\n${text}.`))
     }
   },
 
