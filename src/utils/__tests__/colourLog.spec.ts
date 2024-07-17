@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-import { Linter, type ResultSummary } from '@Types'
+import { Linter, type ReportSummary } from '@Types'
 
 import colourLog from '../colourLog'
 
@@ -117,9 +117,9 @@ describe('colourLog', () => {
 
   })
 
-  describe('result', () => {
+  describe('summary', () => {
 
-    const commonSummary: ResultSummary = {
+    const commonSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: 1,
@@ -140,7 +140,7 @@ describe('colourLog', () => {
     }
 
     it('logs the finished lint message along with the file count and duration (single file)', () => {
-      colourLog.result(commonSummary, startTime)
+      colourLog.summary(commonSummary, startTime)
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('Finished eslint')
       expect(chalk.yellow).toHaveBeenCalledOnceWith('[1 file, 1000ms]')
@@ -148,7 +148,7 @@ describe('colourLog', () => {
     })
 
     it('logs the finished lint message along with the file count and duration (multiple files)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         fileCount: 7,
       }, startTime)
@@ -159,7 +159,7 @@ describe('colourLog', () => {
     })
 
     it('logs the error count in red (single error)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         errorCount: 1,
       }, startTime)
@@ -170,7 +170,7 @@ describe('colourLog', () => {
     })
 
     it('logs the error count in red (multiple errors)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         errorCount: 2,
       }, startTime)
@@ -181,7 +181,7 @@ describe('colourLog', () => {
     })
 
     it('logs the error count in red with the fixable error count in dim', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         errorCount: 3,
         fixableErrorCount: 2,
@@ -194,7 +194,7 @@ describe('colourLog', () => {
     })
 
     it('logs the warning count in yellow (single warning)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         warningCount: 1,
       }, startTime)
@@ -205,7 +205,7 @@ describe('colourLog', () => {
     })
 
     it('logs the warning count in yellow (multiple warnings)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         warningCount: 5,
       }, startTime)
@@ -216,7 +216,7 @@ describe('colourLog', () => {
     })
 
     it('logs the warning count in yellow with the fixable warning count in dim', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         warningCount: 6,
         fixableWarningCount: 3,
@@ -229,7 +229,7 @@ describe('colourLog', () => {
     })
 
     it('logs the deprecated rule count in magenta and the list in dim (single deprecation)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         deprecatedRules: ['foo'],
       }, startTime)
@@ -241,7 +241,7 @@ describe('colourLog', () => {
     })
 
     it('logs the deprecated rule count in magenta and the list alphabetised in dim (multiple deprecations)', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         deprecatedRules: ['foo', 'bar', 'baz'],
       }, startTime)
@@ -253,7 +253,7 @@ describe('colourLog', () => {
     })
 
     it('logs everything together', () => {
-      colourLog.result({
+      colourLog.summary({
         ...commonSummary,
         deprecatedRules: ['foo', 'bar', 'baz'],
         errorCount: 2,
@@ -274,9 +274,9 @@ describe('colourLog', () => {
 
   })
 
-  describe('resultBlock', () => {
+  describe('summaryBlock', () => {
 
-    const commonSummary: ResultSummary = {
+    const commonSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: 1,
@@ -287,7 +287,7 @@ describe('colourLog', () => {
     }
 
     it('logs the error count in a red background', () => {
-      colourLog.resultBlock({
+      colourLog.summaryBlock({
         ...commonSummary,
         errorCount: 1,
       })
@@ -297,7 +297,7 @@ describe('colourLog', () => {
     })
 
     it('logs the warning count in a yellow background', () => {
-      colourLog.resultBlock({
+      colourLog.summaryBlock({
         ...commonSummary,
         warningCount: 1,
       })
@@ -307,7 +307,7 @@ describe('colourLog', () => {
     })
 
     it('logs the both the error and warning counts if both are present', () => {
-      colourLog.resultBlock({
+      colourLog.summaryBlock({
         ...commonSummary,
         errorCount: 2,
         warningCount: 3,
@@ -321,7 +321,7 @@ describe('colourLog', () => {
     })
 
     it('logs a success message if there are no errors or warnings', () => {
-      colourLog.resultBlock(commonSummary)
+      colourLog.summaryBlock(commonSummary)
 
       expect(chalk.bgGreen.black).toHaveBeenCalledOnceWith(' ESLint Success! ')
       expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\n✅  ESLint Success! ')

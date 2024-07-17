@@ -13,7 +13,7 @@ enum Linter {
 }
 
 /*
- * LINT RESULTS
+ * LINT REPORT
  */
 
 enum RuleSeverity {

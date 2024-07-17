@@ -35,7 +35,7 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
 
   const report: LintReport = await linters[linter].lintFiles(files)
 
-  colourLog.result(report.summary, startTime)
+  colourLog.summary(report.summary, startTime)
 
   return report
 }
@@ -73,7 +73,7 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
     })
 
     reports.forEach(({ summary }) => {
-      colourLog.resultBlock(summary)
+      colourLog.summaryBlock(summary)
     })
 
     const exitCode = notifyResults(reports, title)
