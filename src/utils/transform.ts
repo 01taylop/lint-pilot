@@ -12,7 +12,7 @@ interface Result {
 }
 
 const formatResult = ({ column, lineNumber, message, rule, severity }: Result): FormattedResult => ({
-  message: message.length > 72 ? `${message.substring(0, 69)}...` : message,
+  message,
   messageTheme: chalk.white,
   position: column ? `${lineNumber}:${column}` : lineNumber.toString(),
   positionTheme: chalk.dim,

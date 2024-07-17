@@ -23,18 +23,6 @@ describe('formatResult', () => {
     }))
   })
 
-  it('truncates the message when it exceeds 72 characters', () => {
-    const formattedResult = formatResult({
-      ...commonResult,
-      message: 'This is a very long error message. So long that it exceeds 72 characters.',
-    })
-
-    expect(formattedResult).toStrictEqual(expect.objectContaining({
-      message: 'This is a very long error message. So long that it exceeds 72 charact...',
-      messageTheme: chalk.white,
-    }))
-  })
-
   it('formats the result with a position: line number and column number', () => {
     const formattedResult = formatResult(commonResult)
 
