@@ -27,7 +27,10 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
 
   const files = await sourceFiles({
     filePattern,
-    ignore: '**/+(coverage|node_modules)/**',
+    ignore: [
+      '**/*.min.*',
+      '**/+(coverage|node_modules)/**',
+    ],
     linter,
   })
 
@@ -93,7 +96,10 @@ program
           '**/*.{md,mdx}',
           '**/*.{css,scss,less,sass,styl,stylus}',
         ],
-        ignorePatterns: ['**/+(coverage|node_modules)/**'],
+        ignorePatterns: [
+          '**/*.min.*',
+          '**/+(coverage|node_modules)/**',
+        ],
       })
 
       fileChangeEvent.on(Events.FILE_CHANGED, ({ message }) => {
