@@ -1,8 +1,8 @@
 import stylelint from 'stylelint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, type LintReport, type ReportSummary } from '@Types'
 
-const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
+const lintFiles = async (files: Array<string>): Promise<LintReport> => {
   try {
     const { results, ruleMetadata } = await stylelint.lint({
       allowEmptyInput: true,
@@ -14,7 +14,7 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
       files,
     })
 
-    const processedResult: ProcessedResult = {
+    const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: results.length,
@@ -25,17 +25,19 @@ const lintFiles = async (files: Array<string>): Promise<LinterResult> => {
     }
 
     results.forEach(({ deprecations, warnings }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations.map(({ text }) => text)])]
-      processedResult.errorCount += warnings.length
+      reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...deprecations.map(({ text }) => text)])]
+      reportSummary.errorCount += warnings.length
+
       warnings.forEach(({ rule }) => {
         if (ruleMetadata[rule]?.fixable) {
-          processedResult.fixableErrorCount += 1
+          reportSummary.fixableErrorCount += 1
         }
       })
     })
 
     return {
-      processedResult,
+      results: {},
+      summary: reportSummary,
     }
   } catch (error: any) {
     console.error(error.stack)

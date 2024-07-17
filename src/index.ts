@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
 
-import { Events, Linter, type LinterResult, type RunLinter, type RunLintPilot } from '@Types'
+import { Events, Linter } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
+
+import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 
 import linters from './linters/index'
 import sourceFiles from './sourceFiles'
@@ -20,7 +22,6 @@ program
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
 const runLinter = async ({ filePattern, linter }: RunLinter) => {
-  // TODO: Handle case where no files are sourced
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -30,11 +31,11 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
     linter,
   })
 
-  const result: LinterResult = await linters[linter].lintFiles(files)
+  const report: LintReport = await linters[linter].lintFiles(files)
 
-  colourLog.result(result.processedResult, startTime)
+  colourLog.summary(report.summary, startTime)
 
-  return result
+  return report
 }
 
 const runLintPilot = ({ title, watch }: RunLintPilot) => {
@@ -51,12 +52,16 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
       filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
       linter: Linter.Stylelint,
     }),
-  ]).then((results) => {
-    results.forEach(({ processedResult }) => {
-      colourLog.resultBlock(processedResult)
+  ]).then((reports) => {
+    reports.forEach(report => {
+      colourLog.results(report)
     })
 
-    const exitCode = notifyResults(results, title)
+    reports.forEach(({ summary }) => {
+      colourLog.summaryBlock(summary)
+    })
+
+    const exitCode = notifyResults(reports, title)
 
     if (watch) {
       colourLog.info('Watching for changes...')

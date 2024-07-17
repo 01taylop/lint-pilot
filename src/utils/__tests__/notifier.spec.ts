@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import notifier from 'node-notifier'
 
-import { Linter, type LinterResult } from '@Types'
+import { Linter, type LintReport } from '@Types'
 
 import { notifyResults } from '../notifier'
 
@@ -11,8 +11,9 @@ jest.mock('node-notifier', () => ({
 
 describe('notifyResults', () => {
 
-  const generateResult = (errorCount = 0, warningCount = 0): LinterResult => ({
-    processedResult: {
+  const generateReport = (errorCount = 0, warningCount = 0): LintReport => ({
+    results: {},
+    summary: {
       deprecatedRules: [],
       errorCount,
       fileCount: 0,
@@ -25,9 +26,9 @@ describe('notifyResults', () => {
 
   it('returns an exit code of 1 if there are errors', () => {
     const exitCode = notifyResults([
-      generateResult(0, 0),
-      generateResult(1, 0),
-      generateResult(0, 1),
+      generateReport(0, 0),
+      generateReport(1, 0),
+      generateReport(0, 1),
     ], 'Lint Pilot')
 
     expect(exitCode).toBe(1)
@@ -35,9 +36,9 @@ describe('notifyResults', () => {
 
   it('returns an exit code of 0 if there are no errors, but there are warnings', () => {
     const exitCode = notifyResults([
-      generateResult(0, 0),
-      generateResult(0, 0),
-      generateResult(0, 1),
+      generateReport(0, 0),
+      generateReport(0, 0),
+      generateReport(0, 1),
     ], 'Lint Pilot')
 
     expect(exitCode).toBe(0)
@@ -45,8 +46,8 @@ describe('notifyResults', () => {
 
   it('returns an exit code of 0 if there are no errors or warnings', () => {
     const exitCode = notifyResults([
-      generateResult(0, 0),
-      generateResult(0, 0),
+      generateReport(0, 0),
+      generateReport(0, 0),
     ], 'Lint Pilot')
 
     expect(exitCode).toBe(0)
@@ -54,9 +55,9 @@ describe('notifyResults', () => {
 
   it('notifies when there is a single error', () => {
     notifyResults([
-      generateResult(0, 0),
-      generateResult(1, 1),
-      generateResult(0, 1),
+      generateReport(0, 0),
+      generateReport(1, 1),
+      generateReport(0, 1),
     ], 'Lint Pilot')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
@@ -68,9 +69,9 @@ describe('notifyResults', () => {
 
   it('notifies when there are multiple errors', () => {
     notifyResults([
-      generateResult(0, 0),
-      generateResult(5, 0),
-      generateResult(2, 1),
+      generateReport(0, 0),
+      generateReport(5, 0),
+      generateReport(2, 1),
     ], 'Lint Pilot')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
@@ -82,9 +83,9 @@ describe('notifyResults', () => {
 
   it('notifies when there is a single warning', () => {
     notifyResults([
-      generateResult(0, 0),
-      generateResult(0, 0),
-      generateResult(0, 1),
+      generateReport(0, 0),
+      generateReport(0, 0),
+      generateReport(0, 1),
     ], 'Lint Pilot')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
@@ -96,9 +97,9 @@ describe('notifyResults', () => {
 
   it('notifies when there are multiple warnings', () => {
     notifyResults([
-      generateResult(0, 0),
-      generateResult(0, 7),
-      generateResult(0, 2),
+      generateReport(0, 0),
+      generateReport(0, 7),
+      generateReport(0, 2),
     ], 'Lint Pilot')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
@@ -110,8 +111,8 @@ describe('notifyResults', () => {
 
   it('notifies when there are no errors or warnings', () => {
     notifyResults([
-      generateResult(0, 0),
-      generateResult(0, 0),
+      generateReport(0, 0),
+      generateReport(0, 0),
     ], 'Lint Pilot')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({

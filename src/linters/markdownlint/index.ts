@@ -1,11 +1,14 @@
 import markdownlint, { type LintResults } from 'markdownlint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
+import { formatResult } from '@Utils/transform'
+
+import type { LintReport, ReportResults, ReportSummary } from '@Types'
 
 import loadConfig from './loadConfig'
 
-const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((resolve, reject) => {
+const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((resolve, reject) => {
   const [configName, config] = loadConfig()
 
   colourLog.configDebug(`Using ${configName} markdownlint config:`, config)
@@ -24,7 +27,9 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
       return reject(new Error('No results'))
     }
 
-    const processedResult: ProcessedResult = {
+    const reportResults: ReportResults = {}
+
+    const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
       fileCount: Object.keys(results).length,
@@ -34,17 +39,35 @@ const lintFiles = (files: Array<string>): Promise<LinterResult> => new Promise((
       warningCount: 0,
     }
 
-    Object.entries(results).forEach(([_file, errors]) => {
-      processedResult.errorCount += errors.length
-      errors.forEach(({ fixInfo }) => {
-        if (fixInfo) {
-          processedResult.fixableErrorCount += 1
-        }
-      })
+    Object.entries(results).forEach(([file, errors]) => {
+      if (!errors.length) {
+        return
+      }
+
+      reportResults[file] = []
+
+      reportSummary.errorCount += errors.length
+
+      errors
+        .sort((a, b) => a.lineNumber - b.lineNumber || a.ruleNames[1].localeCompare(b.ruleNames[1]))
+        .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
+          reportResults[file].push(formatResult({
+            column: errorRange?.length ? errorRange[0] : undefined,
+            lineNumber,
+            message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
+            rule: ruleNames[1],
+            severity: RuleSeverity.ERROR,
+          }))
+
+          if (fixInfo) {
+            reportSummary.fixableErrorCount += 1
+          }
+        })
     })
 
     resolve({
-      processedResult,
+      results: reportResults,
+      summary: reportSummary,
     })
   })
 })
