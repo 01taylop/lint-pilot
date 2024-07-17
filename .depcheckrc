@@ -1,8 +1,9 @@
 ignores: [
+  "eslint-plugin-eslint-comments",
   "eslint-plugin-inclusive-language",
   "eslint-plugin-sort-destructure-keys",
   "eslint-plugin-sort-exports",
-  "rimraf",
-  "@types/jest"
+  "@types/jest",
+  "rimraf"
 ]
 skip-missing: true
