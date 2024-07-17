@@ -175,8 +175,8 @@ describe('colourLog', () => {
 
       // File 1
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
-      expect(chalk.underline).toHaveBeenNthCalledWith(1, `${process.cwd()}/CONTRIBUTING.md`)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, `_${process.cwd()}/CONTRIBUTING.md_`)
+      expect(chalk.underline).toHaveBeenNthCalledWith(1, 'CONTRIBUTING.md')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, '_CONTRIBUTING.md_')
       expect(spaceLog).toHaveBeenNthCalledWith(1, {
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,
@@ -184,8 +184,8 @@ describe('colourLog', () => {
 
       // File 2
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(4)
-      expect(chalk.underline).toHaveBeenNthCalledWith(2, `${process.cwd()}/README.md`)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(5, `_${process.cwd()}/README.md_`)
+      expect(chalk.underline).toHaveBeenNthCalledWith(2, 'README.md')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(5, '_README.md_')
       expect(spaceLog).toHaveBeenNthCalledWith(2, {
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,

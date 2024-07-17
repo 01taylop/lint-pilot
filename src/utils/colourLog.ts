@@ -44,7 +44,7 @@ const colourLog = {
 
     Object.entries(results).forEach(([file, formattedResults]) => {
       console.log()
-      console.log(chalk.underline(`${process.cwd()}/${file}`))
+      console.log(chalk.underline(file))
       spaceLog({
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,
