@@ -111,4 +111,8 @@ program
     }
   })
 
+process.on('exit', () => {
+  console.log()
+})
+
 program.parse(process.argv)

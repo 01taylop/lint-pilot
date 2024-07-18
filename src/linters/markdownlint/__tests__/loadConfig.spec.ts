@@ -12,7 +12,6 @@ describe('loadConfig', () => {
 
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
   jest.spyOn(markdownlint, 'readConfigSync').mockImplementation(() => ({ default: true }))
-  jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
   it('returns the custom config if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -46,16 +45,20 @@ describe('loadConfig', () => {
   })
 
   it('catches and logs any errors', () => {
+    expect.assertions(2)
+
     const error = new Error('Test error')
 
     jest.mocked(fs.existsSync).mockImplementationOnce(() => {
       throw error
     })
 
-    loadConfig()
-
-    expect(colourLog.error).toHaveBeenCalledWith('An error occurred while loading the markdownlint config', error)
-    expect(process.exit).toHaveBeenCalledWith(1)
+    try {
+      loadConfig()
+    } catch {
+      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while loading the markdownlint config', error)
+      expect(process.exit).toHaveBeenCalledWith(1)
+    }
   })
 
 })

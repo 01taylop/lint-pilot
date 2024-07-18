@@ -13,21 +13,21 @@ const lintFiles = async (files: Array<string>): Promise<LintReport> => {
       fix: false,
     })
 
-    const results: Array<ESLint.LintResult> = await eslint.lintFiles(files)
+    const lintResults: Array<ESLint.LintResult> = await eslint.lintFiles(files)
 
     const reportResults: ReportResults = {}
 
     const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
-      fileCount: results.length,
+      fileCount: lintResults.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.ESLint,
       warningCount: 0,
     }
 
-    results.forEach(({ errorCount, filePath, fixableErrorCount, fixableWarningCount, messages, usedDeprecatedRules, warningCount }) => {
+    lintResults.forEach(({ errorCount, filePath, fixableErrorCount, fixableWarningCount, messages, usedDeprecatedRules, warningCount }) => {
       const file = filePath.replace(`${process.cwd()}/`, '')
 
       reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
@@ -57,7 +57,6 @@ const lintFiles = async (files: Array<string>): Promise<LintReport> => {
     }
   } catch (error: any) {
     colourLog.error('An error occurred while running eslint', error)
-    console.log()
     process.exit(1)
   }
 }

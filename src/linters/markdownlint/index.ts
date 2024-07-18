@@ -16,15 +16,10 @@ const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((re
   markdownlint({
     config,
     files,
-  }, (error: any, results: LintResults | undefined) => {
+  }, (error: any, lintResults: LintResults | undefined = {}) => {
     if (error) {
       colourLog.error('An error occurred while running markdownlint', error)
-      return reject(error)
-    }
-
-    if (!results) {
-      colourLog.error('An error occurred while running markdownlint: no results')
-      return reject(new Error('No results'))
+      process.exit(1)
     }
 
     const reportResults: ReportResults = {}
@@ -32,14 +27,14 @@ const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((re
     const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
-      fileCount: Object.keys(results).length,
+      fileCount: Object.keys(lintResults).length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.Markdownlint,
       warningCount: 0,
     }
 
-    Object.entries(results).forEach(([file, errors]) => {
+    Object.entries(lintResults).forEach(([file, errors]) => {
       if (!errors.length) {
         return
       }

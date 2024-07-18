@@ -45,26 +45,40 @@ describe('markdownlint', () => {
     }, expect.any(Function))
   })
 
-  it('rejects when markdownlint returns an error', async () => {
+  it('exists the process when markdownlint returns an error', async () => {
+    expect.assertions(2)
+
     const error = new Error('Test error')
 
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
       callback(error, undefined)
     })
 
-    await expect(markdownlintLib.lintFiles(testFiles)).rejects.toThrow(error)
-
-    expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
+    try {
+      await markdownlintLib.lintFiles(testFiles)
+    } catch {
+      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
+      expect(process.exit).toHaveBeenCalledWith(1)
+    }
   })
 
-  it('rejects when markdownlint returns no results', async () => {
+  it('resolves with results and a summary when markdownlint successfully lints (no files)', async () => {
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
       callback(null, undefined)
     })
 
-    await expect(markdownlintLib.lintFiles(testFiles)).rejects.toThrow('No results')
-
-    expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint: no results')
+    expect(await markdownlintLib.lintFiles([])).toStrictEqual({
+      results: {},
+      summary: {
+        deprecatedRules: [],
+        errorCount: 0,
+        fileCount: 0,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'MarkdownLint',
+        warningCount: 0,
+      },
+    })
   })
 
   it('resolves with results and a summary when markdownlint successfully lints (no errors)', async () => {
