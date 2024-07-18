@@ -3,7 +3,7 @@ import markdownlint from 'markdownlint'
 import colourLog from '@Utils/colourLog'
 
 import loadConfig from '../loadConfig'
-import markdownLib from '..'
+import markdownlintLib from '..'
 
 jest.mock('markdownlint')
 jest.mock('@Utils/colourLog')
@@ -26,7 +26,7 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles(testFiles)
 
     expect(loadConfig).toHaveBeenCalledTimes(1)
     expect(colourLog.configDebug).toHaveBeenCalledWith('Using default markdownlint config:', mockedConfig)
@@ -37,7 +37,7 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles(testFiles)
 
     expect(markdownlint).toHaveBeenCalledOnceWith({
       config: mockedConfig,
@@ -52,7 +52,7 @@ describe('markdownlint', () => {
       callback(error, undefined)
     })
 
-    await expect(markdownLib.lintFiles(testFiles)).rejects.toThrow(error)
+    await expect(markdownlintLib.lintFiles(testFiles)).rejects.toThrow(error)
 
     expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
   })
@@ -62,7 +62,7 @@ describe('markdownlint', () => {
       callback(null, undefined)
     })
 
-    await expect(markdownLib.lintFiles(testFiles)).rejects.toThrow('No results')
+    await expect(markdownlintLib.lintFiles(testFiles)).rejects.toThrow('No results')
 
     expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint: no results')
   })
@@ -74,7 +74,7 @@ describe('markdownlint', () => {
       })
     })
 
-    expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -149,7 +149,7 @@ describe('markdownlint', () => {
       callback(null, markdownlintResult)
     })
 
-    expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
       results: {
         'CHANGELOG.md': [{
           ...commonResult,

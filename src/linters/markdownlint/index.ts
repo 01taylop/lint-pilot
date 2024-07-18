@@ -72,8 +72,8 @@ const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((re
   })
 })
 
-const markdownLib = {
+const markdownlintLib = {
   lintFiles,
 }
 
-export default markdownLib
+export default markdownlintLib

@@ -22,14 +22,15 @@ const colourLog = {
   },
 
   error: (text: string, error?: Error | unknown) => {
-    if (error) {
-      console.log(chalk.red(`\n${text}. Run with --debug for more information.`))
-      if (global.debug === true) {
-        console.log()
-        console.log(error)
-      }
-    } else {
-      console.log(chalk.red(`\n${text}.`))
+    let errorMessage = `\n${text}.`
+    if (error && global.debug === false) {
+      errorMessage += ' Run with --debug for more information.'
+    }
+
+    console.log(chalk.red(errorMessage))
+    if (error && global.debug === true) {
+      console.log()
+      console.log(error)
     }
   },
 

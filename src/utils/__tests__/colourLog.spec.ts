@@ -97,7 +97,7 @@ describe('colourLog', () => {
       expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred.')
     })
 
-    it('logs additional debug information if there is an error', () => {
+    it('logs additional debug information if there is an error and global.debug is false', () => {
       colourLog.error('An error occurred', error)
 
       expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
@@ -119,9 +119,9 @@ describe('colourLog', () => {
 
       colourLog.error('An error occurred', error)
 
-      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
+      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred.')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(3)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred. Run with --debug for more information.')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred.')
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, error)
     })
