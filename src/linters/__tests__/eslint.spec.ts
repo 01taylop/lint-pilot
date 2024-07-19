@@ -178,10 +178,10 @@ describe('eslint', () => {
         }],
         'utils.ts': [{
           ...commonResult,
-          position: '1:1',
+          position: '0',
           message: 'Test core error',
           rule: 'core-error',
-          severity: 'X',
+          severity: '!',
         }],
       },
       summary: {

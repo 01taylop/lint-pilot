@@ -42,7 +42,7 @@ const lintFiles = async (files: Array<string>): Promise<LintReport> => {
         }
 
         reportResults[file].push(formatResult({
-          column,
+          column: line ? column : undefined,
           lineNumber: line || 0,
           message: message.trim(),
           rule: ruleId || 'core-error',
