@@ -6,7 +6,7 @@ import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {
   filePattern: string
-  ignore: string
+  ignore: Array<string> | string
   linter: Linter
 }
 

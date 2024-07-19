@@ -93,29 +93,37 @@ describe('colourLog', () => {
     it('logs the text in red', () => {
       colourLog.error('An error occurred')
 
-      expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred')
+      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred.')
     })
 
-    it('logs the text in red but does not log the error if global.debug is false', () => {
+    it('logs additional debug information if there is an error and global.debug is false', () => {
+      colourLog.error('An error occurred', error)
+
+      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
+      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
+    })
+
+    it('does not log the error if global.debug is false', () => {
       global.debug = false
 
       colourLog.error('An error occurred', error)
 
-      expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
+      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
       expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred. Run with --debug for more information.')
     })
 
-    it('logs the text in red and logs the error if global.debug is true', () => {
+    it('logs the error if global.debug is true', () => {
       global.debug = true
 
       colourLog.error('An error occurred', error)
 
-      expect(chalk.red).toHaveBeenCalledOnceWith('An error occurred')
-      expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred')
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, error)
+      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred.')
+      expect(mockedConsoleLog).toHaveBeenCalledTimes(3)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred.')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, error)
     })
 
   })
@@ -167,8 +175,8 @@ describe('colourLog', () => {
 
       // File 1
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
-      expect(chalk.underline).toHaveBeenNthCalledWith(1, `${process.cwd()}/CONTRIBUTING.md`)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, `_${process.cwd()}/CONTRIBUTING.md_`)
+      expect(chalk.underline).toHaveBeenNthCalledWith(1, 'CONTRIBUTING.md')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, '_CONTRIBUTING.md_')
       expect(spaceLog).toHaveBeenNthCalledWith(1, {
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,
@@ -176,8 +184,8 @@ describe('colourLog', () => {
 
       // File 2
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(4)
-      expect(chalk.underline).toHaveBeenNthCalledWith(2, `${process.cwd()}/README.md`)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(5, `_${process.cwd()}/README.md_`)
+      expect(chalk.underline).toHaveBeenNthCalledWith(2, 'README.md')
+      expect(mockedConsoleLog).toHaveBeenNthCalledWith(5, '_README.md_')
       expect(spaceLog).toHaveBeenNthCalledWith(2, {
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,

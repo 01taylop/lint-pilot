@@ -3,7 +3,7 @@ import markdownlint from 'markdownlint'
 import colourLog from '@Utils/colourLog'
 
 import loadConfig from '../loadConfig'
-import markdownLib from '..'
+import markdownlintLib from '..'
 
 jest.mock('markdownlint')
 jest.mock('@Utils/colourLog')
@@ -26,10 +26,10 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles(testFiles)
 
     expect(loadConfig).toHaveBeenCalledTimes(1)
-    expect(colourLog.configDebug).toHaveBeenCalledWith('Using default markdownlint config:', mockedConfig)
+    expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Using default markdownlint config:', mockedConfig)
   })
 
   it('calls markdownlint with the config and files', async () => {
@@ -37,7 +37,7 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles(testFiles)
 
     expect(markdownlint).toHaveBeenCalledOnceWith({
       config: mockedConfig,
@@ -45,26 +45,40 @@ describe('markdownlint', () => {
     }, expect.any(Function))
   })
 
-  it('rejects when markdownlint returns an error', async () => {
+  it('exists the process when markdownlint returns an error', async () => {
+    expect.assertions(2)
+
     const error = new Error('Test error')
 
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
       callback(error, undefined)
     })
 
-    await expect(markdownLib.lintFiles(testFiles)).rejects.toThrow(error)
-
-    expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
+    try {
+      await markdownlintLib.lintFiles(testFiles)
+    } catch {
+      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
+      expect(process.exit).toHaveBeenCalledWith(1)
+    }
   })
 
-  it('rejects when markdownlint returns no results', async () => {
+  it('resolves with results and a summary when markdownlint successfully lints (no files)', async () => {
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
       callback(null, undefined)
     })
 
-    await expect(markdownLib.lintFiles(testFiles)).rejects.toThrow('No results')
-
-    expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint: no results')
+    expect(await markdownlintLib.lintFiles([])).toStrictEqual({
+      results: {},
+      summary: {
+        deprecatedRules: [],
+        errorCount: 0,
+        fileCount: 0,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'MarkdownLint',
+        warningCount: 0,
+      },
+    })
   })
 
   it('resolves with results and a summary when markdownlint successfully lints (no errors)', async () => {
@@ -74,7 +88,7 @@ describe('markdownlint', () => {
       })
     })
 
-    expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -149,7 +163,7 @@ describe('markdownlint', () => {
       callback(null, markdownlintResult)
     })
 
-    expect(await markdownLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
       results: {
         'CHANGELOG.md': [{
           ...commonResult,

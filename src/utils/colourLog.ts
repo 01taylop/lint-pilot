@@ -22,8 +22,14 @@ const colourLog = {
   },
 
   error: (text: string, error?: Error | unknown) => {
-    console.log(`\n${chalk.red(text)}`)
+    let errorMessage = `\n${text}.`
+    if (error && global.debug === false) {
+      errorMessage += ' Run with --debug for more information.'
+    }
+
+    console.log(chalk.red(errorMessage))
     if (error && global.debug === true) {
+      console.log()
       console.log(error)
     }
   },
@@ -39,7 +45,7 @@ const colourLog = {
 
     Object.entries(results).forEach(([file, formattedResults]) => {
       console.log()
-      console.log(chalk.underline(`${process.cwd()}/${file}`))
+      console.log(chalk.underline(file))
       spaceLog({
         columnKeys: ['severity', 'position', 'message', 'rule'],
         spaceSize: 2,

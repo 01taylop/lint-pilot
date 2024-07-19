@@ -3,6 +3,10 @@ jest.mock('log-symbols', () => ({
   error: 'X',
 }))
 
+jest.spyOn(process, 'exit').mockImplementation(code => {
+  throw new Error(`process.exit(${code})`)
+})
+
 beforeEach(() => {
   global.debug = false
 })

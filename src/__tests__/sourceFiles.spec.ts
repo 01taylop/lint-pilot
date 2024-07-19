@@ -11,7 +11,6 @@ describe('sourceFiles', () => {
 
   jest.spyOn(colourLog, 'configDebug').mockImplementation(() => {})
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
-  jest.spyOn(process, 'exit').mockImplementation(() => null as never)
 
   const commonArgs = {
     filePattern: '*.ts',
@@ -54,14 +53,18 @@ describe('sourceFiles', () => {
   })
 
   it('catches any errors and exists the process', async () => {
+    expect.assertions(2)
+
     const error = new Error('Test error')
 
     jest.mocked(glob).mockRejectedValue(error)
 
-    await sourceFiles(commonArgs)
-
-    expect(colourLog.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', error)
-    expect(process.exit).toHaveBeenCalledWith(1)
+    try {
+      await sourceFiles(commonArgs)
+    } catch {
+      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while trying to source files matching *.ts', error)
+      expect(process.exit).toHaveBeenCalledWith(1)
+    }
   })
 
 })
