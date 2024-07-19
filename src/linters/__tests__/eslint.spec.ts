@@ -19,26 +19,24 @@ describe('eslint', () => {
 
     await eslintLib.lintFiles(testFiles)
 
-    expect(ESLint).toHaveBeenCalledTimes(1)
-    expect(ESLint).toHaveBeenCalledWith({
+    expect(ESLint).toHaveBeenCalledOnceWith({
       cache: false,
       fix: false,
     })
   })
 
-  it('calls eslint with the files', async () => {
+  it('calls ESLint.lintFiles with the files', async () => {
     lintFilesMock.mockImplementationOnce(() => [])
 
     await eslintLib.lintFiles(testFiles)
 
-    expect(ESLint.prototype.lintFiles).toHaveBeenCalledTimes(1)
-    expect(ESLint.prototype.lintFiles).toHaveBeenCalledWith(testFiles)
+    expect(ESLint.prototype.lintFiles).toHaveBeenCalledOnceWith(testFiles)
   })
 
   it('exists the process when eslint throws an error', async () => {
     expect.assertions(2)
 
-    const error = new Error('Test error') as any
+    const error = new Error('Test error')
 
     lintFilesMock.mockImplementationOnce(() => {
       throw error
@@ -50,6 +48,25 @@ describe('eslint', () => {
       expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running eslint', error)
       expect(process.exit).toHaveBeenCalledWith(1)
     }
+  })
+
+  it('resolves with results and a summary when eslint successfully lints (no files)', async () => {
+    const lintResults: Array<ESLint.LintResult> = []
+
+    lintFilesMock.mockImplementationOnce(() => lintResults)
+
+    expect(await eslintLib.lintFiles(testFiles)).toStrictEqual({
+      results: {},
+      summary: {
+        deprecatedRules: [],
+        errorCount: 0,
+        fileCount: 0,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'ESLint',
+        warningCount: 0,
+      },
+    })
   })
 
   it('resolves with results and a summary when eslint successfully lints (no errors)', async () => {
@@ -82,7 +99,7 @@ describe('eslint', () => {
   })
 
   it('resolves with results and a summary when eslint successfully lints (with errors, warnings, and deprecations)', async () => {
-    const lintResults: Array<ESLint.LintResult> = [{
+    const eslintResult: Array<ESLint.LintResult> = [{
       errorCount: 0,
       fatalErrorCount: 0,
       filePath: `${process.cwd()}/constants.ts`,
@@ -153,7 +170,7 @@ describe('eslint', () => {
       ruleTheme: expect.any(Function),
     }
 
-    lintFilesMock.mockImplementationOnce(() => lintResults)
+    lintFilesMock.mockImplementationOnce(() => eslintResult)
 
     expect(await eslintLib.lintFiles(testFiles)).toStrictEqual({
       results: {
@@ -194,5 +211,7 @@ describe('eslint', () => {
         warningCount: 2,
       },
     })
+
   })
+
 })

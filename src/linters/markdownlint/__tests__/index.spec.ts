@@ -29,7 +29,7 @@ describe('markdownlint', () => {
     await markdownlintLib.lintFiles(testFiles)
 
     expect(loadConfig).toHaveBeenCalledTimes(1)
-    expect(colourLog.configDebug).toHaveBeenCalledWith('Using default markdownlint config:', mockedConfig)
+    expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Using default markdownlint config:', mockedConfig)
   })
 
   it('calls markdownlint with the config and files', async () => {
