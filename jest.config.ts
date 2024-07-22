@@ -8,7 +8,7 @@ const config: JestConfigWithTsJest = {
     'src/**/*.ts',
     // TODO: Write tests for these files when they are less likely to change
     '!src/index.ts',
-    '!src/linters/(index|stylelint).ts',
+    '!src/linters/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
