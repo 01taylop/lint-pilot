@@ -1,4 +1,4 @@
-import markdownlint from 'markdownlint'
+import markdownlint, { type LintResults } from 'markdownlint'
 
 import colourLog from '@Utils/colourLog'
 
@@ -82,10 +82,12 @@ describe('markdownlint', () => {
   })
 
   it('resolves with results and a summary when markdownlint successfully lints (no errors)', async () => {
+    const lintResults: LintResults = {
+      'README.md': [],
+    }
+
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, {
-        'README.md': []
-      })
+      callback(null, lintResults)
     })
 
     expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
@@ -103,8 +105,7 @@ describe('markdownlint', () => {
   })
 
   it('resolves with results and a summary when markdownlint successfully lints (with errors)', async () => {
-
-    const commonError = {
+    const commonResult = {
       ruleNames: ['MD000', 'test-rule-name'],
       ruleInformation: 'test-rule-information',
       errorDetail: 'test-error-detail',
@@ -112,18 +113,20 @@ describe('markdownlint', () => {
       errorRange: [1, 2],
     }
 
-    const markdownlintResult = {
-      'CHANGELOG.md': [{
-        ...commonError,
+    const lintResults: LintResults = {
+      // No errors
+      'CHANGELOG.md': [],
+      'CONTRIBUTING.md': [{
+        ...commonResult,
         lineNumber: 1,
         fixInfo: {
           lineNumber: 1,
         },
         ruleDescription: 'test-rule-description',
       }],
-      'CONTRIBUTING.md': [],
+      // 5 errors
       'README.md': [{
-        ...commonError,
+        ...commonResult,
         lineNumber: 7,
         errorRange: [],
         fixInfo: {
@@ -131,73 +134,73 @@ describe('markdownlint', () => {
         },
         ruleDescription: 'no-error-range',
       }, {
-        ...commonError,
+        ...commonResult,
         errorDetail: '',
         lineNumber: 9,
         ruleDescription: 'no-error-detail',
       }, {
-        ...commonError,
+        ...commonResult,
         lineNumber: 13,
         ruleNames: ['MD000', 'test-rule-b'],
         ruleDescription: 'sorted-by-name',
       }, {
-        ...commonError,
+        ...commonResult,
         lineNumber: 13,
         ruleNames: ['MD000', 'test-rule-a'],
         ruleDescription: 'sorted-by-name',
       }, {
-        ...commonError,
+        ...commonResult,
         errorDetail: '',
         lineNumber: 3,
         ruleDescription: 'sort-by-line-number',
       }],
     }
 
-    const commonResult = {
+    const resultThemes = {
       messageTheme: expect.any(Function),
       positionTheme: expect.any(Function),
       ruleTheme: expect.any(Function),
     }
 
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, markdownlintResult)
+      callback(null, lintResults)
     })
 
     expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
       results: {
-        'CHANGELOG.md': [{
-          ...commonResult,
+        'CONTRIBUTING.md': [{
+          ...resultThemes,
           message: 'test-rule-description: test-error-detail',
           position: '1:1',
           rule: 'test-rule-name',
           severity: 'X',
         }],
         'README.md': [{
-          ...commonResult,
+          ...resultThemes,
           message: 'sort-by-line-number',
           position: '3:1',
           rule: 'test-rule-name',
           severity: 'X',
         }, {
-          ...commonResult,
+          ...resultThemes,
           message: 'no-error-range: test-error-detail',
           position: '7',
           rule: 'test-rule-name',
           severity: 'X',
         }, {
-          ...commonResult,
+          ...resultThemes,
           message: 'no-error-detail',
           position: '9:1',
           rule: 'test-rule-name',
           severity: 'X',
         }, {
-          ...commonResult,
+          ...resultThemes,
           message: 'sorted-by-name: test-error-detail',
           position: '13:1',
           rule: 'test-rule-a',
           severity: 'X',
         }, {
-          ...commonResult,
+          ...resultThemes,
           message: 'sorted-by-name: test-error-detail',
           position: '13:1',
           rule: 'test-rule-b',

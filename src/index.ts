@@ -70,7 +70,6 @@ const runLintPilot = ({ filePatterns, title, watch }: RunLintPilot) => {
     if (watch) {
       colourLog.info('Watching for changes...')
     } else {
-      console.log()
       process.exit(exitCode)
     }
   })
