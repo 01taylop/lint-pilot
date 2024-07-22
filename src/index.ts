@@ -8,6 +8,7 @@ import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 
+import getFilePatterns from './filePatterns'
 import linters from './linters/index'
 import sourceFiles from './sourceFiles'
 import { fileChangeEvent, watchFiles } from './watchFiles'
@@ -21,16 +22,13 @@ program
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
-const runLinter = async ({ filePattern, linter }: RunLinter) => {
+const runLinter = async ({ filePattern, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
   const files = await sourceFiles({
     filePattern,
-    ignore: [
-      '**/*.min.*',
-      '**/+(coverage|node_modules)/**',
-    ],
+    ignore,
     linter,
   })
 
@@ -41,18 +39,21 @@ const runLinter = async ({ filePattern, linter }: RunLinter) => {
   return report
 }
 
-const runLintPilot = ({ title, watch }: RunLintPilot) => {
+const runLintPilot = ({ filePatterns, title, watch }: RunLintPilot) => {
   Promise.all([
     runLinter({
-      filePattern: '**/*.{cjs,js,jsx,mjs,ts,tsx}',
+      filePattern: filePatterns.includePatterns[Linter.ESLint],
+      ignore: filePatterns.ignorePatterns,
       linter: Linter.ESLint,
     }),
     runLinter({
-      filePattern: '**/*.{md,mdx}',
+      filePattern: filePatterns.includePatterns[Linter.Markdownlint],
+      ignore: filePatterns.ignorePatterns,
       linter: Linter.Markdownlint,
     }),
     runLinter({
-      filePattern: '**/*.{css,scss,less,sass,styl,stylus}',
+      filePattern: filePatterns.includePatterns[Linter.Stylelint],
+      ignore: filePatterns.ignorePatterns,
       linter: Linter.Stylelint,
     }),
   ]).then((reports) => {
@@ -78,35 +79,39 @@ const runLintPilot = ({ title, watch }: RunLintPilot) => {
 program
   .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
+
   .option('-w, --watch', 'watch for file changes and re-run the linters', false)
+
+  .option('--ignore-dirs <directories...>', 'Directories to ignore globally')
+  .option('--ignore-patterns <patterns...>', 'File patterns to ignore globally')
+  .option('--eslint-include <patterns...>', 'File patterns to include for ESLint')
+
   .option('--debug', 'output additional debug information including the list of files being linted', false)
-  .action(({ debug, emoji, title, watch }) => {
+  .action(({ debug, emoji, eslintInclude, ignoreDirs, ignorePatterns, title, watch }) => {
     clearTerminal()
     colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
 
     global.debug = debug
 
-    runLintPilot({ title, watch })
+    const filePatterns = getFilePatterns({
+      eslintInclude,
+      ignoreDirs,
+      ignorePatterns,
+    })
+    runLintPilot({ filePatterns, title, watch })
 
     if (watch) {
       watchFiles({
-        filePatterns: [
-          '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-          '**/*.{md,mdx}',
-          '**/*.{css,scss,less,sass,styl,stylus}',
-        ],
-        ignorePatterns: [
-          '**/*.min.*',
-          '**/+(coverage|node_modules)/**',
-        ],
+        filePatterns: Object.values(filePatterns.includePatterns).flat(),
+        ignorePatterns: filePatterns.ignorePatterns,
       })
 
       fileChangeEvent.on(Events.FILE_CHANGED, ({ message }) => {
         clearTerminal()
         colourLog.info(message)
         console.log()
-        runLintPilot({ title, watch })
+        runLintPilot({ filePatterns, title, watch })
       })
     }
   })

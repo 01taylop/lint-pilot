@@ -5,8 +5,8 @@ import colourLog from '@Utils/colourLog'
 import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {
-  filePattern: string
-  ignore: Array<string> | string
+  filePattern: Array<string>
+  ignore: Array<string>
   linter: Linter
 }
 
