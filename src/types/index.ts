@@ -54,12 +54,21 @@ interface LintReport {
  * LINT PILOT
  */
 
+interface FilePatterns {
+  includePatterns: {
+    [key in Linter]: Array<string>
+  }
+  ignorePatterns: Array<string>
+}
+
 interface RunLinter {
-  filePattern: string
+  filePattern: Array<string>
+  ignore: Array<string>
   linter: Linter
 }
 
 interface RunLintPilot {
+  filePatterns: FilePatterns
   title: string
   watch: boolean
 }
@@ -69,6 +78,7 @@ interface RunLintPilot {
  */
 
 export type {
+  FilePatterns,
   FormattedResult,
   LintReport,
   ReportResults,
