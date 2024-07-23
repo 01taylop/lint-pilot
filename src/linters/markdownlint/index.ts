@@ -4,11 +4,11 @@ import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { formatResult } from '@Utils/transform'
 
-import type { LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
 import loadConfig from './loadConfig'
 
-const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((resolve, reject) => {
+const lintFiles = ({ files, fix }: LintFiles): Promise<LintReport> => new Promise((resolve, _reject) => {
   const [configName, config] = loadConfig()
 
   colourLog.configDebug(`Using ${configName} markdownlint config:`, config)

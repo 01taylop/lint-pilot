@@ -22,7 +22,7 @@ program
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
-const runLinter = async ({ filePattern, linter, ignore }: RunLinter) => {
+const runLinter = async ({ filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -32,27 +32,33 @@ const runLinter = async ({ filePattern, linter, ignore }: RunLinter) => {
     linter,
   })
 
-  const report: LintReport = await linters[linter].lintFiles(files)
+  const report: LintReport = await linters[linter].lintFiles({
+    files,
+    fix,
+  })
 
   colourLog.summary(report.summary, startTime)
 
   return report
 }
 
-const runLintPilot = ({ filePatterns, title, watch }: RunLintPilot) => {
+const runLintPilot = ({ filePatterns, fix, title, watch }: RunLintPilot) => {
   Promise.all([
     runLinter({
       filePattern: filePatterns.includePatterns[Linter.ESLint],
+      fix,
       ignore: filePatterns.ignorePatterns,
       linter: Linter.ESLint,
     }),
     runLinter({
       filePattern: filePatterns.includePatterns[Linter.Markdownlint],
+      fix,
       ignore: filePatterns.ignorePatterns,
       linter: Linter.Markdownlint,
     }),
     runLinter({
       filePattern: filePatterns.includePatterns[Linter.Stylelint],
+      fix,
       ignore: filePatterns.ignorePatterns,
       linter: Linter.Stylelint,
     }),
@@ -79,6 +85,7 @@ program
   .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
   .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
 
+  .option('--fix', 'automatically fix problems', false)
   .option('-w, --watch', 'watch for file changes and re-run the linters', false)
 
   .option('--ignore-dirs <directories...>', 'Directories to ignore globally')
@@ -86,7 +93,7 @@ program
   .option('--eslint-include <patterns...>', 'File patterns to include for ESLint')
 
   .option('--debug', 'output additional debug information including the list of files being linted', false)
-  .action(({ debug, emoji, eslintInclude, ignoreDirs, ignorePatterns, title, watch }) => {
+  .action(({ debug, emoji, eslintInclude, fix, ignoreDirs, ignorePatterns, title, watch }) => {
     clearTerminal()
     colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
@@ -98,7 +105,7 @@ program
       ignoreDirs,
       ignorePatterns,
     })
-    runLintPilot({ filePatterns, title, watch })
+    runLintPilot({ filePatterns, fix, title, watch })
 
     if (watch) {
       watchFiles({
@@ -110,7 +117,7 @@ program
         clearTerminal()
         colourLog.info(message)
         console.log()
-        runLintPilot({ filePatterns, title, watch })
+        runLintPilot({ filePatterns, fix, title, watch })
       })
     }
   })
