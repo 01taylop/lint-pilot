@@ -1,13 +1,15 @@
-import markdownlint, { type LintResults } from 'markdownlint'
-
+import { markdownlintError } from '@Jest/testData'
 import colourLog from '@Utils/colourLog'
 
+import fixFile from '../fixFile'
 import loadConfig from '../loadConfig'
+import markdownlintAsync, { type LintResults } from '../markdownlintAsync'
 import markdownlintLib from '..'
 
-jest.mock('markdownlint')
 jest.mock('@Utils/colourLog')
+jest.mock('../fixFile')
 jest.mock('../loadConfig')
+jest.mock('../markdownlintAsync')
 
 describe('markdownlint', () => {
 
@@ -18,13 +20,12 @@ describe('markdownlint', () => {
   const testFiles = ['README.md']
 
   beforeEach(() => {
+    jest.mocked(fixFile).mockImplementation(() => {})
     jest.mocked(loadConfig).mockReturnValue(['default', mockedConfig])
   })
 
   it('loads the config and logs it', async () => {
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, {})
-    })
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce({})
 
     await markdownlintLib.lintFiles({
       files: testFiles,
@@ -36,28 +37,26 @@ describe('markdownlint', () => {
   })
 
   it('calls markdownlint with the config and files', async () => {
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, {})
-    })
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce({})
 
     await markdownlintLib.lintFiles({
       files: testFiles,
       fix: false,
     })
 
-    expect(markdownlint).toHaveBeenCalledOnceWith({
+    expect(markdownlintAsync).toHaveBeenCalledOnceWith({
       config: mockedConfig,
       files: testFiles,
-    }, expect.any(Function))
+    })
   })
 
-  it('exists the process when markdownlint returns an error', async () => {
+  it('exists the process when markdownlint throws an error', async () => {
     expect.assertions(2)
 
     const error = new Error('Test error')
 
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(error, undefined)
+    jest.mocked(markdownlintAsync).mockImplementationOnce(() => {
+      throw error
     })
 
     try {
@@ -72,9 +71,7 @@ describe('markdownlint', () => {
   })
 
   it('resolves with results and a summary when markdownlint successfully lints (no files)', async () => {
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, undefined)
-    })
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce({})
 
     expect(await markdownlintLib.lintFiles({
       files: [],
@@ -98,9 +95,7 @@ describe('markdownlint', () => {
       'README.md': [],
     }
 
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, lintResults)
-    })
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
 
     expect(await markdownlintLib.lintFiles({
       files: testFiles,
@@ -177,9 +172,7 @@ describe('markdownlint', () => {
       ruleTheme: expect.any(Function),
     }
 
-    jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => {
-      callback(null, lintResults)
-    })
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
 
     expect(await markdownlintLib.lintFiles({
       files: testFiles,
@@ -235,7 +228,76 @@ describe('markdownlint', () => {
         warningCount: 0,
       },
     })
+  })
 
+  it('does not fix lint errors when the fix option is disabled', async () => {
+    const lintResults: LintResults = {
+      'README.md': [],
+    }
+
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
+
+    await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })
+
+    expect(markdownlintAsync).toHaveBeenCalledOnceWith({
+      config: mockedConfig,
+      files: testFiles,
+    })
+    expect(fixFile).not.toHaveBeenCalled()
+  })
+
+  it('calls markdownlint once when the fix option is enabled but there are no errors auto fixed', async () => {
+    const lintResults: LintResults = {
+      'README.md': [],
+    }
+
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
+
+    await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: true,
+    })
+
+    expect(markdownlintAsync).toHaveBeenCalledOnceWith({
+      config: mockedConfig,
+      files: testFiles,
+    })
+    expect(fixFile).not.toHaveBeenCalled()
+  })
+
+  it('fixes lint errors when the fix option is enabled and returns the updated results (running markdownlint a second time)', async () => {
+    const lintResultsWithError: LintResults = {
+      'README.md': [markdownlintError],
+    }
+    const lintResultsWithoutError: LintResults = {
+      'README.md': [],
+    }
+
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResultsWithError)
+    jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResultsWithoutError)
+
+    await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: true,
+    })
+
+    expect(markdownlintAsync).toHaveBeenCalledTimes(2)
+    expect(markdownlintAsync).toHaveBeenNthCalledWith(1, {
+      config: mockedConfig,
+      files: testFiles,
+    })
+    expect(markdownlintAsync).toHaveBeenNthCalledWith(2, {
+      config: mockedConfig,
+      files: testFiles,
+    })
+    expect(fixFile).toHaveBeenCalledTimes(1)
+    expect(fixFile).toHaveBeenCalledWith({
+      errors: [markdownlintError],
+      file: 'README.md',
+    })
   })
 
 })

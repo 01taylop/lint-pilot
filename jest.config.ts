@@ -21,6 +21,7 @@ const config: JestConfigWithTsJest = {
   },
   moduleFileExtensions: ['ts', ...defaults.moduleFileExtensions],
   moduleNameMapper: {
+    '^@Jest(.*)$': '<rootDir>/jest-config$1',
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },
