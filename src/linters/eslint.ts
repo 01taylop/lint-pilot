@@ -10,7 +10,7 @@ const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
   try {
     const eslint = new ESLint({
       cache: false,
-      fix: false,
+      fix,
     })
 
     const lintResults: Array<ESLint.LintResult> = await eslint.lintFiles(files)
@@ -50,6 +50,10 @@ const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
         }))
       })
     })
+
+    if (fix) {
+      await ESLint.outputFixes(lintResults)
+    }
 
     return {
       results: reportResults,

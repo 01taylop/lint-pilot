@@ -13,11 +13,21 @@ describe('eslint', () => {
 
   const testFiles = ['index.ts']
   const lintFilesMock = ESLint.prototype.lintFiles as jest.Mock
+  const outputFixesMock = ESLint.outputFixes as jest.Mock
+
+  const resultThemes = {
+    messageTheme: expect.any(Function),
+    positionTheme: expect.any(Function),
+    ruleTheme: expect.any(Function),
+  }
 
   it('creates a new ESLint instance', async () => {
     lintFilesMock.mockImplementationOnce(() => [])
 
-    await eslintLib.lintFiles(testFiles)
+    await eslintLib.lintFiles({
+      files: testFiles,
+      fix: false
+    })
 
     expect(ESLint).toHaveBeenCalledOnceWith({
       cache: false,
@@ -28,7 +38,10 @@ describe('eslint', () => {
   it('calls ESLint.lintFiles with the files', async () => {
     lintFilesMock.mockImplementationOnce(() => [])
 
-    await eslintLib.lintFiles(testFiles)
+    await eslintLib.lintFiles({
+      files: testFiles,
+      fix: false
+    })
 
     expect(ESLint.prototype.lintFiles).toHaveBeenCalledOnceWith(testFiles)
   })
@@ -43,7 +56,10 @@ describe('eslint', () => {
     })
 
     try {
-      await eslintLib.lintFiles(testFiles)
+      await eslintLib.lintFiles({
+        files: testFiles,
+        fix: false
+      })
     } catch {
       expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running eslint', error)
       expect(process.exit).toHaveBeenCalledWith(1)
@@ -55,7 +71,10 @@ describe('eslint', () => {
 
     lintFilesMock.mockImplementationOnce(() => lintResults)
 
-    expect(await eslintLib.lintFiles([])).toStrictEqual({
+    expect(await eslintLib.lintFiles({
+      files: [],
+      fix: false
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -84,7 +103,10 @@ describe('eslint', () => {
 
     lintFilesMock.mockImplementationOnce(() => lintResults)
 
-    expect(await eslintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await eslintLib.lintFiles({
+      files: testFiles,
+      fix: false
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -184,15 +206,12 @@ describe('eslint', () => {
       warningCount: 0,
     }]
 
-    const resultThemes = {
-      messageTheme: expect.any(Function),
-      positionTheme: expect.any(Function),
-      ruleTheme: expect.any(Function),
-    }
-
     lintFilesMock.mockImplementationOnce(() => lintResults)
 
-    expect(await eslintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await eslintLib.lintFiles({
+      files: testFiles,
+      fix: false
+    })).toStrictEqual({
       results: {
         'index.ts': [{
           ...resultThemes,
@@ -243,6 +262,98 @@ describe('eslint', () => {
         warningCount: 2,
       },
     })
+  })
+
+  it('does not fix lint errors when the fix option is disabled', async () => {
+    const lintResults: Array<ESLint.LintResult> = [{
+      errorCount: 1,
+      fatalErrorCount: 0,
+      filePath: `${process.cwd()}/index.ts`,
+      fixableErrorCount: 1,
+      fixableWarningCount: 0,
+      messages: [{
+        column: 1,
+        line: 1,
+        message: 'Fixable error rule',
+        ruleId: 'fixable-error-rule',
+        severity: 2,
+      }],
+      suppressedMessages: [],
+      usedDeprecatedRules: [],
+      warningCount: 0,
+    }]
+
+    lintFilesMock.mockImplementationOnce(() => lintResults)
+
+    const result = await eslintLib.lintFiles({
+      files: testFiles,
+      fix: false
+    })
+
+    expect(ESLint).toHaveBeenCalledOnceWith({
+      cache: false,
+      fix: false,
+    })
+    expect(result).toStrictEqual({
+      results: {
+        'index.ts': [{
+          ...resultThemes,
+          message: 'Fixable error rule',
+          position: '1:1',
+          rule: 'fixable-error-rule',
+          severity: 'X',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 1,
+        fileCount: 1,
+        fixableErrorCount: 1,
+        fixableWarningCount: 0,
+        linter: 'ESLint',
+        warningCount: 0,
+      },
+    })
+    expect(outputFixesMock).not.toHaveBeenCalled()
+  })
+
+  it('fixes lint errors when the fix option is enabled', async () => {
+    const lintResults: Array<ESLint.LintResult> = [{
+      errorCount: 0,
+      fatalErrorCount: 0,
+      filePath: `${process.cwd()}/index.ts`,
+      fixableErrorCount: 0,
+      fixableWarningCount: 0,
+      messages: [],
+      suppressedMessages: [],
+      usedDeprecatedRules: [],
+      warningCount: 0,
+    }]
+
+    lintFilesMock.mockImplementationOnce(() => lintResults)
+
+    const result = await eslintLib.lintFiles({
+      files: testFiles,
+      fix: true
+    })
+
+    expect(ESLint).toHaveBeenCalledOnceWith({
+      cache: false,
+      fix: true,
+    })
+    expect(result).toStrictEqual({
+      results: {},
+      summary: {
+        deprecatedRules: [],
+        errorCount: 0,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'ESLint',
+        warningCount: 0,
+      },
+    })
+    expect(outputFixesMock).toHaveBeenCalledOnceWith(lintResults)
   })
 
 })
