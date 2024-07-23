@@ -14,12 +14,18 @@ const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
       ruleMetadata,
     } = await stylelint.lint({
       allowEmptyInput: true,
+      cache: false,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,
         },
       },
       files,
+      fix,
+      quietDeprecationWarnings: true,
+      reportDescriptionlessDisables: true,
+      reportInvalidScopeDisables: true,
+      reportNeedlessDisables: true,
     })
 
     const reportResults: ReportResults = {}

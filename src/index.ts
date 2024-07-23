@@ -126,4 +126,4 @@ process.on('exit', () => {
   console.log()
 })
 
-program.parse(process.argv)
+program.parseAsync(process.argv)

@@ -22,9 +22,20 @@ describe('stylelint', () => {
       ruleMetadata: {},
     }))
 
-    await stylelintLib.lintFiles(testFiles)
+    await stylelintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })
 
-    expect(stylelint.lint).toHaveBeenCalledOnceWith(expect.objectContaining({ files: testFiles }))
+    expect(stylelint.lint).toHaveBeenCalledOnceWith(expect.objectContaining({
+      allowEmptyInput: true,
+      files: testFiles,
+      fix: false,
+      quietDeprecationWarnings: true,
+      reportDescriptionlessDisables: true,
+      reportInvalidScopeDisables: true,
+      reportNeedlessDisables: true,
+    }))
   })
 
   it('exists the process when stylelint throws an error', async () => {
@@ -37,7 +48,10 @@ describe('stylelint', () => {
     })
 
     try {
-      await stylelintLib.lintFiles(testFiles)
+      await stylelintLib.lintFiles({
+        files: testFiles,
+        fix: false,
+      })
     } catch {
       expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running stylelint', error)
       expect(process.exit).toHaveBeenCalledWith(1)
@@ -52,7 +66,10 @@ describe('stylelint', () => {
       ruleMetadata: {},
     }))
 
-    expect(await stylelintLib.lintFiles([])).toStrictEqual({
+    expect(await stylelintLib.lintFiles({
+      files: [],
+      fix: false,
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -80,7 +97,10 @@ describe('stylelint', () => {
       ruleMetadata: {},
     }))
 
-    expect(await stylelintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await stylelintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -187,7 +207,10 @@ describe('stylelint', () => {
       },
     }))
 
-    expect(await stylelintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await stylelintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })).toStrictEqual({
       results: {
         'card.css': [{
           ...resultThemes,
@@ -233,6 +256,56 @@ describe('stylelint', () => {
         warningCount: 0,
       },
     })
+  })
+
+  it('does not fix lint errors when the fix option is disabled', async () => {
+    const lintResults: Array<LintResult> = [{
+      deprecations: [],
+      invalidOptionWarnings: [],
+      parseErrors: [],
+      source: `${process.cwd()}/index.css`,
+      warnings: [],
+    }]
+
+    lintFilesMock.mockImplementationOnce(() => ({
+      results: lintResults,
+      ruleMetadata: {},
+    }))
+
+    await stylelintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })
+
+    expect(stylelint.lint).toHaveBeenCalledOnceWith(expect.objectContaining({
+      files: testFiles,
+      fix: false,
+    }))
+  })
+
+  it('fixes lint errors when the fix option is enabled', async () => {
+    const lintResults: Array<LintResult> = [{
+      deprecations: [],
+      invalidOptionWarnings: [],
+      parseErrors: [],
+      source: `${process.cwd()}/index.css`,
+      warnings: [],
+    }]
+
+    lintFilesMock.mockImplementationOnce(() => ({
+      results: lintResults,
+      ruleMetadata: {},
+    }))
+
+    await stylelintLib.lintFiles({
+      files: testFiles,
+      fix: true,
+    })
+
+    expect(stylelint.lint).toHaveBeenCalledOnceWith(expect.objectContaining({
+      files: testFiles,
+      fix: true,
+    }))
   })
 
 })
