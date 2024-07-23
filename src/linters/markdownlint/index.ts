@@ -6,6 +6,7 @@ import { formatResult } from '@Utils/transform'
 
 import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
+import fixFile from './fixFile'
 import loadConfig from './loadConfig'
 
 const lintFiles = ({ files, fix }: LintFiles): Promise<LintReport> => new Promise((resolve, _reject) => {
@@ -58,6 +59,13 @@ const lintFiles = ({ files, fix }: LintFiles): Promise<LintReport> => new Promis
             reportSummary.fixableErrorCount += 1
           }
         })
+
+      if (fix && reportSummary.fixableErrorCount > 0) {
+        fixFile({
+          errors,
+          file,
+        })
+      }
     })
 
     resolve({

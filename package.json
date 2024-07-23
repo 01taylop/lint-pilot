@@ -34,6 +34,7 @@
     "glob": "10.4.1",
     "log-symbols": "6.0.0",
     "markdownlint": "0.34.0",
+    "markdownlint-rule-helpers": "0.25.0",
     "node-notifier": "10.0.1",
     "space-log": "1.2.0",
     "stylelint": "16.6.1"

@@ -26,7 +26,10 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownlintLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })
 
     expect(loadConfig).toHaveBeenCalledTimes(1)
     expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Using default markdownlint config:', mockedConfig)
@@ -37,7 +40,10 @@ describe('markdownlint', () => {
       callback(null, {})
     })
 
-    await markdownlintLib.lintFiles(testFiles)
+    await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })
 
     expect(markdownlint).toHaveBeenCalledOnceWith({
       config: mockedConfig,
@@ -55,7 +61,10 @@ describe('markdownlint', () => {
     })
 
     try {
-      await markdownlintLib.lintFiles(testFiles)
+      await markdownlintLib.lintFiles({
+        files: testFiles,
+        fix: false,
+      })
     } catch {
       expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running markdownlint', error)
       expect(process.exit).toHaveBeenCalledWith(1)
@@ -67,7 +76,10 @@ describe('markdownlint', () => {
       callback(null, undefined)
     })
 
-    expect(await markdownlintLib.lintFiles([])).toStrictEqual({
+    expect(await markdownlintLib.lintFiles({
+      files: [],
+      fix: false,
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -90,7 +102,10 @@ describe('markdownlint', () => {
       callback(null, lintResults)
     })
 
-    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })).toStrictEqual({
       results: {},
       summary: {
         deprecatedRules: [],
@@ -166,7 +181,10 @@ describe('markdownlint', () => {
       callback(null, lintResults)
     })
 
-    expect(await markdownlintLib.lintFiles(testFiles)).toStrictEqual({
+    expect(await markdownlintLib.lintFiles({
+      files: testFiles,
+      fix: false,
+    })).toStrictEqual({
       results: {
         'CONTRIBUTING.md': [{
           ...resultThemes,
