@@ -61,14 +61,21 @@ interface FilePatterns {
   ignorePatterns: Array<string>
 }
 
+interface LintFiles {
+  files: Array<string>
+  fix: boolean
+}
+
 interface RunLinter {
   filePattern: Array<string>
+  fix: boolean
   ignore: Array<string>
   linter: Linter
 }
 
 interface RunLintPilot {
   filePatterns: FilePatterns
+  fix: boolean
   title: string
   watch: boolean
 }
@@ -80,6 +87,7 @@ interface RunLintPilot {
 export type {
   FilePatterns,
   FormattedResult,
+  LintFiles,
   LintReport,
   ReportResults,
   ReportSummary,

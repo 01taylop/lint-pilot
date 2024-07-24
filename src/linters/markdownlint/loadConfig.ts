@@ -8,21 +8,14 @@ import colourLog from '@Utils/colourLog'
 
 const loadConfig = (): [string, Configuration] => {
   try {
-    // Custom Config
+    // Custom config
     const customConfigPath = `${process.cwd()}/.markdownlint.json`
     if (fs.existsSync(customConfigPath)) {
       return ['custom', markdownlint.readConfigSync(customConfigPath)]
     }
 
+    // Default config
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-    // Local config (if in development mode) - this block will be removed in production builds
-    if (process.env.NODE_ENV === 'development') {
-      const localConfigPath = path.resolve(__dirname, '../../../config/markdownlint.json')
-      return ['development', markdownlint.readConfigSync(localConfigPath)]
-    }
-
-    // Local config (if in production mode)
     const localConfigPath = path.resolve(__dirname, './markdownlint.json')
     return ['default', markdownlint.readConfigSync(localConfigPath)]
   } catch (error) {

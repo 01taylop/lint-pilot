@@ -1,71 +1,51 @@
-import markdownlint, { type LintResults } from 'markdownlint'
-
-import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
-import { formatResult } from '@Utils/transform'
 
-import type { LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFiles, LintReport } from '@Types'
 
+import fixFile from './fixFile'
 import loadConfig from './loadConfig'
+import markdownlintAsync, { type LintResults } from './markdownlintAsync'
+import processResults from './processResults'
 
-const lintFiles = (files: Array<string>): Promise<LintReport> => new Promise((resolve, reject) => {
-  const [configName, config] = loadConfig()
+const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
+  try {
+    const [configName, config] = loadConfig()
 
-  colourLog.configDebug(`Using ${configName} markdownlint config:`, config)
+    colourLog.configDebug(`Using ${configName} markdownlint config:`, config)
 
-  markdownlint({
-    config,
-    files,
-  }, (error: any, lintResults: LintResults | undefined = {}) => {
-    if (error) {
-      colourLog.error('An error occurred while running markdownlint', error)
-      process.exit(1)
-    }
+    if (fix) {
+      const fixableLintResults: LintResults = await markdownlintAsync({
+        config,
+        files,
+      })
 
-    const reportResults: ReportResults = {}
+      let fixedFiles = false
 
-    const reportSummary: ReportSummary = {
-      deprecatedRules: [],
-      errorCount: 0,
-      fileCount: Object.keys(lintResults).length,
-      fixableErrorCount: 0,
-      fixableWarningCount: 0,
-      linter: Linter.Markdownlint,
-      warningCount: 0,
-    }
+      Object.entries(fixableLintResults).forEach(([file, errors]) => {
+        if (errors.some(error => error.fixInfo !== undefined)) {
+          fixFile({
+            errors,
+            file,
+          })
+          fixedFiles = true
+        }
+      })
 
-    Object.entries(lintResults).forEach(([file, errors]) => {
-      if (!errors.length) {
-        return
+      if (!fixedFiles) {
+        return processResults(fixableLintResults)
       }
+    }
 
-      reportResults[file] = []
-
-      reportSummary.errorCount += errors.length
-
-      errors
-        .sort((a, b) => a.lineNumber - b.lineNumber || a.ruleNames[1].localeCompare(b.ruleNames[1]))
-        .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
-          reportResults[file].push(formatResult({
-            column: errorRange?.length ? errorRange[0] : undefined,
-            lineNumber,
-            message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
-            rule: ruleNames[1],
-            severity: RuleSeverity.ERROR,
-          }))
-
-          if (fixInfo) {
-            reportSummary.fixableErrorCount += 1
-          }
-        })
+    const lintResults = await markdownlintAsync({
+      config,
+      files,
     })
-
-    resolve({
-      results: reportResults,
-      summary: reportSummary,
-    })
-  })
-})
+    return processResults(lintResults)
+  } catch (error) {
+    colourLog.error('An error occurred while running markdownlint', error)
+    process.exit(1)
+  }
+}
 
 const markdownlintLib = {
   lintFiles,

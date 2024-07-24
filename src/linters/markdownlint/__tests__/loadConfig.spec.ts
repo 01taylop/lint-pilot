@@ -22,20 +22,7 @@ describe('loadConfig', () => {
     expect(markdownlint.readConfigSync).toHaveBeenCalledWith(`${process.cwd()}/.markdownlint.json`)
   })
 
-  it('returns the development config when NODE_ENV is development', () => {
-    process.env.NODE_ENV = 'development'
-
-    jest.mocked(fs.existsSync).mockReturnValueOnce(false)
-
-    expect(loadConfig()).toStrictEqual(['development', {
-      default: true,
-    }])
-    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(expect.stringContaining('lint-pilot/config/markdownlint.json'))
-  })
-
-  it('returns the default config when NODE_ENV is production', () => {
-    process.env.NODE_ENV = 'production'
-
+  it('returns the default config if no custom config exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(false)
 
     expect(loadConfig()).toStrictEqual(['default', {

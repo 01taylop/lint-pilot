@@ -13,8 +13,8 @@ describe('sourceFiles', () => {
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
 
   const commonArgs = {
-    filePattern: '*.ts',
-    ignore: 'node_modules',
+    filePattern: ['*.ts'],
+    ignore: ['node_modules'],
     linter: Linter.ESLint,
   }
 
@@ -23,7 +23,7 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(commonArgs)
 
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
     expect(files).toEqual([])
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 0 files matching "*.ts" for ESLint:', [])
   })
@@ -35,7 +35,7 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(commonArgs)
 
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
     expect(files).toEqual(mockedFiles)
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 1 file matching "*.ts" for ESLint:', mockedFiles)
   })
@@ -47,7 +47,7 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(commonArgs)
 
-    expect(glob).toHaveBeenCalledWith('*.ts', { ignore: 'node_modules' })
+    expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
     expect(files).toEqual(mockedFiles)
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 2 files matching "*.ts" for ESLint:', mockedFiles)
   })

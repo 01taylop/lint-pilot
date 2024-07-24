@@ -4,9 +4,9 @@ import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { formatResult } from '@Utils/transform'
 
-import type { LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
-const lintFiles = async (files: Array<string>): Promise<LintReport> => {
+const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
   try {
     // TODO: Stylelint config, extensible?
     const {
@@ -14,12 +14,18 @@ const lintFiles = async (files: Array<string>): Promise<LintReport> => {
       ruleMetadata,
     } = await stylelint.lint({
       allowEmptyInput: true,
+      cache: false,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,
         },
       },
       files,
+      fix,
+      quietDeprecationWarnings: true,
+      reportDescriptionlessDisables: true,
+      reportInvalidScopeDisables: true,
+      reportNeedlessDisables: true,
     })
 
     const reportResults: ReportResults = {}

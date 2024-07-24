@@ -16,7 +16,7 @@
   "scripts": {
     "build": "rimraf lib && mkdir lib && rollup -c && yarn buildConfig",
     "buildConfig": "tsx ./scripts/build-config.ts",
-    "lint": "NODE_ENV=development tsx src/index.js",
+    "lint": "NODE_ENV=development tsx src/index.js --ignore-dirs lib",
     "publishLib": "yarn test --coverage && yarn build && cd lib && npm publish",
     "test": "jest"
   },
@@ -34,6 +34,7 @@
     "glob": "10.4.1",
     "log-symbols": "6.0.0",
     "markdownlint": "0.34.0",
+    "markdownlint-rule-helpers": "0.25.0",
     "node-notifier": "10.0.1",
     "space-log": "1.2.0",
     "stylelint": "16.6.1"

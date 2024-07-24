@@ -4,13 +4,13 @@ import { Linter, RuleSeverity } from '@Types'
 import colourLog from '@Utils/colourLog'
 import { formatResult } from '@Utils/transform'
 
-import type { LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
-const lintFiles = async (files: Array<string>): Promise<LintReport> => {
+const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
   try {
     const eslint = new ESLint({
       cache: false,
-      fix: false,
+      fix,
     })
 
     const lintResults: Array<ESLint.LintResult> = await eslint.lintFiles(files)
@@ -50,6 +50,10 @@ const lintFiles = async (files: Array<string>): Promise<LintReport> => {
         }))
       })
     })
+
+    if (fix) {
+      await ESLint.outputFixes(lintResults)
+    }
 
     return {
       results: reportResults,
