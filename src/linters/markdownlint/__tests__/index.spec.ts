@@ -89,7 +89,7 @@ describe('markdownlint', () => {
     expect(fixFile).not.toHaveBeenCalled()
   })
 
-  it('calls markdownlint once when the fix option is enabled but there are no errors auto fixed', async () => {
+  it('calls markdownlint once when the fix option is enabled but there are no errors to be fixed', async () => {
     const lintResults: LintResults = {
       'README.md': [],
     }
