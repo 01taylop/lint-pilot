@@ -28,6 +28,7 @@ describe('markdownlint', () => {
     jest.mocked(markdownlintAsync).mockResolvedValueOnce({})
 
     await markdownlintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })
@@ -40,6 +41,7 @@ describe('markdownlint', () => {
     jest.mocked(markdownlintAsync).mockResolvedValueOnce({})
 
     await markdownlintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })
@@ -61,6 +63,7 @@ describe('markdownlint', () => {
 
     try {
       await markdownlintLib.lintFiles({
+        cache: false,
         files: testFiles,
         fix: false,
       })
@@ -78,6 +81,7 @@ describe('markdownlint', () => {
     jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
 
     await markdownlintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })
@@ -97,6 +101,7 @@ describe('markdownlint', () => {
     jest.mocked(markdownlintAsync).mockResolvedValueOnce(lintResults)
 
     await markdownlintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: true,
     })
@@ -121,6 +126,7 @@ describe('markdownlint', () => {
       .mockResolvedValueOnce(lintResultsWithoutError)
 
     await markdownlintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: true,
     })

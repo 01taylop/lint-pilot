@@ -32,12 +32,30 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => [])
 
     await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false
     })
 
     expect(ESLint).toHaveBeenCalledOnceWith({
       cache: false,
+      cacheLocation: undefined,
+      fix: false,
+    })
+  })
+
+  it('creates a new ESLint instance with cacheing enabled', async () => {
+    lintFilesMock.mockImplementationOnce(() => [])
+
+    await eslintLib.lintFiles({
+      cache: true,
+      files: testFiles,
+      fix: false
+    })
+
+    expect(ESLint).toHaveBeenCalledOnceWith({
+      cache: true,
+      cacheLocation: expect.stringContaining('.lintpilotcache/.eslintcache'),
       fix: false,
     })
   })
@@ -46,6 +64,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => [])
 
     await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false
     })
@@ -64,6 +83,7 @@ describe('eslint', () => {
 
     try {
       await eslintLib.lintFiles({
+        cache: false,
         files: testFiles,
         fix: false
       })
@@ -79,6 +99,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => lintResults)
 
     expect(await eslintLib.lintFiles({
+      cache: false,
       files: [],
       fix: false
     })).toStrictEqual({
@@ -99,6 +120,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
 
     expect(await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false
     })).toStrictEqual({
@@ -204,6 +226,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => lintResults)
 
     expect(await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false
     })).toStrictEqual({
@@ -263,6 +286,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
 
     await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false
     })
@@ -278,6 +302,7 @@ describe('eslint', () => {
     lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
 
     await eslintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: true
     })

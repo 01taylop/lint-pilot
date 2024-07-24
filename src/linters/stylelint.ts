@@ -1,12 +1,13 @@
 import stylelint from 'stylelint'
 
 import { Linter, RuleSeverity } from '@Types'
+import { getCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colourLog'
 import { formatResult } from '@Utils/transform'
 
 import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
-const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
+const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> => {
   try {
     // TODO: Stylelint config, extensible?
     const {
@@ -14,7 +15,8 @@ const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
       ruleMetadata,
     } = await stylelint.lint({
       allowEmptyInput: true,
-      cache: false,
+      cache,
+      cacheLocation: cache ? getCacheDirectory('.stylelintcache') : undefined,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,
