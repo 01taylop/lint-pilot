@@ -1,5 +1,6 @@
 import stylelint, { type LintResult } from 'stylelint'
 
+import { expectedResultThemes } from '@Jest/testData'
 import colourLog from '@Utils/colourLog'
 
 import stylelintLib from '../stylelint'
@@ -15,6 +16,14 @@ describe('stylelint', () => {
 
   const testFiles = ['index.css']
   const lintFilesMock = stylelint.lint as jest.Mock
+
+  const noErrorLintResults: Array<LintResult> = [{
+    deprecations: [],
+    invalidOptionWarnings: [],
+    parseErrors: [],
+    source: `${process.cwd()}/index.css`,
+    warnings: [],
+  }]
 
   it('calls stylelint.lint with the files', async () => {
     lintFilesMock.mockImplementationOnce(() => ({
@@ -84,16 +93,8 @@ describe('stylelint', () => {
   })
 
   it('returns results and a summary when stylelint successfully lints (no errors)', async () => {
-    const lintResults: Array<LintResult> = [{
-      deprecations: [],
-      invalidOptionWarnings: [],
-      parseErrors: [],
-      source: `${process.cwd()}/index.css`,
-      warnings: [],
-    }]
-
     lintFilesMock.mockImplementationOnce(() => ({
-      results: lintResults,
+      results: noErrorLintResults,
       ruleMetadata: {},
     }))
 
@@ -194,12 +195,6 @@ describe('stylelint', () => {
       }],
     }]
 
-    const resultThemes = {
-      messageTheme: expect.any(Function),
-      positionTheme: expect.any(Function),
-      ruleTheme: expect.any(Function),
-    }
-
     lintFilesMock.mockImplementationOnce(() => ({
       results: lintResults,
       ruleMetadata: {
@@ -213,33 +208,33 @@ describe('stylelint', () => {
     })).toStrictEqual({
       results: {
         'card.css': [{
-          ...resultThemes,
+          ...expectedResultThemes,
           message: 'Error rule 1',
           position: '1:1',
           rule: 'error-rule-1',
           severity: 'X',
         }, {
-          ...resultThemes,
+          ...expectedResultThemes,
           message: 'Error rule 2',
           position: '2:1',
           rule: 'error-rule-2',
           severity: 'X',
         }, {
-          ...resultThemes,
+          ...expectedResultThemes,
           message: 'Warning rule 1',
           position: '3:1',
           rule: 'warning-rule-1',
           severity: 'X',
         }],
         'datepicker.css': [{
-          ...resultThemes,
+          ...expectedResultThemes,
           message: 'Fixable rule',
           position: '1:1',
           rule: 'fixable-rule',
           severity: 'X',
         }],
         'unknown-source': [{
-          ...resultThemes,
+          ...expectedResultThemes,
           message: 'Unknown source rule',
           position: '1:1',
           rule: 'unknown-source-rule',
@@ -259,16 +254,8 @@ describe('stylelint', () => {
   })
 
   it('does not fix lint errors when the fix option is disabled', async () => {
-    const lintResults: Array<LintResult> = [{
-      deprecations: [],
-      invalidOptionWarnings: [],
-      parseErrors: [],
-      source: `${process.cwd()}/index.css`,
-      warnings: [],
-    }]
-
     lintFilesMock.mockImplementationOnce(() => ({
-      results: lintResults,
+      results: noErrorLintResults,
       ruleMetadata: {},
     }))
 
@@ -284,16 +271,8 @@ describe('stylelint', () => {
   })
 
   it('fixes lint errors when the fix option is enabled', async () => {
-    const lintResults: Array<LintResult> = [{
-      deprecations: [],
-      invalidOptionWarnings: [],
-      parseErrors: [],
-      source: `${process.cwd()}/index.css`,
-      warnings: [],
-    }]
-
     lintFilesMock.mockImplementationOnce(() => ({
-      results: lintResults,
+      results: noErrorLintResults,
       ruleMetadata: {},
     }))
 

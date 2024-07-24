@@ -1,3 +1,7 @@
+/*
+ * MOCKS AND SPIES
+ */
+
 jest.mock('log-symbols', () => ({
   warning: '!',
   error: 'X',
@@ -7,9 +11,17 @@ jest.spyOn(process, 'exit').mockImplementation(code => {
   throw new Error(`process.exit(${code})`)
 })
 
+/*
+ * HOOKS
+ */
+
 beforeEach(() => {
   global.debug = false
 })
+
+/*
+ * EXTEND EXPECT
+ */
 
 expect.extend({
   toHaveBeenCalledOnceWith(received, ...expected) {

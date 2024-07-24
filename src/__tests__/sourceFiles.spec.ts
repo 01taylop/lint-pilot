@@ -13,8 +13,8 @@ describe('sourceFiles', () => {
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
 
   const commonArgs = {
-    filePattern: '*.ts',
-    ignore: 'node_modules',
+    filePattern: ['*.ts'],
+    ignore: ['node_modules'],
     linter: Linter.ESLint,
   }
 
