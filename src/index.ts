@@ -2,6 +2,7 @@
 import { Command } from 'commander'
 
 import { Events, Linter } from '@Types'
+import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colourLog'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
@@ -22,7 +23,7 @@ program
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
-const runLinter = async ({ filePattern, fix, linter, ignore }: RunLinter) => {
+const runLinter = async ({ cache, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -33,6 +34,7 @@ const runLinter = async ({ filePattern, fix, linter, ignore }: RunLinter) => {
   })
 
   const report: LintReport = await linters[linter].lintFiles({
+    cache,
     files,
     fix,
   })
@@ -42,24 +44,27 @@ const runLinter = async ({ filePattern, fix, linter, ignore }: RunLinter) => {
   return report
 }
 
-const runLintPilot = ({ filePatterns, fix, title, watch }: RunLintPilot) => {
+const runLintPilot = ({ cache, filePatterns, fix, title, watch }: RunLintPilot) => {
+  const commonArgs = {
+    cache,
+    fix,
+    ignore: filePatterns.ignorePatterns,
+  }
+
   Promise.all([
     runLinter({
+      ...commonArgs,
       filePattern: filePatterns.includePatterns[Linter.ESLint],
-      fix,
-      ignore: filePatterns.ignorePatterns,
       linter: Linter.ESLint,
     }),
     runLinter({
+      ...commonArgs,
       filePattern: filePatterns.includePatterns[Linter.Markdownlint],
-      fix,
-      ignore: filePatterns.ignorePatterns,
       linter: Linter.Markdownlint,
     }),
     runLinter({
+      ...commonArgs,
       filePattern: filePatterns.includePatterns[Linter.Stylelint],
-      fix,
-      ignore: filePatterns.ignorePatterns,
       linter: Linter.Stylelint,
     }),
   ]).then((reports) => {
@@ -88,15 +93,22 @@ program
   .option('--fix', 'automatically fix problems', false)
   .option('-w, --watch', 'watch for file changes and re-run the linters', false)
 
+  .option('--cache', 'cache linting results', false)
+  .option('--clearCache', 'clear the cache', false)
+
   .option('--ignore-dirs <directories...>', 'Directories to ignore globally')
   .option('--ignore-patterns <patterns...>', 'File patterns to ignore globally')
   .option('--eslint-include <patterns...>', 'File patterns to include for ESLint')
 
   .option('--debug', 'output additional debug information including the list of files being linted', false)
-  .action(({ debug, emoji, eslintInclude, fix, ignoreDirs, ignorePatterns, title, watch }) => {
+  .action(({ cache, clearCache, debug, emoji, eslintInclude, fix, ignoreDirs, ignorePatterns, title, watch }) => {
     clearTerminal()
     colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
+
+    if (clearCache) {
+      clearCacheDirectory()
+    }
 
     global.debug = debug
 
@@ -105,7 +117,7 @@ program
       ignoreDirs,
       ignorePatterns,
     })
-    runLintPilot({ filePatterns, fix, title, watch })
+    runLintPilot({ cache, filePatterns, fix, title, watch })
 
     if (watch) {
       watchFiles({
@@ -117,7 +129,7 @@ program
         clearTerminal()
         colourLog.info(message)
         console.log()
-        runLintPilot({ filePatterns, fix, title, watch })
+        runLintPilot({ cache, filePatterns, fix, title, watch })
       })
     }
   })

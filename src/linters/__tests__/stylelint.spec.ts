@@ -32,19 +32,49 @@ describe('stylelint', () => {
     }))
 
     await stylelintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })
 
-    expect(stylelint.lint).toHaveBeenCalledOnceWith(expect.objectContaining({
+    expect(stylelint.lint).toHaveBeenCalledOnceWith({
       allowEmptyInput: true,
+      cache: false,
+      cacheLocation: undefined,
+      config: expect.anything(),
       files: testFiles,
       fix: false,
       quietDeprecationWarnings: true,
       reportDescriptionlessDisables: true,
       reportInvalidScopeDisables: true,
       reportNeedlessDisables: true,
+    })
+  })
+
+  it('calls stylelint.lint with cacheing enabled', async () => {
+    lintFilesMock.mockImplementationOnce(() => ({
+      results: [],
+      ruleMetadata: {},
     }))
+
+    await stylelintLib.lintFiles({
+      cache: true,
+      files: testFiles,
+      fix: false,
+    })
+
+    expect(stylelint.lint).toHaveBeenCalledOnceWith({
+      allowEmptyInput: true,
+      cache: true,
+      cacheLocation: expect.stringContaining('.lintpilotcache/.stylelintcache'),
+      config: expect.anything(),
+      files: testFiles,
+      fix: false,
+      quietDeprecationWarnings: true,
+      reportDescriptionlessDisables: true,
+      reportInvalidScopeDisables: true,
+      reportNeedlessDisables: true,
+    })
   })
 
   it('exists the process when stylelint throws an error', async () => {
@@ -58,6 +88,7 @@ describe('stylelint', () => {
 
     try {
       await stylelintLib.lintFiles({
+        cache: false,
         files: testFiles,
         fix: false,
       })
@@ -76,6 +107,7 @@ describe('stylelint', () => {
     }))
 
     expect(await stylelintLib.lintFiles({
+      cache: false,
       files: [],
       fix: false,
     })).toStrictEqual({
@@ -99,6 +131,7 @@ describe('stylelint', () => {
     }))
 
     expect(await stylelintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })).toStrictEqual({
@@ -203,6 +236,7 @@ describe('stylelint', () => {
     }))
 
     expect(await stylelintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })).toStrictEqual({
@@ -260,6 +294,7 @@ describe('stylelint', () => {
     }))
 
     await stylelintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: false,
     })
@@ -277,6 +312,7 @@ describe('stylelint', () => {
     }))
 
     await stylelintLib.lintFiles({
+      cache: false,
       files: testFiles,
       fix: true,
     })
