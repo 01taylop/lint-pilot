@@ -2,6 +2,7 @@ ignores: [
   "eslint-plugin-eslint-comments",
   "eslint-plugin-inclusive-language",
   "eslint-plugin-jest",
+  "eslint-plugin-jest-formatting",
   "eslint-plugin-promise",
   "eslint-plugin-sort-destructure-keys",
   "eslint-plugin-sort-exports",
