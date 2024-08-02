@@ -4,11 +4,11 @@ import Rules from './rules'
 
 const buildFlatConfig = () => ([{
   plugins: {
-    'eslint-comments': Plugins.eslintComments,
-    'inclusive-language': Plugins.inclusiveLanguage,
-    'promise': Plugins.promise,
-    'sort-destructure-keys': Plugins.sortDestructureKeys,
-    'sort-exports': Plugins.sortExports,
+    'eslint-comments': Plugins.EslintComments,
+    'inclusive-language': Plugins.InclusiveLanguage,
+    'promise': Plugins.Promise,
+    'sort-destructure-keys': Plugins.SortDestructureKeys,
+    'sort-exports': Plugins.SortExports,
   },
   rules: {
     ...Rules.ESLintComments,
@@ -25,8 +25,8 @@ const buildFlatConfig = () => ([{
     },
   },
   plugins: {
-    'jest': Plugins.jest,
-    'jest-formatting': Plugins.jestFormatting,
+    'jest': Plugins.Jest,
+    'jest-formatting': Plugins.JestFormatting,
   },
   rules: {
     ...Rules.Jest,
