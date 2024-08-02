@@ -6,6 +6,7 @@ const buildFlatConfig = () => ([{
   plugins: {
     'eslint-comments': Plugins.EslintComments,
     'inclusive-language': Plugins.InclusiveLanguage,
+    'n': Plugins.N,
     'promise': Plugins.Promise,
     'sort-destructure-keys': Plugins.SortDestructureKeys,
     'sort-exports': Plugins.SortExports,
@@ -13,6 +14,7 @@ const buildFlatConfig = () => ([{
   rules: {
     ...Rules.ESLintComments,
     ...Rules.InclusiveLanguage,
+    ...Rules.N,
     ...Rules.Promise,
     ...Rules.SortDestructureKeys,
     ...Rules.SortExports,

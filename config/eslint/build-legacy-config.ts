@@ -8,6 +8,7 @@ const buildLegacyConfig = () => ({
   plugins: [
     'eslint-comments',
     'inclusive-language',
+    'n',
     'promise',
     'sort-destructure-keys',
     'sort-exports',
@@ -15,6 +16,7 @@ const buildLegacyConfig = () => ({
   rules: {
     ...Rules.ESLintComments,
     ...Rules.InclusiveLanguage,
+    ...Rules.N,
     ...Rules.Promise,
     ...Rules.SortDestructureKeys,
     ...Rules.SortExports,
