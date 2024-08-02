@@ -8,7 +8,7 @@ const config: JestConfigWithTsJest = {
     'src/**/*.ts',
     // TODO: Write tests for these files when they are less likely to change
     '!src/index.ts',
-    '!src/linters/*.ts',
+    '!src/linters/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
@@ -21,12 +21,19 @@ const config: JestConfigWithTsJest = {
   },
   moduleFileExtensions: ['ts', ...defaults.moduleFileExtensions],
   moduleNameMapper: {
+    '^@Jest(.*)$': '<rootDir>/jest-config$1',
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },
+  setupFilesAfterEnv: [
+    '<rootDir>/jest-config/setup.ts',
+  ],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.(js|ts)$': 'babel-jest',
   },
+  transformIgnorePatterns: [
+    './node_modules/(?!(chalk)/)',
+  ]
 }
 
 export default config

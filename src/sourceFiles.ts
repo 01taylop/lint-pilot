@@ -1,25 +1,22 @@
 import { glob } from 'glob'
 
 import { Linter } from '@Types'
+import colourLog from '@Utils/colourLog'
 import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {
-  debug: boolean
-  filePattern: string
-  ignore: string
+  filePattern: Array<string>
+  ignore: Array<string>
   linter: Linter
 }
 
-const sourceFiles = async ({ debug, filePattern, ignore, linter }: SourceFiles) => {
+const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
   try {
     const files = await glob(filePattern, { ignore })
-    if (debug) {
-      console.log(`\nSourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`)
-      console.log(files)
-    }
+    colourLog.configDebug(`Sourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`, files)
     return files
   } catch (error) {
-    console.error(`An error occurred while trying to source files matching ${filePattern}`, error)
+    colourLog.error(`An error occurred while trying to source files matching ${filePattern}`, error)
     process.exit(1)
   }
 }

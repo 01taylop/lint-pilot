@@ -1,7 +1,5 @@
 ignores: [
-  "eslint-plugin-import",
-  "eslint-plugin-inclusive-language",
-  "rimraf",
-  "@types/jest"
+  "@types/jest",
+  "rimraf"
 ]
 skip-missing: true

@@ -1,18 +1,60 @@
 import chalk from 'chalk'
+import { spaceLog } from 'space-log'
 
-import { type ProcessedResult } from '@Types'
 import { pluralise } from '@Utils/transform'
+
+import type { LintReport, ReportSummary } from '@Types'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {
-    const configString = configArray.length >= 2 ? `[${configArray.join(', ')}]` : configArray[0]
-    console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
+    const configString = configArray.length > 1
+      ? `[${configArray.join(', ')}]`
+      : configArray[0]
+
+    console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
+  },
+
+  configDebug: (message: string, config: any) => {
+    if (global.debug) {
+      console.log(`\n${chalk.blue(message)}`)
+      console.log(config)
+    }
+  },
+
+  error: (text: string, error?: Error | unknown) => {
+    let errorMessage = `\n${text}.`
+    if (error && global.debug === false) {
+      errorMessage += ' Run with --debug for more information.'
+    }
+
+    console.log(chalk.red(errorMessage))
+    if (error && global.debug === true) {
+      console.log()
+      console.log(error)
+    }
   },
 
   info: (text: string) => console.log(chalk.blue(text)),
 
-  result: (processedResult: ProcessedResult, startTime: number) => {
-    const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = processedResult
+  results: ({ results, summary }: LintReport) => {
+    if (Object.keys(results).length === 0) {
+      return
+    }
+
+    console.log(chalk.blue(`\nLogging ${summary.linter.toLowerCase()} results:`))
+
+    Object.entries(results).forEach(([file, formattedResults]) => {
+      console.log()
+      console.log(chalk.underline(file))
+      spaceLog({
+        columnKeys: ['severity', 'position', 'message', 'rule'],
+        spaceSize: 2,
+      }, formattedResults)
+    })
+  },
+
+  summary: (summary: ReportSummary, startTime: number) => {
+    const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = summary
 
     const log = []
 
@@ -43,28 +85,34 @@ const colourLog = {
     }
 
     // Output
+    const finishedLinter = chalk.cyan(`Finished ${linter.toLowerCase()}`)
     const files = `${fileCount} ${pluralise('file', fileCount)}`
     const endTime = `${new Date().getTime() - startTime}ms`
-    console.log()
-    console.log(chalk.cyan(`Finished ${linter.toLowerCase()}`), chalk.yellow(`[${files}, ${endTime}]`))
-    log.length && console.log(log.join('\n'))
+
+    console.log(`\n${finishedLinter}`, chalk.yellow(`[${files}, ${endTime}]`))
+    if (log.length) {
+      console.log(log.join('\n'))
+    }
   },
 
-  resultBlock: ({ errorCount, linter, warningCount }: ProcessedResult) => {
+  summaryBlock: ({ errorCount, linter, warningCount }: ReportSummary) => {
+    // Errors
     if (errorCount > 0) {
       const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
-      console.log(`💔 ${message}\n`)
-    }
-    if (warningCount > 0) {
-      const message = chalk.bgYellow.black(` ${warningCount} ${linter} ${pluralise('Warning', warningCount)} `)
-      console.log(`🚧 ${message}\n`)
-    }
-    if (errorCount > 0 || warningCount > 0) {
-      return
+      console.log(`\n🚨 ${message}`)
     }
 
-    const message = chalk.bgGreen.black(` ${linter} Success! `)
-    console.log(`✅ ${message}\n`)
+    // Warnings
+    if (warningCount > 0) {
+      const message = chalk.bgYellow.black(` ${warningCount} ${linter} ${pluralise('Warning', warningCount)} `)
+      console.log(`\n🚧 ${message}`)
+    }
+
+    // Success
+    if (errorCount === 0 && warningCount === 0) {
+      const message = chalk.bgGreen.black(` ${linter} Success! `)
+      console.log(`\n✅ ${message}`)
+    }
   },
 
   title: (title: string) => console.log(chalk.cyan(title)),

@@ -1,48 +1,73 @@
-import { ESLint } from 'eslint'
+import { ESLint, loadESLint } from 'eslint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, RuleSeverity } from '@Types'
+import { getCacheDirectory } from '@Utils/cache'
+import colourLog from '@Utils/colourLog'
+import { formatResult } from '@Utils/transform'
 
-const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
+import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
+
+const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles): Promise<LintReport> => {
   try {
-    const eslint = new ESLint({
-      // @ts-expect-error
-      overrideConfigFile: true,
-      overrideConfig: {
-        rules: {
-          'quotes': [2, 'single'],
-          'no-console': 2,
-          'no-ternary': 1,
-          'no-unused-vars': 2,
-        },
-      },
+    const CustomESLint = await loadESLint({
+      useFlatConfig: !eslintUseLegacyConfig,
     })
 
-    const results = await eslint.lintFiles(filePaths)
+    const eslint = new CustomESLint({
+      cache,
+      cacheLocation: cache ? getCacheDirectory('.eslintcache') : undefined,
+      fix,
+    })
 
-    const processedResult: ProcessedResult = {
+    const lintResults: Array<ESLint.LintResult> = await eslint.lintFiles(files)
+
+    const reportResults: ReportResults = {}
+
+    const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
-      fileCount: results.length,
+      fileCount: lintResults.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.ESLint,
       warningCount: 0,
     }
 
-    results.forEach(({ errorCount, fixableErrorCount, fixableWarningCount, usedDeprecatedRules, warningCount }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
-      processedResult.errorCount += errorCount
-      processedResult.fixableErrorCount += fixableErrorCount
-      processedResult.fixableWarningCount += fixableWarningCount
-      processedResult.warningCount += warningCount
+    lintResults.forEach(({ errorCount, filePath, fixableErrorCount, fixableWarningCount, messages, usedDeprecatedRules, warningCount }) => {
+      const file = filePath.replace(`${process.cwd()}/`, '')
+
+      reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
+      reportSummary.errorCount += errorCount
+      reportSummary.fixableErrorCount += fixableErrorCount
+      reportSummary.fixableWarningCount += fixableWarningCount
+      reportSummary.warningCount += warningCount
+
+      messages.forEach(({ column, line, message, ruleId, severity }) => {
+        if (!reportResults[file]) {
+          reportResults[file] = []
+        }
+
+        reportResults[file].push(formatResult({
+          column: line ? column : undefined,
+          lineNumber: line || 0,
+          message: message.trim(),
+          rule: ruleId || 'core-error',
+          severity: severity === 1 ? RuleSeverity.WARNING : RuleSeverity.ERROR,
+        }))
+      })
     })
 
+    if (fix) {
+      await ESLint.outputFixes(lintResults)
+    }
+
     return {
-      processedResult,
+      results: reportResults,
+      summary: reportSummary,
     }
   } catch (error: any) {
-    console.error(error.stack)
-    throw error
+    colourLog.error('An error occurred while running eslint', error)
+    process.exit(1)
   }
 }
 

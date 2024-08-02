@@ -1,45 +1,79 @@
 import stylelint from 'stylelint'
 
-import { Linter, type LinterResult, type ProcessedResult } from '@Types'
+import { Linter, RuleSeverity } from '@Types'
+import { getCacheDirectory } from '@Utils/cache'
+import colourLog from '@Utils/colourLog'
+import { formatResult } from '@Utils/transform'
 
-const lintFiles = async (filePaths: Array<string>): Promise<LinterResult> => {
+import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
+
+const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> => {
   try {
-    const { results, ruleMetadata } = await stylelint.lint({
+    // TODO: Stylelint config, extensible?
+    const {
+      results: lintResults,
+      ruleMetadata,
+    } = await stylelint.lint({
       allowEmptyInput: true,
+      cache,
+      cacheLocation: cache ? getCacheDirectory('.stylelintcache') : undefined,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,
         },
       },
-      files: filePaths,
+      files,
+      fix,
+      quietDeprecationWarnings: true,
+      reportDescriptionlessDisables: true,
+      reportInvalidScopeDisables: true,
+      reportNeedlessDisables: true,
     })
 
-    const processedResult: ProcessedResult = {
+    const reportResults: ReportResults = {}
+
+    const reportSummary: ReportSummary = {
       deprecatedRules: [],
       errorCount: 0,
-      fileCount: results.length,
+      fileCount: lintResults.length,
       fixableErrorCount: 0,
       fixableWarningCount: 0,
       linter: Linter.Stylelint,
       warningCount: 0,
     }
 
-    results.forEach(({ deprecations, warnings }) => {
-      processedResult.deprecatedRules = [...new Set([...processedResult.deprecatedRules, ...deprecations.map(({ text }) => text)])]
-      processedResult.errorCount += warnings.length
-      warnings.forEach(({ rule }) => {
+    lintResults.forEach(({ deprecations, source, warnings }) => {
+      const file = source ? source.replace(`${process.cwd()}/`, '') : 'unknown-source'
+
+      reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...deprecations.map(({ text }) => text)])]
+      reportSummary.errorCount += warnings.length
+
+      warnings.forEach(({ column, line, rule, text }) => {
+        if (!reportResults[file]) {
+          reportResults[file] = []
+        }
+
+        reportResults[file].push(formatResult({
+          column,
+          lineNumber: line,
+          message: text.replace(`(${rule})`, '').trim(),
+          rule,
+          severity: RuleSeverity.ERROR,
+        }))
+
         if (ruleMetadata[rule]?.fixable) {
-          processedResult.fixableErrorCount += 1
+          reportSummary.fixableErrorCount += 1
         }
       })
     })
 
     return {
-      processedResult,
+      results: reportResults,
+      summary: reportSummary,
     }
   } catch (error: any) {
-    console.error(error.stack)
-    throw error
+    colourLog.error('An error occurred while running stylelint', error)
+    process.exit(1)
   }
 }
 
