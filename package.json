@@ -48,6 +48,7 @@
     "@rollup/plugin-typescript": "11.1.6",
     "@types/eslint": "8.56.10",
     "@types/jest": "29.5.12",
+    "@types/markdownlint-rule-helpers": "0.21.5",
     "@types/node-notifier": "8.0.5",
     "babel-plugin-transform-import-meta": "2.2.1",
     "jest": "29.7.0",

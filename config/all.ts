@@ -1,3 +1,3 @@
-import buildConfig from './eslint/build-config'
+import buildFlatConfig from './eslint/build-flat-config'
 
-export default buildConfig()
+export default buildFlatConfig()
