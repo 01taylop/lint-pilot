@@ -23,7 +23,7 @@ program
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
   .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
-const runLinter = async ({ cache, filePattern, fix, linter, ignore }: RunLinter) => {
+const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -35,6 +35,7 @@ const runLinter = async ({ cache, filePattern, fix, linter, ignore }: RunLinter)
 
   const report: LintReport = await linters[linter].lintFiles({
     cache,
+    eslintUseLegacyConfig,
     files,
     fix,
   })
@@ -44,7 +45,7 @@ const runLinter = async ({ cache, filePattern, fix, linter, ignore }: RunLinter)
   return report
 }
 
-const runLintPilot = ({ cache, filePatterns, fix, title, watch }: RunLintPilot) => {
+const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, watch }: RunLintPilot) => {
   const commonArgs = {
     cache,
     fix,
@@ -54,6 +55,7 @@ const runLintPilot = ({ cache, filePatterns, fix, title, watch }: RunLintPilot) 
   Promise.all([
     runLinter({
       ...commonArgs,
+      eslintUseLegacyConfig,
       filePattern: filePatterns.includePatterns[Linter.ESLint],
       linter: Linter.ESLint,
     }),
@@ -96,12 +98,14 @@ program
   .option('--cache', 'cache linting results', false)
   .option('--clearCache', 'clear the cache', false)
 
-  .option('--ignore-dirs <directories...>', 'Directories to ignore globally')
-  .option('--ignore-patterns <patterns...>', 'File patterns to ignore globally')
-  .option('--eslint-include <patterns...>', 'File patterns to include for ESLint')
+  .option('--ignore-dirs <directories...>', 'directories to ignore globally')
+  .option('--ignore-patterns <patterns...>', 'file patterns to ignore globally')
+  .option('--eslint-include <patterns...>', 'file patterns to include for ESLint')
 
   .option('--debug', 'output additional debug information including the list of files being linted', false)
-  .action(({ cache, clearCache, debug, emoji, eslintInclude, fix, ignoreDirs, ignorePatterns, title, watch }) => {
+  .option('--eslint-use-legacy-config', 'set to true to use the legacy ESLint configuration', false)
+
+  .action(({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegacyConfig, fix, ignoreDirs, ignorePatterns, title, watch }) => {
     clearTerminal()
     colourLog.title(`${emoji} ${title} ${emoji}`)
     console.log()
@@ -117,7 +121,17 @@ program
       ignoreDirs,
       ignorePatterns,
     })
-    runLintPilot({ cache, filePatterns, fix, title, watch })
+
+    const lintPilotOptions = {
+      cache,
+      eslintUseLegacyConfig,
+      filePatterns,
+      fix,
+      title,
+      watch,
+    }
+
+    runLintPilot(lintPilotOptions)
 
     if (watch) {
       watchFiles({
@@ -129,7 +143,7 @@ program
         clearTerminal()
         colourLog.info(message)
         console.log()
-        runLintPilot({ cache, filePatterns, fix, title, watch })
+        runLintPilot(lintPilotOptions)
       })
     }
   })

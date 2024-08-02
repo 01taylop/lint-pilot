@@ -63,12 +63,14 @@ interface FilePatterns {
 
 interface LintFiles {
   cache: boolean
+  eslintUseLegacyConfig?: boolean
   files: Array<string>
   fix: boolean
 }
 
 interface RunLinter {
   cache: boolean
+  eslintUseLegacyConfig?: boolean
   filePattern: Array<string>
   fix: boolean
   ignore: Array<string>
@@ -77,6 +79,7 @@ interface RunLinter {
 
 interface RunLintPilot {
   cache: boolean
+  eslintUseLegacyConfig: boolean
   filePatterns: FilePatterns
   fix: boolean
   title: string
