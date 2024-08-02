@@ -1,3 +1,4 @@
+import { FILE_PATHS } from './constants'
 import Plugins from './plugins'
 import Rules from './rules'
 
@@ -17,7 +18,7 @@ const buildFlatConfig = () => ([{
     ...Rules.SortExports,
   },
 }, {
-  files: ['*.spec.*', '*.test.*'],
+  files: FILE_PATHS.TESTS,
   languageOptions: {
     globals: {
       'jest/globals': true,
@@ -32,7 +33,7 @@ const buildFlatConfig = () => ([{
     ...Rules.JestFormatting,
   },
 }, {
-  files: ['*.spec.ts', '*.spec.tsx', '*.test.ts', '*.test.tsx'],
+  files: FILE_PATHS.TESTS_TYPESCRIPT,
   plugins: {
     'jest': Plugins.jest,
   },

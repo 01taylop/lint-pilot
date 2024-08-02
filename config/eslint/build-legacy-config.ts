@@ -1,3 +1,4 @@
+import { FILE_PATHS } from './constants'
 import Rules from './rules'
 
 const buildLegacyConfig = () => ({
@@ -19,7 +20,7 @@ const buildLegacyConfig = () => ({
     ...Rules.SortExports,
   },
   overrides: [{
-    files: ['*.spec.*', '*.test.*'],
+    files: FILE_PATHS.TESTS,
     plugins: [
       'jest',
       'jest-formatting',
@@ -29,7 +30,7 @@ const buildLegacyConfig = () => ({
       ...Rules.JestFormatting,
     },
   }, {
-    files: ['*.spec.ts', '*.spec.tsx', '*.test.ts', '*.test.tsx'],
+    files: FILE_PATHS.TESTS_TYPESCRIPT,
     plugins: [
       'jest',
     ],
