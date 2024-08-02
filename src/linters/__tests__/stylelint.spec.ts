@@ -17,6 +17,14 @@ describe('stylelint', () => {
   const testFiles = ['index.css']
   const lintFilesMock = jest.mocked(stylelint.lint)
 
+  const commonLintFilesResult = {
+    cwd: '',
+    errored: false,
+    output: '',
+    report: '',
+    reportedDisables: [],
+  }
+
   const noErrorLintResults: Array<LintResult> = [{
     deprecations: [],
     invalidOptionWarnings: [],
@@ -26,7 +34,8 @@ describe('stylelint', () => {
   }]
 
   it('calls stylelint.lint with the files', async () => {
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: [],
       ruleMetadata: {},
     }))
@@ -52,7 +61,8 @@ describe('stylelint', () => {
   })
 
   it('calls stylelint.lint with cacheing enabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: [],
       ruleMetadata: {},
     }))
@@ -101,7 +111,8 @@ describe('stylelint', () => {
   it('returns results and a summary when stylelint successfully lints (no files)', async () => {
     const lintResults: Array<LintResult> = []
 
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: lintResults,
       ruleMetadata: {},
     }))
@@ -125,7 +136,8 @@ describe('stylelint', () => {
   })
 
   it('returns results and a summary when stylelint successfully lints (no errors)', async () => {
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: noErrorLintResults,
       ruleMetadata: {},
     }))
@@ -228,7 +240,8 @@ describe('stylelint', () => {
       }],
     }]
 
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: lintResults,
       ruleMetadata: {
         'fixable-rule': { fixable: true },
@@ -288,7 +301,8 @@ describe('stylelint', () => {
   })
 
   it('does not fix lint errors when the fix option is disabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: noErrorLintResults,
       ruleMetadata: {},
     }))
@@ -306,7 +320,8 @@ describe('stylelint', () => {
   })
 
   it('fixes lint errors when the fix option is enabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => ({
+    lintFilesMock.mockImplementationOnce(async () => ({
+      ...commonLintFilesResult,
       results: noErrorLintResults,
       ruleMetadata: {},
     }))
