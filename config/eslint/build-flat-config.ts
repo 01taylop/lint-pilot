@@ -1,10 +1,12 @@
 import { FILE_PATHS } from './constants'
+import Overrides from './overrides'
 import Plugins from './plugins'
 import Rules from './rules'
 
 const buildFlatConfig = () => ([{
   plugins: {
     'eslint-comments': Plugins.EslintComments,
+    'import': Plugins.Import,
     'inclusive-language': Plugins.InclusiveLanguage,
     'n': Plugins.N,
     'promise': Plugins.Promise,
@@ -13,6 +15,7 @@ const buildFlatConfig = () => ([{
   },
   rules: {
     ...Rules.ESLintComments,
+    ...Rules.Import,
     ...Rules.InclusiveLanguage,
     ...Rules.N,
     ...Rules.Promise,
@@ -33,6 +36,7 @@ const buildFlatConfig = () => ([{
   rules: {
     ...Rules.Jest,
     ...Rules.JestFormatting,
+    ...Overrides.TESTS,
   },
 }, {
   files: FILE_PATHS.TESTS_TYPESCRIPT,
