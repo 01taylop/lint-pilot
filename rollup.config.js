@@ -24,8 +24,6 @@ export default {
       preventAssignment: true,
     }),
     terser(),
-    typescript({
-      exclude: ['**/*.spec.*'],
-    }),
+    typescript(),
   ],
 }

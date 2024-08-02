@@ -15,7 +15,7 @@ describe('stylelint', () => {
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
 
   const testFiles = ['index.css']
-  const lintFilesMock = stylelint.lint as jest.Mock
+  const lintFilesMock = jest.mocked(stylelint.lint)
 
   const noErrorLintResults: Array<LintResult> = [{
     deprecations: [],

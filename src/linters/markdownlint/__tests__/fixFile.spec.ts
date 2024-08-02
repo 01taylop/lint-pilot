@@ -21,8 +21,8 @@ describe('fixFile', () => {
   const fixedFileContent = 'Fixed file content'
 
   beforeEach(() => {
-    (readFileSync as jest.Mock).mockReturnValue(mockFileContent)
-    applyFixes.mockReturnValue(fixedFileContent)
+    jest.mocked(readFileSync).mockReturnValue(mockFileContent)
+    jest.mocked(applyFixes).mockReturnValue(fixedFileContent)
   })
 
   it('reads the correct file and writes the fixed content back to the file', () => {
