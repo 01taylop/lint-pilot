@@ -34,11 +34,8 @@ const buildFlatConfig = () => ([{
   },
 }, {
   files: FILE_PATHS.TESTS_TYPESCRIPT,
-  plugins: {
-    'jest': Plugins.jest,
-  },
   rules: {
-    ...Rules.JestFormatting,
+    ...Rules.JestTypescript,
   },
 }])
 

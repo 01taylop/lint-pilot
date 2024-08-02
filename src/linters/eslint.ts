@@ -10,7 +10,7 @@ import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types
 const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles): Promise<LintReport> => {
   try {
     const CustomESLint = await loadESLint({
-      useFlatConfig: eslintUseLegacyConfig ? false : true,
+      useFlatConfig: !eslintUseLegacyConfig,
     })
 
     const eslint = new CustomESLint({
