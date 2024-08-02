@@ -1,13 +1,13 @@
 const FILE_PATHS = {
   TESTS: [
-    '*.spec.*',
-    '*.test.*',
+    '**/*.spec.*',
+    '**/*.test.*',
   ],
   TESTS_TYPESCRIPT: [
-    '*.spec.ts',
-    '*.spec.tsx',
-    '*.test.ts',
-    '*.test.tsx',
+    '**/*.spec.ts',
+    '**/*.spec.tsx',
+    '**/*.test.ts',
+    '**/*.test.tsx',
   ]
 }
 

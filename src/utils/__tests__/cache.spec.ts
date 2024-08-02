@@ -1,11 +1,11 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import colourLog from '@Utils/colourLog'
 
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
-jest.mock('fs')
+jest.mock('node:fs')
 jest.mock('@Utils/colourLog', () => ({
   info: jest.fn(),
 }))
@@ -47,7 +47,7 @@ describe('getCacheDirectory', () => {
     const result = getCacheDirectory('.eslintcache')
 
     expect(path.resolve).toHaveBeenCalledWith(process.cwd(), '.lintpilotcache', '.eslintcache')
-    expect(result).toEqual(`${process.cwd()}/.lintpilotcache/.eslintcache`)
+    expect(result).toBe(`${process.cwd()}/.lintpilotcache/.eslintcache`)
   })
 
 })

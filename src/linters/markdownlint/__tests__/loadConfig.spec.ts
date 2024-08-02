@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 
 import markdownlint from 'markdownlint'
 
@@ -6,7 +6,7 @@ import colourLog from '@Utils/colourLog'
 
 import loadConfig from '../loadConfig'
 
-jest.mock('fs')
+jest.mock('node:fs')
 
 describe('loadConfig', () => {
 
