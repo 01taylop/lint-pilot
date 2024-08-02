@@ -1,4 +1,4 @@
-import { ESLint } from 'eslint'
+import { ESLint, loadESLint } from 'eslint'
 
 import { Linter, RuleSeverity } from '@Types'
 import { getCacheDirectory } from '@Utils/cache'
@@ -7,9 +7,13 @@ import { formatResult } from '@Utils/transform'
 
 import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
-const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> => {
+const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles): Promise<LintReport> => {
   try {
-    const eslint = new ESLint({
+    const CustomESLint = await loadESLint({
+      useFlatConfig: !eslintUseLegacyConfig,
+    })
+
+    const eslint = new CustomESLint({
       cache,
       cacheLocation: cache ? getCacheDirectory('.eslintcache') : undefined,
       fix,

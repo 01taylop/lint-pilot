@@ -1,4 +1,4 @@
-import { ESLint } from 'eslint'
+import { ESLint, loadESLint } from 'eslint'
 
 import { expectedResultThemes } from '@Jest/testData'
 import colourLog from '@Utils/colourLog'
@@ -13,8 +13,9 @@ describe('eslint', () => {
   jest.spyOn(colourLog, 'error').mockImplementation(() => {})
 
   const testFiles = ['index.ts']
-  const lintFilesMock = ESLint.prototype.lintFiles as jest.Mock
-  const outputFixesMock = ESLint.outputFixes as jest.Mock
+  const lintFilesMock = jest.mocked(ESLint.prototype.lintFiles)
+  const loadESLintMock = jest.mocked(loadESLint).mockResolvedValue(ESLint)
+  const outputFixesMock = jest.mocked(ESLint.outputFixes)
 
   const noErrorLintResults: Array<ESLint.LintResult> = [{
     errorCount: 0,
@@ -28,8 +29,8 @@ describe('eslint', () => {
     warningCount: 0,
   }]
 
-  it('creates a new ESLint instance', async () => {
-    lintFilesMock.mockImplementationOnce(() => [])
+  it('creates a new ESLint instance using flat config', async () => {
+    lintFilesMock.mockImplementationOnce(async () => [])
 
     await eslintLib.lintFiles({
       cache: false,
@@ -37,6 +38,29 @@ describe('eslint', () => {
       fix: false
     })
 
+    expect(loadESLintMock).toHaveBeenCalledOnceWith({
+      useFlatConfig: true,
+    })
+    expect(ESLint).toHaveBeenCalledOnceWith({
+      cache: false,
+      cacheLocation: undefined,
+      fix: false,
+    })
+  })
+
+  it('creates a new ESLint instance using legacy config', async () => {
+    lintFilesMock.mockImplementationOnce(async () => [])
+
+    await eslintLib.lintFiles({
+      cache: false,
+      eslintUseLegacyConfig: true,
+      files: testFiles,
+      fix: false
+    })
+
+    expect(loadESLintMock).toHaveBeenCalledOnceWith({
+      useFlatConfig: false,
+    })
     expect(ESLint).toHaveBeenCalledOnceWith({
       cache: false,
       cacheLocation: undefined,
@@ -45,7 +69,7 @@ describe('eslint', () => {
   })
 
   it('creates a new ESLint instance with cacheing enabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => [])
+    lintFilesMock.mockImplementationOnce(async () => [])
 
     await eslintLib.lintFiles({
       cache: true,
@@ -61,7 +85,7 @@ describe('eslint', () => {
   })
 
   it('calls ESLint.lintFiles with the files', async () => {
-    lintFilesMock.mockImplementationOnce(() => [])
+    lintFilesMock.mockImplementationOnce(async () => [])
 
     await eslintLib.lintFiles({
       cache: false,
@@ -96,7 +120,7 @@ describe('eslint', () => {
   it('returns results and a summary when eslint successfully lints (no files)', async () => {
     const lintResults: Array<ESLint.LintResult> = []
 
-    lintFilesMock.mockImplementationOnce(() => lintResults)
+    lintFilesMock.mockImplementationOnce(async () => lintResults)
 
     expect(await eslintLib.lintFiles({
       cache: false,
@@ -117,7 +141,7 @@ describe('eslint', () => {
   })
 
   it('returns results and a summary when eslint successfully lints (no errors)', async () => {
-    lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
+    lintFilesMock.mockImplementationOnce(async () => noErrorLintResults)
 
     expect(await eslintLib.lintFiles({
       cache: false,
@@ -223,7 +247,7 @@ describe('eslint', () => {
       warningCount: 0,
     }]
 
-    lintFilesMock.mockImplementationOnce(() => lintResults)
+    lintFilesMock.mockImplementationOnce(async () => lintResults)
 
     expect(await eslintLib.lintFiles({
       cache: false,
@@ -283,7 +307,7 @@ describe('eslint', () => {
   })
 
   it('does not fix lint errors when the fix option is disabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
+    lintFilesMock.mockImplementationOnce(async () => noErrorLintResults)
 
     await eslintLib.lintFiles({
       cache: false,
@@ -299,7 +323,7 @@ describe('eslint', () => {
   })
 
   it('fixes lint errors when the fix option is enabled', async () => {
-    lintFilesMock.mockImplementationOnce(() => noErrorLintResults)
+    lintFilesMock.mockImplementationOnce(async () => noErrorLintResults)
 
     await eslintLib.lintFiles({
       cache: false,

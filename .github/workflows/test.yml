@@ -27,6 +27,9 @@ jobs:
     - name: Install Dependencies
       run: yarn install --immutable
 
+    - name: Lint
+      run: yarn lint --ignore-patterns '**/*.ts'
+
     - name: Run Tests
       run: yarn test --coverage
 

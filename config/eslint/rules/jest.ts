@@ -1,6 +1,6 @@
 // https://github.com/jest-community/eslint-plugin-jest
 
-export const JestRules = {
+export const Jest = {
   'jest/consistent-test-it': 2,
   'jest/expect-expect': [2, {
     assertFunctionNames: ['expect', 'expect*'],
@@ -64,7 +64,7 @@ export const JestRules = {
   'jest/valid-title': 2,
 }
 
-export const JestTypescriptRules = {
+export const JestTypescript = {
   'jest/no-untyped-mock-factory': 2,
   'jest/unbound-method': 1,
 }
