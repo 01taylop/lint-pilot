@@ -24,7 +24,7 @@ describe('sourceFiles', () => {
     const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
-    expect(files).toEqual([])
+    expect(files).toStrictEqual([])
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 0 files matching "*.ts" for ESLint:', [])
   })
 
@@ -36,7 +36,7 @@ describe('sourceFiles', () => {
     const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
-    expect(files).toEqual(mockedFiles)
+    expect(files).toStrictEqual(mockedFiles)
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 1 file matching "*.ts" for ESLint:', mockedFiles)
   })
 
@@ -48,7 +48,7 @@ describe('sourceFiles', () => {
     const files = await sourceFiles(commonArgs)
 
     expect(glob).toHaveBeenCalledWith(['*.ts'], { ignore: [ 'node_modules' ] })
-    expect(files).toEqual(mockedFiles)
+    expect(files).toStrictEqual(mockedFiles)
     expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 2 files matching "*.ts" for ESLint:', mockedFiles)
   })
 

@@ -15,7 +15,7 @@ describe('filePatterns', () => {
       '**/*.{cjs,js,jsx,mjs,ts,tsx}',
     ]
 
-    expect(filePatterns.includePatterns[Linter.ESLint]).toEqual(expectedPatterns)
+    expect(filePatterns.includePatterns[Linter.ESLint]).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
@@ -29,7 +29,7 @@ describe('filePatterns', () => {
       'foo',
     ]
 
-    expect(filePatterns.includePatterns[Linter.ESLint]).toEqual(expectedPatterns)
+    expect(filePatterns.includePatterns[Linter.ESLint]).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
@@ -44,7 +44,7 @@ describe('filePatterns', () => {
       'bar',
     ]
 
-    expect(filePatterns.includePatterns[Linter.ESLint]).toEqual(expectedPatterns)
+    expect(filePatterns.includePatterns[Linter.ESLint]).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
@@ -55,7 +55,7 @@ describe('filePatterns', () => {
       '**/*.{md,mdx}',
     ]
 
-    expect(filePatterns.includePatterns[Linter.Markdownlint]).toEqual(expectedPatterns)
+    expect(filePatterns.includePatterns[Linter.Markdownlint]).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Markdownlint Patterns', expectedPatterns)
   })
 
@@ -66,7 +66,7 @@ describe('filePatterns', () => {
       '**/*.{css,scss,less,sass,styl,stylus}',
     ]
 
-    expect(filePatterns.includePatterns[Linter.Stylelint]).toEqual(expectedPatterns)
+    expect(filePatterns.includePatterns[Linter.Stylelint]).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Stylelint Patterns', expectedPatterns)
   })
 
@@ -78,7 +78,7 @@ describe('filePatterns', () => {
       '**/*.+(map|min).*',
     ]
 
-    expect(filePatterns.ignorePatterns).toEqual(expectedPatterns)
+    expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
@@ -92,7 +92,7 @@ describe('filePatterns', () => {
       '**/*.+(map|min).*',
     ]
 
-    expect(filePatterns.ignorePatterns).toEqual(expectedPatterns)
+    expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
@@ -106,7 +106,7 @@ describe('filePatterns', () => {
       '**/*.+(map|min).*',
     ]
 
-    expect(filePatterns.ignorePatterns).toEqual(expectedPatterns)
+    expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
@@ -121,7 +121,7 @@ describe('filePatterns', () => {
       'foo',
     ]
 
-    expect(filePatterns.ignorePatterns).toEqual(expectedPatterns)
+    expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
@@ -137,7 +137,7 @@ describe('filePatterns', () => {
       'foo',
     ]
 
-    expect(filePatterns.ignorePatterns).toEqual(expectedPatterns)
+    expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
