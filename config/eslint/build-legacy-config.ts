@@ -1,4 +1,5 @@
 import { FILE_PATHS } from './constants'
+import Overrides from './overrides'
 import Rules from './rules'
 
 const buildLegacyConfig = () => ({
@@ -7,6 +8,7 @@ const buildLegacyConfig = () => ({
   },
   plugins: [
     'eslint-comments',
+    'import',
     'inclusive-language',
     'n',
     'promise',
@@ -15,6 +17,7 @@ const buildLegacyConfig = () => ({
   ],
   rules: {
     ...Rules.ESLintComments,
+    ...Rules.Import,
     ...Rules.InclusiveLanguage,
     ...Rules.N,
     ...Rules.Promise,
@@ -30,6 +33,7 @@ const buildLegacyConfig = () => ({
     rules: {
       ...Rules.Jest,
       ...Rules.JestFormatting,
+      ...Overrides.TESTS,
     },
   }, {
     files: FILE_PATHS.TESTS_TYPESCRIPT,

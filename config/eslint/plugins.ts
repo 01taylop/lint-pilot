@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import EslintComments from 'eslint-plugin-eslint-comments'
+import Import from 'eslint-plugin-import'
 import InclusiveLanguage from 'eslint-plugin-inclusive-language'
 import Jest from 'eslint-plugin-jest'
 import JestFormatting from 'eslint-plugin-jest-formatting'
@@ -11,6 +12,7 @@ import SortExports from 'eslint-plugin-sort-exports'
 
 const Plugins = {
   EslintComments,
+  Import,
   InclusiveLanguage,
   Jest,
   JestFormatting,
