@@ -11,7 +11,7 @@ export default () => ({
       'function-no-unknown': null, // scss/function-no-unknown
       'property-no-unknown': null, // scss/property-no-unknown
       ...Rules.DeclarationStrictValue,
-      ...Rules.SCSS,
+      ...Rules.Scss,
     },
   }],
   plugins: [

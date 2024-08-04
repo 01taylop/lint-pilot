@@ -1,3 +1,3 @@
-// https://github.com/hudochenkov/stylelint-order/tree/master
+// https://github.com/hudochenkov/stylelint-order
 
 export default {}
