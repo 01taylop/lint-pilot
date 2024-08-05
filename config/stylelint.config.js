@@ -8,6 +8,7 @@ export default () => ({
     files: ['**/*.scss'], // TODO: Extend and make dry
     rules: {
       'at-rule-no-unknown': null, // scss/at-rule-no-unknown
+      'comment-no-empty': null, // scss/comment-no-empty
       'function-no-unknown': null, // scss/function-no-unknown
       'property-no-unknown': null, // scss/property-no-unknown
       ...Rules.DeclarationStrictValue,
