@@ -1,4 +1,9 @@
 ignores: [
+  "@stylistic/stylelint-plugin",
+  "stylelint-config-property-sort-order-smacss",
+  "stylelint-declaration-strict-value",
+  "stylelint-order",
+  "stylelint-scss",
   "@types/jest",
   "rimraf"
 ]
