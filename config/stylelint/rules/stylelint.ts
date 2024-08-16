@@ -3,159 +3,248 @@
 import { REGEX_PATTERNS } from '../constants'
 
 /*
- * Possible errors
+ * Avoid Errors
  */
 
-const possibleErrors = {
-  'annotation-no-unknown': true,
-  'at-rule-no-unknown': true,
-  'block-no-empty': true,
-  'color-no-invalid-hex': true,
-  'comment-no-empty': true,
-  'custom-property-no-missing-var-function': true,
+const descending = {
+  'no-descending-specificity': true,
+}
+
+const duplicate = {
   'declaration-block-no-duplicate-custom-properties': true,
   'declaration-block-no-duplicate-properties': true,
-  'declaration-block-no-shorthand-property-overrides': true,
   'font-family-no-duplicate-names': true,
-  'font-family-no-missing-generic-family-keyword': true,
-  'function-calc-no-unspaced-operator': true,
-  'function-linear-gradient-no-nonstandard-direction': true,
-  'keyframe-declaration-no-important': true,
-  'media-feature-name-no-unknown': true,
-  'named-grid-areas-no-invalid': true,
-  'no-descending-specificity': true,
+  'keyframe-block-no-duplicate-selectors': true,
   'no-duplicate-at-import-rules': true,
   'no-duplicate-selectors': true,
+}
+
+const empty = {
+  'block-no-empty': true,
+  'comment-no-empty': true,
   'no-empty-source': true,
+}
+
+const invalid = {
+  'color-no-invalid-hex': true,
+  'function-calc-no-unspaced-operator': true,
+  'keyframe-declaration-no-important': true,
+  'media-query-no-invalid': true,
+  'named-grid-areas-no-invalid': true,
   'no-invalid-double-slash-comments': true,
   'no-invalid-position-at-import-rule': true,
+  'string-no-newline': true,
+}
+
+const irregular = {
+  'no-irregular-whitespace': true,
+}
+
+const missing = {
+  'custom-property-no-missing-var-function': true,
+  'font-family-no-missing-generic-family-keyword': [true, {
+    ignoreFontFamilies: [],
+  }],
+}
+
+const nonStandard = {
+  'function-linear-gradient-no-nonstandard-direction': true,
+}
+
+const overrides = {
+  'declaration-block-no-shorthand-property-overrides': true,
+}
+
+const unmatchable = {
+  'selector-anb-no-unmatchable': true,
+}
+
+const unknown = {
+  'annotation-no-unknown': true,
+  'at-rule-no-unknown': true,
+  'declaration-property-value-no-unknown': true,
+  'function-no-unknown': true,
+  'media-feature-name-no-unknown': true,
+  'media-feature-name-value-no-unknown': true,
+  'no-unknown-animations': true,
+  'no-unknown-custom-media': true,
+  'no-unknown-custom-properties': true,
   'property-no-unknown': true,
   'selector-pseudo-class-no-unknown': true,
   'selector-pseudo-element-no-unknown': true,
   'selector-type-no-unknown': true,
-  'string-no-newline': true,
   'unit-no-unknown': true,
 }
 
 /*
- * Limit language features
+ * Enforce Conventions
  */
 
-const limitLanguageFeatures = {
-  'alpha-value-notation': 'number',
-  // 'at-rule-allowed-list': false,
+const allowedDisallowedAndRequired = {
+  // 'at-rule-allowed-list': [],
   'at-rule-disallowed-list': ['debug'],
   'at-rule-no-vendor-prefix': true,
-  // 'at-rule-property-required-list': false,
-  'color-function-notation': 'modern',
+  // 'at-rule-property-required-list': {},
   'color-hex-alpha': 'never',
   'color-named': 'never',
-  // 'color-no-hex': false,
-  // 'comment-pattern': false,
-  // 'comment-word-disallowed-list': false,
-  'custom-media-pattern': REGEX_PATTERNS.KEBAB,
-  'custom-property-pattern': REGEX_PATTERNS.KEBAB,
-  'declaration-block-no-redundant-longhand-properties': true,
-  'declaration-block-single-line-max-declarations': 1,
-  // 'declaration-no-important': false,
-  // 'declaration-property-unit-allowed-list': false,
-  // 'declaration-property-unit-disallowed-list': false,
-  // 'declaration-property-value-allowed-list': false,
+  // 'color-no-hex': true,
+  // 'comment-word-disallowed-list': [],
+  // 'declaration-no-important': true,
+  // 'declaration-property-unit-allowed-list': {},
+  // 'declaration-property-unit-disallowed-list': {},
+  // 'declaration-property-value-allowed-list': {},
   'declaration-property-value-disallowed-list': {
+    position: ['fixed'],
     transform: ['all'],
   },
-  'font-weight-notation': 'numeric',
-  // 'function-allowed-list': false,
-  // 'function-disallowed-list': false,
+  // 'function-allowed-list': [],
+  // 'function-disallowed-list': [],
   'function-url-no-scheme-relative': true,
-  // 'function-url-scheme-allowed-list': false,
-  // 'function-url-scheme-disallowed-list': false,
-  'hue-degree-notation': 'angle',
-  'keyframe-selector-notation': 'percentage-unless-within-keyword-only-block',
-  'keyframes-name-pattern': REGEX_PATTERNS.KEBAB,
+  // 'function-url-scheme-allowed-list': [],
+  // 'function-url-scheme-disallowed-list': [],
   'length-zero-no-unit': true,
-  'max-nesting-depth': [3, {
-    ignore: ['blockless-at-rules', 'pseudo-classes'],
-  }],
-  // 'media-feature-name-allowed-list': false,
-  // 'media-feature-name-disallowed-list': false,
+  // 'media-feature-name-allowed-list': [],
+  // 'media-feature-name-disallowed-list': [],
   'media-feature-name-no-vendor-prefix': true,
-  // 'media-feature-name-value-allowed-list': false,
-  'no-unknown-animations': true,
-  'number-max-precision': 2,
-  // 'property-allowed-list': false,
+  // 'media-feature-name-unit-allowed-list': {},
+  // 'media-feature-name-value-allowed-list': {},
+  // 'property-allowed-list': [],
   'property-disallowed-list': ['font-size', 'opacity', 'text-overflow', 'z-index'],
   'property-no-vendor-prefix': true,
-  // 'rule-selector-property-disallowed-list': false,
-  // 'selector-attribute-name-disallowed-list': false,
-  // 'selector-attribute-operator-allowed-list': false,
-  // 'selector-attribute-operator-disallowed-list': false,
-  'selector-class-pattern': REGEX_PATTERNS.HYPHENATED_BEM,
-  // 'selector-combinator-allowed-list': false,
-  // 'selector-combinator-disallowed-list': false,
-  // 'selector-disallowed-list': false,
-  'selector-id-pattern': REGEX_PATTERNS.KEBAB,
-  'selector-max-attribute': 1,
-  'selector-max-class': 3,
-  'selector-max-combinators': 3,
-  'selector-max-compound-selectors': 4,
-  'selector-max-id': 1,
-  'selector-max-pseudo-class': 2,
-  // 'selector-max-specificity': false,
-  'selector-max-type': 2,
-  'selector-max-universal': 1,
-  // 'selector-nested-pattern': false,
+  // 'rule-selector-property-disallowed-list': {},
+  // 'selector-attribute-name-disallowed-list': [],
+  // 'selector-attribute-operator-allowed-list': [],
+  // 'selector-attribute-operator-disallowed-list': [],
+  // 'selector-combinator-allowed-list': [],
+  // 'selector-combinator-disallowed-list': [],
+  // 'selector-disallowed-list': [],
   'selector-no-qualifying-type': true,
   'selector-no-vendor-prefix': true,
-  // 'selector-pseudo-class-allowed-list': false,
-  // 'selector-pseudo-class-disallowed-list': false,
-  // 'selector-pseudo-element-allowed-list': false,
-  'selector-pseudo-element-colon-notation': 'double',
-  // 'selector-pseudo-element-disallowed-list': false,
-  'shorthand-property-no-redundant-values': true,
-  // 'time-min-milliseconds': false,
-  // 'unit-allowed-list': false,
-  // 'unit-disallowed-list': false,
+  // 'selector-pseudo-class-allowed-list': [],
+  // 'selector-pseudo-class-disallowed-list': [],
+  // 'selector-pseudo-element-allowed-list': [],
+  // 'selector-pseudo-element-disallowed-list': [],
+  // 'unit-allowed-list': [],
+  // 'unit-disallowed-list': [],
   'value-no-vendor-prefix': true,
 }
 
-/*
- * Stylistic issues
- */
+const caseSensitive = {
+  'function-name-case': 'lower',
+  'selector-type-case': 'lower',
+  'value-keyword-case': ['lower', {
+    ignoreProperties: ['font-family', '/^\\$font-family(-{1}.*)*/'], // All scss variables with fonts should be named "font-family-x"
+  }],
+}
 
-const stylisticIssues = {
+const emptyLines = {
   'at-rule-empty-line-before': ['always', {
     except: ['after-same-name', 'first-nested'],
     ignore: ['after-comment'],
     ignoreAtRules: ['else', 'mixin', 'return', 'warn'],
   }],
-  'color-hex-length': 'short',
   'comment-empty-line-before': ['always', {
     except: ['first-nested'],
+    ignore: ['stylelint-commands'],
   }],
-  'comment-whitespace-inside': 'always',
   'custom-property-empty-line-before': ['always', {
     except: ['after-comment', 'after-custom-property', 'first-nested'],
   }],
   'declaration-empty-line-before': ['always', {
     except: ['after-comment', 'after-declaration', 'first-nested'],
   }],
-  'font-family-name-quotes': 'always-where-required',
-  'function-name-case': 'lower',
-  'function-url-quotes': 'always',
-  'no-irregular-whitespace': true,
   'rule-empty-line-before': ['always', {
-    ignore: ['after-comment', 'first-nested'],
-  }],
-  'selector-attribute-quotes': 'always',
-  'selector-type-case': 'lower',
-  'value-keyword-case': ['lower', {
-    ignoreProperties: ['font-family', '/^\\$font-family(-{1}.*)*/'], // all scss variables with fonts should be named either "font-family" or "font-family-x"
+    except: ['after-single-line-comment', 'first-nested'],
   }],
 }
 
+const maxAndMin = {
+  'declaration-block-single-line-max-declarations': 1,
+  'declaration-property-max-values': {},
+  'max-nesting-depth': [3, {
+    ignore: ['blockless-at-rules', 'pseudo-classes'],
+    ignoreAtRules: ['media'],
+  }],
+  'number-max-precision': 2,
+  'selector-max-attribute': 2,
+  'selector-max-class': 3,
+  'selector-max-combinators': 3,
+  'selector-max-compound-selectors': 4,
+  'selector-max-id': 1,
+  'selector-max-pseudo-class': 2,
+  // 'selector-max-specificity': '',
+  'selector-max-type': 2,
+  'selector-max-universal': 1,
+  // 'time-min-milliseconds': 100,
+}
+
+const notation = {
+  'alpha-value-notation': 'number',
+  'color-function-notation': 'modern',
+  'color-hex-length': 'short',
+  'font-weight-notation': ['numeric', {
+    ignore: ['relative'],
+  }],
+  'hue-degree-notation': 'angle',
+  'import-notation': 'string',
+  'keyframe-selector-notation': 'percentage-unless-within-keyword-only-block',
+  'lightness-notation': 'percentage',
+  'media-feature-range-notation': 'context',
+  'selector-not-notation': 'complex',
+  'selector-pseudo-element-colon-notation': 'double',
+}
+
+const pattern = {
+  // 'comment-pattern': '',
+  'custom-media-pattern': REGEX_PATTERNS.KEBAB,
+  'custom-property-pattern': REGEX_PATTERNS.KEBAB,
+  'keyframes-name-pattern': REGEX_PATTERNS.KEBAB,
+  'selector-class-pattern': REGEX_PATTERNS.HYPHENATED_BEM,
+  'selector-id-pattern': REGEX_PATTERNS.KEBAB,
+  // 'selector-nested-pattern': '',
+}
+
+const quotes = {
+  'font-family-name-quotes': 'always-where-recommended',
+  'function-url-quotes': ['always', {
+    except: ['empty'],
+  }],
+  'selector-attribute-quotes': 'always',
+}
+
+const redundant = {
+  'declaration-block-no-redundant-longhand-properties': true,
+  'shorthand-property-no-redundant-values': true,
+}
+
+const whitespaceInside = {
+  'comment-whitespace-inside': 'always',
+}
+
+/*
+ * Export
+ */
+
 export default {
-  ...possibleErrors,
-  ...limitLanguageFeatures,
-  ...stylisticIssues,
+  // Avoid Errors
+  ...descending,
+  ...duplicate,
+  ...empty,
+  ...invalid,
+  ...irregular,
+  ...missing,
+  ...nonStandard,
+  ...overrides,
+  ...unmatchable,
+  ...unknown,
+  // Enforce Conventions
+  ...allowedDisallowedAndRequired,
+  ...caseSensitive,
+  ...emptyLines,
+  ...maxAndMin,
+  ...notation,
+  ...pattern,
+  ...quotes,
+  ...redundant,
+  ...whitespaceInside,
 }
