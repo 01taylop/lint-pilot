@@ -14,7 +14,9 @@ export default {
   //   ignoreFunctions: [],
   // }],
   'scss/at-function-parentheses-space-before': 'never',
-  'scss/at-function-pattern': REGEX_PATTERNS.KEBAB,
+  'scss/at-function-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: 'Expected function name to be kebab-case',
+  }],
   'scss/at-if-closing-brace-newline-after': 'always-last-in-chain',
   'scss/at-if-closing-brace-space-after': 'always-intermediate',
   'scss/at-if-no-null': true,
@@ -26,7 +28,9 @@ export default {
   // }],
   'scss/at-mixin-no-risky-nesting-selector': true,
   'scss/at-mixin-parentheses-space-before': 'never',
-  'scss/at-mixin-pattern': REGEX_PATTERNS.KEBAB,
+  'scss/at-mixin-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: 'Expected mixin name to be kebab-case',
+  }],
   'scss/at-root-no-redundant': true,
   'scss/at-rule-conditional-no-parentheses': true,
   'scss/at-rule-no-unknown': true,
@@ -58,7 +62,9 @@ export default {
   }],
   'scss/dollar-variable-no-missing-interpolation': true,
   'scss/dollar-variable-no-namespaced-assignment': true,
-  'scss/dollar-variable-pattern': REGEX_PATTERNS.KEBAB,
+  'scss/dollar-variable-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: 'Expected variable name to be kebab-case',
+  }],
   'scss/double-slash-comment-empty-line-before': ['always', {
     except: ['first-nested'],
     ignore: ['between-comments', 'stylelint-commands'],
@@ -86,7 +92,9 @@ export default {
   'scss/operator-no-newline-before': true,
   'scss/operator-no-unspaced': true,
   'scss/partial-no-import': true,
-  'scss/percent-placeholder-pattern': REGEX_PATTERNS.KEBAB,
+  'scss/percent-placeholder-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: 'Expected placeholder name to be kebab-case',
+  }],
   'scss/property-no-unknown': true,
   // 'scss/selector-nest-combinators': 'always',
   'scss/selector-no-redundant-nesting-selector': true,

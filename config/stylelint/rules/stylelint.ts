@@ -12,7 +12,9 @@ const descending = {
 
 const duplicate = {
   'declaration-block-no-duplicate-custom-properties': true,
-  'declaration-block-no-duplicate-properties': true,
+  'declaration-block-no-duplicate-properties': [true, {
+    ignore: ['consecutive-duplicates-with-different-syntaxes'],
+  }],
   'font-family-no-duplicate-names': true,
   'keyframe-block-no-duplicate-selectors': true,
   'no-duplicate-at-import-rules': true,
@@ -72,7 +74,9 @@ const unknown = {
   'property-no-unknown': true,
   'selector-pseudo-class-no-unknown': true,
   'selector-pseudo-element-no-unknown': true,
-  'selector-type-no-unknown': true,
+  'selector-type-no-unknown': [true, {
+    ignore: ['custom-elements'],
+  }],
   'unit-no-unknown': true,
 }
 
@@ -102,7 +106,9 @@ const allowedDisallowedAndRequired = {
   'function-url-no-scheme-relative': true,
   // 'function-url-scheme-allowed-list': [],
   // 'function-url-scheme-disallowed-list': [],
-  'length-zero-no-unit': true,
+  'length-zero-no-unit': [true, {
+    ignore: ['custom-properties'],
+  }],
   // 'media-feature-name-allowed-list': [],
   // 'media-feature-name-disallowed-list': [],
   'media-feature-name-no-vendor-prefix': true,
@@ -126,7 +132,9 @@ const allowedDisallowedAndRequired = {
   // 'selector-pseudo-element-disallowed-list': [],
   // 'unit-allowed-list': [],
   // 'unit-disallowed-list': [],
-  'value-no-vendor-prefix': true,
+  'value-no-vendor-prefix': [true, {
+    ignoreValues: ['box', 'inline-box'],
+  }],
 }
 
 const caseSensitive = {
@@ -165,7 +173,7 @@ const maxAndMin = {
     ignore: ['blockless-at-rules', 'pseudo-classes'],
     ignoreAtRules: ['media'],
   }],
-  'number-max-precision': 2,
+  'number-max-precision': 3,
   'selector-max-attribute': 2,
   'selector-max-class': 3,
   'selector-max-combinators': 3,
@@ -179,14 +187,22 @@ const maxAndMin = {
 }
 
 const notation = {
-  'alpha-value-notation': 'number',
+  'alpha-value-notation': ['percentage', {
+    exceptProperties: [
+      'opacity',
+      'fill-opacity',
+      'flood-opacity',
+      'stop-opacity',
+      'stroke-opacity',
+    ],
+  }],
   'color-function-notation': 'modern',
   'color-hex-length': 'short',
   'font-weight-notation': ['numeric', {
     ignore: ['relative'],
   }],
   'hue-degree-notation': 'angle',
-  'import-notation': 'string',
+  'import-notation': 'url',
   'keyframe-selector-notation': 'percentage-unless-within-keyword-only-block',
   'lightness-notation': 'percentage',
   'media-feature-range-notation': 'context',
@@ -196,11 +212,21 @@ const notation = {
 
 const pattern = {
   // 'comment-pattern': '',
-  'custom-media-pattern': REGEX_PATTERNS.KEBAB,
-  'custom-property-pattern': REGEX_PATTERNS.KEBAB,
-  'keyframes-name-pattern': REGEX_PATTERNS.KEBAB,
-  'selector-class-pattern': REGEX_PATTERNS.HYPHENATED_BEM,
-  'selector-id-pattern': REGEX_PATTERNS.KEBAB,
+  'custom-media-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: (name: string) => `Expected custom media query name "${name}" to be kebab-case`,
+  }],
+  'custom-property-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: (name: string) => `Expected custom property name "${name}" to be kebab-case`,
+  }],
+  'keyframes-name-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: (name: string) => `Expected keyframe name "${name}" to be kebab-case`,
+  }],
+  'selector-class-pattern': [REGEX_PATTERNS.HYPHENATED_BEM, {
+    message: (selector: string) => `Expected class selector "${selector}" to be BEM hyphenated`,
+  }],
+  'selector-id-pattern': [REGEX_PATTERNS.KEBAB, {
+    message: (selector: string) => `Expected id selector "${selector}" to be kebab-case`,
+  }],
   // 'selector-nested-pattern': '',
 }
 

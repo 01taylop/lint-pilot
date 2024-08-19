@@ -7,9 +7,15 @@ export default () => ({
   overrides: [{
     files: ['**/*.scss'], // TODO: Extend and make dry
     rules: {
+      'annotation-no-unknown': null,
       'at-rule-no-unknown': null, // scss/at-rule-no-unknown
       'comment-no-empty': null, // scss/comment-no-empty
       'function-no-unknown': null, // scss/function-no-unknown
+      'import-notation': 'string',
+      'media-query-no-invalid': null,
+      'no-invalid-position-at-import-rule': [true, {
+				ignoreAtRules: ['use', 'forward'],
+			}],
       'property-no-unknown': null, // scss/property-no-unknown
       ...Rules.DeclarationStrictValue,
       ...Rules.Scss,
