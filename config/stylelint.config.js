@@ -1,3 +1,6 @@
+import postcssLess from 'postcss-less'
+import postcssScss from 'postcss-scss'
+
 import Rules from './stylelint/rules'
 
 export default () => ({
@@ -5,7 +8,8 @@ export default () => ({
     'stylelint-config-property-sort-order-smacss',
   ],
   overrides: [{
-    files: ['**/*.scss'], // TODO: Extend and make dry
+    customSyntax: postcssScss,
+    files: ['**/*.scss'],
     rules: {
       'annotation-no-unknown': null,
       'at-rule-no-unknown': null, // scss/at-rule-no-unknown
@@ -17,17 +21,30 @@ export default () => ({
 				ignoreAtRules: ['use', 'forward'],
 			}],
       'property-no-unknown': null, // scss/property-no-unknown
-      ...Rules.DeclarationStrictValue,
       ...Rules.Scss,
+    },
+    plugins: [
+      'stylelint-scss',
+    ],
+  }, {
+    customSyntax: postcssLess,
+    files: ['**/*.less'],
+    rules: {
+      'annotation-no-unknown': null,
+      'import-notation': 'string',
+      'media-query-no-invalid': null,
+      'no-invalid-position-at-import-rule': [true, {
+				ignoreAtRules: ['use', 'forward'],
+			}],
     },
   }],
   plugins: [
     '@stylistic/stylelint-plugin',
     'stylelint-declaration-strict-value',
     'stylelint-order',
-    'stylelint-scss',
   ],
   rules: {
+    ...Rules.DeclarationStrictValue,
     ...Rules.Order,
     ...Rules.Stylelint,
     ...Rules.Stylistic,

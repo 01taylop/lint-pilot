@@ -27,13 +27,14 @@
 - [eslint-plugin-compat](https://github.com/amilajack/eslint-plugin-compat)
 - [eslint-plugin-json](https://github.com/azeemba/eslint-plugin-json)
 
-## Stylelint Rules
+## Stylelint Rules/Config
 
-- [ ] stylelint-config-property-sort-order-smacss
-- [ ] stylelint-config-standard-scss
-- [ ] stylelint-declaration-strict-value
-- [ ] stylelint-order
-- [ ] stylelint-scss
+- [x] @stylistic/stylelint-plugin
+- [x] stylelint
+- [x] stylelint-declaration-strict-value
+- [x] stylelint-order
+- [x] stylelint-scss
+- [x] stylelint-config-property-sort-order-smacss
 
 ## Configuration Files
 

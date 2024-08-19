@@ -63,7 +63,7 @@ describe('filePatterns', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
-      '**/*.{css,scss,less,sass,styl,stylus}',
+      '**/*.{css,scss,less}',
     ]
 
     expect(filePatterns.includePatterns[Linter.Stylelint]).toStrictEqual(expectedPatterns)
