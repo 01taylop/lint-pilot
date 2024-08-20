@@ -36,7 +36,7 @@ const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFileP
     includePatterns: {
       [Linter.ESLint]: eslintIncludePatterns,
       [Linter.Markdownlint]: ['**/*.{md,mdx}'],
-      [Linter.Stylelint]: ['**/*.{css,scss,less,sass,styl,stylus}'],
+      [Linter.Stylelint]: ['**/*.{css,scss,less}'],
     },
     ignorePatterns: [
       `**/+(${ignoreDirectories.join('|')})/**`,

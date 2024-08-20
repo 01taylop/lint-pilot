@@ -21,6 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@stylistic/stylelint-plugin": "3.0.0",
     "chalk": "5.3.0",
     "chokidar": "3.6.0",
     "commander": "12.1.0",
@@ -38,8 +39,14 @@
     "markdownlint": "0.34.0",
     "markdownlint-rule-helpers": "0.25.0",
     "node-notifier": "10.0.1",
+    "postcss-less": "6.0.0",
+    "postcss-scss": "4.0.9",
     "space-log": "1.2.0",
-    "stylelint": "16.6.1"
+    "stylelint": "16.8.1",
+    "stylelint-config-property-sort-order-smacss": "10.0.0",
+    "stylelint-declaration-strict-value": "1.10.6",
+    "stylelint-order": "6.0.4",
+    "stylelint-scss": "6.5.0"
   },
   "devDependencies": {
     "@babel/core": "7.24.6",
@@ -65,6 +72,7 @@
   },
   "author": "Patrick Taylor <hello@patricktaylor.dev>",
   "keywords": [
+    "@stylistic/stylelint-plugin",
     "eslint",
     "eslint-plugin-eslint-comments",
     "eslint-plugin-inclusive-language",
@@ -76,6 +84,10 @@
     "eslint-plugin-sort-exports",
     "lint",
     "markdownlint",
-    "stylelint"
+    "stylelint",
+    "stylelint-config-property-sort-order-smacss",
+    "stylelint-declaration-strict-value",
+    "stylelint-order",
+    "stylelint-scss"
   ]
 }
