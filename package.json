@@ -30,7 +30,7 @@
     "eslint-plugin-inclusive-language": "2.2.1",
     "eslint-plugin-jest": "28.8.3",
     "eslint-plugin-n": "17.10.1",
-    "eslint-plugin-promise": "6.4.0",
+    "eslint-plugin-promise": "7.1.0",
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-exports": "0.9.1",
     "glob": "10.4.1",
