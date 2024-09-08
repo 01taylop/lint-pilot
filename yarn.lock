@@ -3826,6 +3826,11 @@ markdown-it@14.1.0:
     punycode.js "^2.3.1"
     uc.micro "^2.1.0"
 
+markdownlint-micromark@0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/markdownlint-micromark/-/markdownlint-micromark-0.1.10.tgz#a77a1a70adad9eac18ff412baf36a0c2189875d7"
+  integrity sha512-no5ZfdqAdWGxftCLlySHSgddEjyW4kui4z7amQcGsSKfYC5v/ou+8mIQVyg9KQMeEZLNtz9OPDTj7nnTnoR4FQ==
+
 markdownlint-micromark@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/markdownlint-micromark/-/markdownlint-micromark-0.1.2.tgz#5520e04febffa46741875a2f297509ffdb561f5c"
@@ -3836,25 +3841,20 @@ markdownlint-micromark@0.1.7:
   resolved "https://registry.yarnpkg.com/markdownlint-micromark/-/markdownlint-micromark-0.1.7.tgz#c465091b30d61a56027ccbfb981c80c96448c165"
   integrity sha512-BbRPTC72fl5vlSKv37v/xIENSRDYL/7X/XoFzZ740FGEbs9vZerLrIkFRY0rv7slQKxDczToYuMmqQFN61fi4Q==
 
-markdownlint-micromark@0.1.9:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/markdownlint-micromark/-/markdownlint-micromark-0.1.9.tgz#4876996b60d4dceb3a02f4eee2d3a366eb9569fa"
-  integrity sha512-5hVs/DzAFa8XqYosbEAEg6ok6MF2smDj89ztn9pKkCtdKHVdPQuGMH7frFfYL9mLkvfFe4pTyAMffLbjf3/EyA==
-
-markdownlint-rule-helpers@0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/markdownlint-rule-helpers/-/markdownlint-rule-helpers-0.25.0.tgz#700e22715c3b02bc364914d9b15674b99eeb7c5f"
-  integrity sha512-2vH6ee3UCPUuKVOxrinHxCT4bLjpCLRdtzTu4UO7Qb4Gl2vlGb70Un8byDv8dyJ8ZqZtxANd2XxvAumoG2nYcw==
+markdownlint-rule-helpers@0.26.0:
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/markdownlint-rule-helpers/-/markdownlint-rule-helpers-0.26.0.tgz#f53a15b2183637e00cb51851a37ed0259ff76979"
+  integrity sha512-4ek4hbHoON6ZdEz/MG5lAk4Qdnlpot393A+EZErugbJHOc7r9Fd96VNVOvnYEXX+HeItXh5nfBOLQVDAiaZkeg==
   dependencies:
     markdownlint-micromark "0.1.2"
 
-markdownlint@0.34.0:
-  version "0.34.0"
-  resolved "https://registry.yarnpkg.com/markdownlint/-/markdownlint-0.34.0.tgz#bbc2047c952d1644269009a69ba227ed597b23fa"
-  integrity sha512-qwGyuyKwjkEMOJ10XN6OTKNOVYvOIi35RNvDLNxTof5s8UmyGHlCdpngRHoRGNvQVGuxO3BJ7uNSgdeX166WXw==
+markdownlint@0.35.0:
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/markdownlint/-/markdownlint-0.35.0.tgz#8189347fef3550045de78a96c52a7f45c2a4f91e"
+  integrity sha512-wgp8yesWjFBL7bycA3hxwHRdsZGJhjhyP1dSxKVKrza0EPFYtn+mHtkVy6dvP1kGSjovyG5B8yNP6Frj0UFUJg==
   dependencies:
     markdown-it "14.1.0"
-    markdownlint-micromark "0.1.9"
+    markdownlint-micromark "0.1.10"
 
 markdownlint@^0.30.0:
   version "0.30.0"
