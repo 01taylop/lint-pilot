@@ -3,8 +3,8 @@
 import EslintComments from 'eslint-plugin-eslint-comments'
 import InclusiveLanguage from 'eslint-plugin-inclusive-language'
 import Jest from 'eslint-plugin-jest'
-import Promise from 'eslint-plugin-promise'
 import N from 'eslint-plugin-n'
+import Promise from 'eslint-plugin-promise'
 import SortDestructureKeys from 'eslint-plugin-sort-destructure-keys'
 import SortExports from 'eslint-plugin-sort-exports'
 

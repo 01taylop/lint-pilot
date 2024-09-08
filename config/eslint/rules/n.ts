@@ -1,7 +1,7 @@
 // https://github.com/eslint-community/eslint-plugin-n
 
 export default {
-  'n/callback-return': 1,
+  'n/callback-return': 2,
   'n/exports-style': 0,
   'n/file-extension-in-import': 0,
   'n/global-require': 0,
@@ -17,7 +17,7 @@ export default {
   'n/no-mixed-requires': [2, { allowCall: true, grouping: true }],
   'n/no-new-require': 2,
   'n/no-path-concat': 2,
-  'n/no-process-env': 0,
+  'n/no-process-env': 0, // TODO: Revisit this rule
   'n/no-process-exit': 0, // TODO: Revisit this rule
   'n/no-restricted-import': 0,
   'n/no-restricted-require': 0,
