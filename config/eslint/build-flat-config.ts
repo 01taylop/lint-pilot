@@ -28,11 +28,9 @@ const buildFlatConfig = () => ([{
   },
   plugins: {
     'jest': Plugins.Jest,
-    'jest-formatting': Plugins.JestFormatting,
   },
   rules: {
     ...Rules.Jest,
-    ...Rules.JestFormatting,
   },
 }, {
   files: FILE_PATHS.TESTS_TYPESCRIPT,
