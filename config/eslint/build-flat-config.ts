@@ -34,6 +34,14 @@ const buildFlatConfig = () => ([{
   },
 }, {
   files: FILE_PATHS.TESTS_TYPESCRIPT,
+  languageOptions: {
+    globals: {
+      'jest/globals': true,
+    },
+  },
+  plugins: {
+    'jest': Plugins.Jest,
+  },
   rules: {
     ...Rules.JestTypescript,
   },

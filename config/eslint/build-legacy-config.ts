@@ -31,6 +31,9 @@ const buildLegacyConfig = () => ({
     },
   }, {
     files: FILE_PATHS.TESTS_TYPESCRIPT,
+    plugins: [
+      'jest',
+    ],
     rules: {
       ...Rules.JestTypescript,
     },
