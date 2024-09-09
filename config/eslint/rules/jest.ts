@@ -3,9 +3,12 @@
 export const Jest = {
   'jest/consistent-test-it': 2,
   'jest/expect-expect': [2, {
+    additionalTestBlockFunctions: [],
     assertFunctionNames: ['expect', 'expect*'],
   }],
-  'jest/max-expects': 2,
+  'jest/max-expects': [2, {
+    max: 5,
+  }],
   'jest/max-nested-describe': [2, {
     max: 3,
   }],
@@ -33,19 +36,29 @@ export const Jest = {
   }],
   'jest/no-test-prefixes': 2,
   'jest/no-test-return-statement': 2,
-
+  'jest/padding-around-after-all-blocks': 2,
+  'jest/padding-around-after-each-blocks': 2,
+  'jest/padding-around-before-all-blocks': 2,
+  'jest/padding-around-before-each-blocks': 2,
+  'jest/padding-around-describe-blocks': 2,
+  'jest/padding-around-expect-groups': 2,
+  'jest/padding-around-test-blocks': 2,
   'jest/prefer-called-with': 2,
   'jest/prefer-comparison-matcher': 2,
   'jest/prefer-each': 2,
   'jest/prefer-equality-matcher': 2,
-  'jest/prefer-expect-assertions': 0,
+  'jest/prefer-expect-assertions': [2, {
+    onlyFunctionsWithAsyncKeyword: true,
+    onlyFunctionsWithExpectInCallback: true,
+    onlyFunctionsWithExpectInLoop: true,
+  }],
   'jest/prefer-expect-resolves': 2,
   'jest/prefer-hooks-in-order': 2,
   'jest/prefer-hooks-on-top': 2,
   'jest/prefer-importing-jest-globals': 0,
   'jest/prefer-jest-mocked': 2,
   'jest/prefer-lowercase-title': [2, {
-    ignore: ['describe'],
+    ignoreTopLevelDescribe: true,
   }],
   'jest/prefer-mock-promise-shorthand': 2,
   'jest/prefer-snapshot-hint': 0,
@@ -56,7 +69,7 @@ export const Jest = {
   'jest/prefer-to-have-length': 2,
   'jest/prefer-todo': 2,
   'jest/require-hook': 2,
-  'jest/require-to-throw-message': 1,
+  'jest/require-to-throw-message': 2,
   'jest/require-top-level-describe': 2,
   'jest/valid-describe-callback': 2,
   'jest/valid-expect': 2,
@@ -66,5 +79,7 @@ export const Jest = {
 
 export const JestTypescript = {
   'jest/no-untyped-mock-factory': 2,
-  'jest/unbound-method': 1,
+
+  '@typescript-eslint/unbound-method': 0,
+  'jest/unbound-method': 2,
 }

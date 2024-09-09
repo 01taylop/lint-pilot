@@ -28,14 +28,20 @@ const buildFlatConfig = () => ([{
   },
   plugins: {
     'jest': Plugins.Jest,
-    'jest-formatting': Plugins.JestFormatting,
   },
   rules: {
     ...Rules.Jest,
-    ...Rules.JestFormatting,
   },
 }, {
   files: FILE_PATHS.TESTS_TYPESCRIPT,
+  languageOptions: {
+    globals: {
+      'jest/globals': true,
+    },
+  },
+  plugins: {
+    'jest': Plugins.Jest,
+  },
   rules: {
     ...Rules.JestTypescript,
   },

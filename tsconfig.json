@@ -15,10 +15,9 @@
     "target": "ESNext"
   },
   "include": [
-    "config/**/*.ts",
-    "jest-config/types.d.ts",
-    "src/**/*.ts",
-    "src/types/global.d.ts"
+    "config",
+    "jest-config",
+    "src"
   ],
   "exclude": ["node_modules"]
 }
