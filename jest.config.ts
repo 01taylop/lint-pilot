@@ -5,7 +5,7 @@ import type { JestConfigWithTsJest } from 'ts-jest'
 const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
-    'src/**/*.ts',
+    'src/**/*',
     // TODO: Write tests for these files when they are less likely to change
     '!src/index.ts',
     '!src/linters/index.ts',
@@ -25,6 +25,9 @@ const config: JestConfigWithTsJest = {
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },
+  modulePathIgnorePatterns: [
+    '<rootDir>/lib/',
+  ],
   setupFilesAfterEnv: [
     '<rootDir>/jest-config/setup.ts',
   ],
