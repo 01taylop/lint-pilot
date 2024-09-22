@@ -16,6 +16,19 @@ const COPY_FILES = [
   'README.md',
 ]
 
+const createConfig = inputFile => ({
+  external: Object.keys(packageJSON.dependencies),
+  input: inputFile,
+  output: {
+    dir: OUTPUT_DIR,
+    format: 'cjs',
+  },
+  plugins: [
+    nodeResolve(),
+    typescript(),
+  ],
+})
+
 export default [{
   external: Object.keys(packageJSON.dependencies),
   input: 'src/index.ts',
@@ -37,22 +50,8 @@ export default [{
       targets: COPY_FILES.map(file => ({ src: file, dest: OUTPUT_DIR })),
     }),
   ],
-}, {
-  external: [
-    'postcss-less',
-    'postcss-scss',
-  ],
-  input: [
-    'config/stylelint.config.js',
-  ],
-  output: {
-    dir: OUTPUT_DIR,
-    format: 'cjs',
-  },
-  plugins: [
-    nodeResolve({
-      preferBuiltins: true,
-    }),
-    typescript(),
-  ],
-}]
+},
+  createConfig('config/all-legacy.ts'),
+  createConfig('config/all.ts'),
+  createConfig('config/stylelint.config.js'),
+]
