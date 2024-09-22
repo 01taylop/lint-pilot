@@ -1,10 +1,10 @@
-import config from './config/all.ts'
+import config from './lib/all'
 
 export default [
   ...config,
   {
     rules: {
-      // semi: [2, 'always'],
+      // semi: [1, 'always'],
     }
   }
 ]

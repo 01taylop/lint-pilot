@@ -6,11 +6,7 @@
     // "semi": [1, "always"]
   },
   "parserOptions": {
-    "ecmaFeatures": {
-      "modules": true
-    },
     "ecmaVersion": 2018,
-    "requireConfigFile": false,
     "sourceType": "module"
   }
 }

@@ -3,7 +3,7 @@ import postcssScss from 'postcss-scss'
 
 import Rules from './stylelint/rules'
 
-export default () => ({
+export default {
   extends: [
     'stylelint-config-property-sort-order-smacss',
   ],
@@ -49,4 +49,4 @@ export default () => ({
     ...Rules.Stylelint,
     ...Rules.Stylistic,
   },
-})
+}

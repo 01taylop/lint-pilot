@@ -2,28 +2,52 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
+import copy from 'rollup-plugin-copy'
 import { terser } from 'rollup-plugin-terser'
 
 const packageJSON = JSON.parse(readFileSync(resolve('./package.json'), 'utf-8'))
 
-export default {
+const OUTPUT_DIR = 'lib'
+
+const COPY_FILES = [
+  'config/markdownlint.json',
+  'package.json',
+  'README.md',
+]
+
+const createConfig = (configFile, format) => ({
+  external: Object.keys(packageJSON.dependencies),
+  input: configFile,
+  output: {
+    dir: OUTPUT_DIR,
+    format,
+  },
+  plugins: [
+    nodeResolve(),
+    typescript(),
+  ],
+})
+
+export default [{
   external: Object.keys(packageJSON.dependencies),
   input: 'src/index.ts',
   output: {
-    file: 'lib/index.min.js',
+    file: `${OUTPUT_DIR}/index.min.js`,
     format: 'es',
   },
   plugins: [
     nodeResolve({
       preferBuiltins: true,
     }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      preventAssignment: true,
-    }),
-    terser(),
     typescript(),
+    terser(),
+    copy({
+      targets: COPY_FILES.map(file => ({ src: file, dest: OUTPUT_DIR })),
+    }),
   ],
-}
+},
+  createConfig('config/all-legacy.ts', 'cjs'),
+  createConfig('config/all.ts', 'es'),
+  createConfig('config/stylelint.config.js', 'cjs'),
+]
