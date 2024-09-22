@@ -27,14 +27,16 @@ jobs:
     - name: Install Dependencies
       run: yarn install --immutable
 
-    - name: Lint
-      run: yarn lint --ignore-patterns '**/*.ts'
-
     - name: Run Tests
       run: yarn test --coverage
 
     - name: Run Build
       run: yarn build
+
+    - name: Lint
+      run: |
+        yarn lint --ignore-patterns '**/*.ts'
+        yarn lint --eslint-use-legacy-config --ignore-patterns '**/*.ts'
 
     - name: Depcheck
       run: npx depcheck
