@@ -12,16 +12,17 @@ const packageJSON = JSON.parse(readFileSync(resolve('./package.json'), 'utf-8'))
 const OUTPUT_DIR = 'lib'
 
 const COPY_FILES = [
+  'config/markdownlint.json',
   'package.json',
   'README.md',
 ]
 
-const createConfig = inputFile => ({
+const createConfig = (configFile, format) => ({
   external: Object.keys(packageJSON.dependencies),
-  input: inputFile,
+  input: configFile,
   output: {
     dir: OUTPUT_DIR,
-    format: 'cjs',
+    format,
   },
   plugins: [
     nodeResolve(),
@@ -51,7 +52,7 @@ export default [{
     }),
   ],
 },
-  createConfig('config/all-legacy.ts'),
-  createConfig('config/all.ts'),
-  createConfig('config/stylelint.config.js'),
+  createConfig('config/all-legacy.ts', 'cjs'),
+  createConfig('config/all.ts', 'es'),
+  createConfig('config/stylelint.config.js', 'cjs'),
 ]
