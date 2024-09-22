@@ -4,18 +4,29 @@ import { resolve } from 'node:path'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
+import copy from 'rollup-plugin-copy'
 import { terser } from 'rollup-plugin-terser'
 
 const packageJSON = JSON.parse(readFileSync(resolve('./package.json'), 'utf-8'))
+
+const OUTPUT_DIR = 'lib'
+
+const COPY_FILES = [
+  'package.json',
+  'README.md',
+]
 
 export default {
   external: Object.keys(packageJSON.dependencies),
   input: 'src/index.ts',
   output: {
-    file: 'lib/index.min.js',
+    file: `${OUTPUT_DIR}/index.min.js`,
     format: 'es',
   },
   plugins: [
+    copy({
+      targets: COPY_FILES.map(file => ({ src: file, dest: OUTPUT_DIR })),
+    }),
     nodeResolve({
       preferBuiltins: true,
     }),

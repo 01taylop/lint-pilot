@@ -61,33 +61,11 @@ const compileLintConfiguration = async (): Promise<void> => {
 }
 
 /*
- * Copy Additional Files
- */
-
-const copyAdditionalFiles = async () => {
-  try {
-    const files = [
-      'package.json',
-      'README.md',
-    ]
-
-    for (const file of files) {
-      const filePath = path.resolve(`./${file}`)
-      await copyFile(file, filePath)
-    }
-  } catch (error) {
-    console.error('An error occurred while copying files:', error)
-    process.exit(1)
-  }
-}
-
-/*
  * Run
  */
 
 const init = async () => {
   await compileLintConfiguration()
-  await copyAdditionalFiles()
 }
 
 init()
