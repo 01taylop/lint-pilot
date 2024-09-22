@@ -16,7 +16,7 @@ const COPY_FILES = [
   'README.md',
 ]
 
-export default {
+export default [{
   external: Object.keys(packageJSON.dependencies),
   input: 'src/index.ts',
   output: {
@@ -24,9 +24,6 @@ export default {
     format: 'es',
   },
   plugins: [
-    copy({
-      targets: COPY_FILES.map(file => ({ src: file, dest: OUTPUT_DIR })),
-    }),
     nodeResolve({
       preferBuiltins: true,
     }),
@@ -34,7 +31,28 @@ export default {
       'process.env.NODE_ENV': JSON.stringify('production'),
       preventAssignment: true,
     }),
+    typescript(),
     terser(),
+    copy({
+      targets: COPY_FILES.map(file => ({ src: file, dest: OUTPUT_DIR })),
+    }),
+  ],
+}, {
+  external: [
+    'postcss-less',
+    'postcss-scss',
+  ],
+  input: [
+    'config/stylelint.config.js',
+  ],
+  output: {
+    dir: OUTPUT_DIR,
+    format: 'cjs',
+  },
+  plugins: [
+    nodeResolve({
+      preferBuiltins: true,
+    }),
     typescript(),
   ],
-}
+}]
