@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
 import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
 import { terser } from 'rollup-plugin-terser'
@@ -40,10 +39,6 @@ export default [{
   plugins: [
     nodeResolve({
       preferBuiltins: true,
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      preventAssignment: true,
     }),
     typescript(),
     terser(),

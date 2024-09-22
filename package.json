@@ -15,8 +15,7 @@
   },
   "scripts": {
     "build": "rimraf lib && mkdir lib && rollup -c",
-    "buildConfig": "tsx ./scripts/build-config.ts",
-    "lint": "NODE_ENV=development tsx src/index.js --ignore-dirs lib",
+    "lint": "tsx src/index.js --ignore-dirs lib",
     "publishLib": "yarn test --coverage && yarn build && cd lib && npm publish",
     "test": "jest"
   },
@@ -52,7 +51,6 @@
     "@babel/preset-env": "7.25.4",
     "@babel/preset-typescript": "7.24.7",
     "@rollup/plugin-node-resolve": "15.2.3",
-    "@rollup/plugin-replace": "5.0.7",
     "@rollup/plugin-typescript": "11.1.6",
     "@types/eslint": "9.6.1",
     "@types/jest": "29.5.12",
