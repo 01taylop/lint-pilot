@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import chalk from 'chalk'
 import { Command } from 'commander'
+import logSymbols from 'log-symbols'
 
 import { Events, Linter } from '@Types'
 import { clearCacheDirectory } from '@Utils/cache'
@@ -20,8 +22,12 @@ program
   .name('lint-pilot')
   .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
   .version('0.0.1')
+
   .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
-  .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
+  .configureOutput({
+    outputError: (str, write) => write(`\n${logSymbols.error} ${chalk.red(str)}`),
+  })
+  .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information')
 
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
