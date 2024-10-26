@@ -25,15 +25,15 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install Dependencies
-      run: yarn install --immutable
+      run: yarn install --frozen-lockfile --ignore-scripts --no-progress --prefer-offline
 
     - name: Run Tests
       run: yarn test --coverage
 
-    - name: Run Build
+    - name: Build Lint Pilot
       run: yarn build
 
-    - name: Lint
+    - name: Run Lint Pilot
       run: |
         yarn lint --ignore-patterns '**/*.ts'
         yarn lint --eslint-use-legacy-config --ignore-patterns '**/*.ts'
