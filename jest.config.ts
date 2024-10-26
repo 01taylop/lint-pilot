@@ -33,7 +33,7 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(js|ts)$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    './node_modules/(?!(chalk)/)',
+    './node_modules/(?!(chalk|is-unicode-supported)/)',
   ],
 }
 
