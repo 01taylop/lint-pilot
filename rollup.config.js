@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
+import json from '@rollup/plugin-json'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import copy from 'rollup-plugin-copy'
@@ -37,6 +38,7 @@ export default [{
     format: 'es',
   },
   plugins: [
+    json(),
     nodeResolve({
       preferBuiltins: true,
     }),
