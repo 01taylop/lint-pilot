@@ -6,9 +6,7 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*',
-    // TODO: Write tests for these files when they are less likely to change
     '!src/index.ts',
-    '!src/linters/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
@@ -36,7 +34,7 @@ const config: JestConfigWithTsJest = {
   },
   transformIgnorePatterns: [
     './node_modules/(?!(chalk)/)',
-  ]
+  ],
 }
 
 export default config
