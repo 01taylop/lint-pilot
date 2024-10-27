@@ -4,6 +4,8 @@ import { description, name, version } from '../../package.json'
 import { lint } from '../commands'
 import createProgram from '../index'
 
+import type { LintOptions } from '@Types/commands'
+
 jest.mock('chalk', () => ({
   red: jest.fn(text => text),
 }))
@@ -80,7 +82,7 @@ Commands:
     const program = createProgram()
     program.parse(['node', './index.ts', 'lint'])
 
-    expect(lint).toHaveBeenCalledOnceWith({
+    const expectedOptions: LintOptions = {
       cache: false,
       clearCache: false,
       debug: false,
@@ -89,14 +91,16 @@ Commands:
       fix: false,
       title: 'Lint Pilot',
       watch: false,
-    })
+    }
+
+    expect(lint).toHaveBeenCalledOnceWith(expectedOptions)
   })
 
   it('calls the lint command with configured options', () => {
     const program = createProgram()
     program.parse(['node', './index.ts', 'lint', '--emoji', '🚀', '--title', 'Rocket Lint', '--fix', '--watch', '--cache', '--clearCache', '--ignore-dirs', 'node_modules', '--ignore-patterns', 'dist', '--eslint-include', '*.mdx', '--debug', '--eslint-use-legacy-config'])
 
-    expect(lint).toHaveBeenCalledOnceWith({
+    const expectedOptions: LintOptions = {
       cache: true,
       clearCache: true,
       debug: true,
@@ -108,6 +112,8 @@ Commands:
       ignorePatterns: ['dist'],
       title: 'Rocket Lint',
       watch: true,
-    })
+    }
+
+    expect(lint).toHaveBeenCalledOnceWith(expectedOptions)
   })
 })
