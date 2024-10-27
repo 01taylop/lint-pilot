@@ -20,12 +20,12 @@ describe('clearCacheDirectory', () => {
 
     clearCacheDirectory()
 
-    expect(fs.existsSync).toHaveBeenCalledWith(expectedCacheDirectory)
-    expect(fs.rmSync).toHaveBeenCalledWith(expectedCacheDirectory, {
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheDirectory)
+    expect(fs.rmSync).toHaveBeenCalledOnceWith(expectedCacheDirectory, {
       force: true,
       recursive: true,
     })
-    expect(colourLog.info).toHaveBeenCalledWith('Cache cleared.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('Cache cleared.\n')
   })
 
   it('does not attempt to clear the cache if the directory does not exist', () => {
@@ -33,9 +33,9 @@ describe('clearCacheDirectory', () => {
 
     clearCacheDirectory()
 
-    expect(fs.existsSync).toHaveBeenCalledWith(expectedCacheDirectory)
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheDirectory)
     expect(fs.rmSync).not.toHaveBeenCalled()
-    expect(colourLog.info).toHaveBeenCalledWith('No cache to clear.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('No cache to clear.\n')
   })
 
 })
@@ -47,7 +47,7 @@ describe('getCacheDirectory', () => {
 
     const result = getCacheDirectory('.eslintcache')
 
-    expect(path.resolve).toHaveBeenCalledWith(process.cwd(), '.lintpilotcache', '.eslintcache')
+    expect(path.resolve).toHaveBeenCalledOnceWith(process.cwd(), '.lintpilotcache', '.eslintcache')
     expect(result).toBe(`${process.cwd()}/.lintpilotcache/.eslintcache`)
   })
 

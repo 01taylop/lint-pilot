@@ -1,20 +1,13 @@
-import { type FilePatterns, Linter } from '@Types'
-import colourLog from '@Utils/colourLog'
+import type { LintOptions } from '@Types/commands'
+import { type FilePatterns, Linter } from '@Types/lint'
+import colourLog from '@Utils/colour-log'
 
-type StringOrArray = string | Array<string>
+type GetFilePatterns = Pick<LintOptions, 'eslintInclude' | 'ignoreDirs' | 'ignorePatterns'>
 
-interface GetFilePatterns {
-  eslintInclude?: StringOrArray
-  ignoreDirs?: StringOrArray
-  ignorePatterns?: StringOrArray
-}
-
-const enforceArray = (value: StringOrArray = []): Array<string> => Array.of(value).flat()
-
-const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFilePatterns): FilePatterns => {
+const getFilePatterns = ({ eslintInclude = [], ignoreDirs = [], ignorePatterns = [] }: GetFilePatterns): FilePatterns => {
   const eslintIncludePatterns = [
     '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-    ...enforceArray(eslintInclude),
+    ...Array.of(eslintInclude).flat(),
   ]
 
   const ignoreDirectories = [
@@ -24,12 +17,12 @@ const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFileP
     'tmp',
     'tscOutput',
     'vendor',
-    ...enforceArray(ignoreDirs),
+    ...Array.of(ignoreDirs).flat(),
   ].sort()
 
   const ignoreGlobs = [
     '**/*.+(map|min).*',
-    ...enforceArray(ignorePatterns),
+    ...Array.of(ignorePatterns).flat(),
   ].sort()
 
   const filePatterns = {
@@ -53,4 +46,6 @@ const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFileP
   return filePatterns
 }
 
-export default getFilePatterns
+export {
+  getFilePatterns,
+}
