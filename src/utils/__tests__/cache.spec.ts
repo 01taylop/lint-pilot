@@ -1,18 +1,19 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
 jest.mock('node:fs')
-jest.mock('@Utils/colourLog', () => ({
-  info: jest.fn(),
-}))
 
 describe('clearCacheDirectory', () => {
 
   const expectedCacheDirectory = `${process.cwd()}/.lintpilotcache`
+
+  beforeEach(() => {
+    jest.spyOn(colourLog, 'info').mockImplementation(() => true)
+  })
 
   it('clears the cache directory if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -41,7 +42,7 @@ describe('clearCacheDirectory', () => {
 
 describe('getCacheDirectory', () => {
 
-  it('returns the correct cache directory path for a given file', () => {
+  it('returns the cache directory for a given file', () => {
     jest.spyOn(path, 'resolve')
 
     const result = getCacheDirectory('.eslintcache')
