@@ -1,8 +1,10 @@
 import type { LintOptions } from '@Types/commands'
+import colourLog from '@Utils/colour-log'
 import { clearTerminal } from '@Utils/terminal'
 
-const lint = (options: LintOptions) => {
+const lint = ({ emoji, title, ...options }: LintOptions) => {
   clearTerminal()
+  colourLog.title(`${emoji} ${title}\n`)
 
   console.log('Run Lint', options)
 }
