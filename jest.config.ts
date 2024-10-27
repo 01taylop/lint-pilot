@@ -6,7 +6,6 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*',
-    '!src/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
