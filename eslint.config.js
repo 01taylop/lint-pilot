@@ -5,6 +5,6 @@ export default [
   {
     rules: {
       // semi: [1, 'always'],
-    }
-  }
+    },
+  },
 ]

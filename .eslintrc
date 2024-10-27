@@ -2,11 +2,11 @@
   "extends": [
     "./lib/all-legacy"
   ],
-  "rules": {
-    // "semi": [1, "always"]
-  },
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
+  },
+  "rules": {
+    // "semi": [1, "always"]
   }
 }
