@@ -6,7 +6,6 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*',
-    '!src/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
@@ -33,7 +32,7 @@ const config: JestConfigWithTsJest = {
     '^.+\\.(js|ts)$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    './node_modules/(?!(chalk|is-unicode-supported)/)',
+    './node_modules/(?!(chalk)/)',
   ],
 }
 
