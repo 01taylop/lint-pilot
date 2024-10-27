@@ -27,9 +27,6 @@ Options:
 
 Commands:
   lint            run all linters: ESLint, Stylelint, and MarkdownLint (default)
-  lint:es         run ESLint only
-  lint:markdown   run MarkdownLint only
-  lint:style      run Stylelint only
   help [command]  display help for command
 `)
   })
