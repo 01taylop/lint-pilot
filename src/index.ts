@@ -29,42 +29,6 @@ program
     console.log('Run Lint')
   })
 
-/*
-* ESLint
-*/
-
-program
-  .command('lint:es')
-  .description('run ESLint only')
-  .action(() => {
-    // TODO: Run ESLint
-    console.log('Run ESLint')
-  })
-
-/*
-* MarkdownLint
-*/
-
-program
-  .command('lint:markdown')
-  .description('run MarkdownLint only')
-  .action(() => {
-    // TODO: Run MarkdownLint
-    console.log('Run MarkdownLint')
-  })
-
-/*
-* Stylelint
-*/
-
-program
-  .command('lint:style')
-  .description('run Stylelint only')
-  .action(() => {
-    // TODO: Run Stylelint
-    console.log('Run Stylelint')
-  })
-
 /* istanbul ignore next */
 process.on('exit', () => {
   console.log()
