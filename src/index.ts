@@ -26,7 +26,7 @@ const createProgram = () => {
 
   program
     .command('lint', { isDefault: true })
-    .description('run all linters: ESLint, Stylelint, and MarkdownLint (default)')
+    .description('run all linters: ESLint, Stylelint, and Markdownlint (default)')
 
     .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
     .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
@@ -37,14 +37,14 @@ const createProgram = () => {
     .option('--cache', 'cache linting results', false)
     .option('--clearCache', 'clear the cache', false)
 
-    .option('--ignore-dirs <directories...>', 'directories to ignore globally')
-    .option('--ignore-patterns <patterns...>', 'file patterns to ignore globally')
-    .option('--eslint-include <patterns...>', 'file patterns to include for ESLint')
+    .option('--ignore-dirs <directories...>', 'define directories to ignore')
+    .option('--ignore-patterns <patterns...>', 'define file patterns to ignore')
+    .option('--eslint-include <patterns...>', 'define additional file patterns for ESLint')
 
-    .option('--debug', 'output additional debug information including the list of files being linted', false)
-    .option('--eslint-use-legacy-config', 'set to true to use the legacy ESLint configuration', false)
+    .option('--debug', 'output additional debug information', false)
+    .option('--eslint-use-legacy-config', 'use legacy ESLint config', false)
 
-    .action(options => lint(options))
+    .action(lint)
 
   return program
 }
