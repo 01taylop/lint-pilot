@@ -3,7 +3,9 @@ import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
 import { clearTerminal } from '@Utils/terminal'
 
-const lint = ({ clearCache, debug, emoji, title, ...options }: LintOptions) => {
+import { getFilePatterns } from './file-patterns'
+
+const lint = ({ clearCache, debug, emoji, eslintInclude, ignoreDirs, ignorePatterns, title, ...options }: LintOptions) => {
   global.debug = debug
 
   clearTerminal()
@@ -13,7 +15,13 @@ const lint = ({ clearCache, debug, emoji, title, ...options }: LintOptions) => {
     clearCacheDirectory()
   }
 
-  console.log('Run Lint', options)
+  const filePatterns = getFilePatterns({
+    eslintInclude,
+    ignoreDirs,
+    ignorePatterns,
+  })
+
+  console.log('Run Lint', options, filePatterns)
 }
 
 export default lint

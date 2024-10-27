@@ -33,7 +33,7 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  lint [options]  run all linters: ESLint, Stylelint, and MarkdownLint (default)
+  lint [options]  run all linters: ESLint, Stylelint, and Markdownlint (default)
   help [command]  display help for command
 `)
   })
