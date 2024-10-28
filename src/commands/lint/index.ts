@@ -4,8 +4,9 @@ import colourLog from '@Utils/colour-log'
 import { clearTerminal } from '@Utils/terminal'
 
 import { getFilePatterns } from './file-patterns'
+import { EVENTS, fileChangeEvent, watchFiles } from './watch-files'
 
-const lint = ({ clearCache, debug, emoji, eslintInclude, ignoreDirs, ignorePatterns, title, ...options }: LintOptions) => {
+const lint = ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegacyConfig, fix, ignoreDirs, ignorePatterns, title, watch }: LintOptions) => {
   global.debug = debug
 
   clearTerminal()
@@ -21,7 +22,29 @@ const lint = ({ clearCache, debug, emoji, eslintInclude, ignoreDirs, ignorePatte
     ignorePatterns,
   })
 
-  console.log('Run Lint', options, filePatterns)
+  const lintOptions = {
+    cache,
+    eslintUseLegacyConfig,
+    filePatterns,
+    fix,
+    title,
+    watch,
+  }
+
+  console.log('Run Lint', lintOptions) // TODO: Run lint
+
+  if (watch) {
+    watchFiles({
+      filePatterns: Object.values(filePatterns.includePatterns).flat(),
+      ignorePatterns: filePatterns.ignorePatterns,
+    })
+
+    fileChangeEvent.on(EVENTS.FILE_CHANGED, ({ message }) => {
+      clearTerminal()
+      colourLog.info(`${message}\n`)
+      console.log('Run Lint', lintOptions) // TODO: Run lint
+    })
+  }
 }
 
 export default lint
