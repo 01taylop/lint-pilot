@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import { Command } from 'commander'
 
 import { description, version } from '../package.json'
+import { lintCommand } from './commands'
 import { exitHandler } from './exitHandler'
 
 const createProgram = () => {
@@ -19,7 +20,7 @@ const createProgram = () => {
     })
     .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.')
 
-  .action(() => console.log('lint action called'))
+  lintCommand(program)
 
   return program
 }

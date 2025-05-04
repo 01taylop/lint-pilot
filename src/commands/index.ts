@@ -1,5 +1,5 @@
-import lint from './lint'
+import lintCommand from './lint/command'
 
 export {
-  lint,
+  lintCommand,
 }
