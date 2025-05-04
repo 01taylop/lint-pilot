@@ -5,40 +5,28 @@ import action from './action'
 
 const helpText = `
 Examples:
-
-  Basic Usage:
-    Automatically fix problems:
-      ${chalk.gray('$ lint-pilot lint --fix')}
-    Watch for file changes and re-run linters:
-      ${chalk.gray('$ lint-pilot lint --watch')}
-
-  Customisation:
-    Customise the emoji and title:
-      ${chalk.gray('$ lint-pilot lint -e 🐳 -t "Ocean Lint"')}
-
-  Caching:
-    Enable caching for faster linting:
-      ${chalk.gray('$ lint-pilot lint --cache')}
-    Clear the cache:
-      ${chalk.gray('$ lint-pilot lint --clear-cache')}
-
-  Ignore and Include:
-    Ignore specific directories:
-      ${chalk.gray('$ lint-pilot lint --ignore-dirs generated')}
-    Ignore specific file patterns:
-      ${chalk.gray('$ lint-pilot lint --ignore-patterns "*.cjs"')}
-    Include additional file patterns for ESLint:
-      ${chalk.gray('$ lint-pilot lint --eslint-include "**/*.mdx"')}
-
-  Debugging and Legacy:
-    Output debug information (e.g., configuration details, file paths):
-      ${chalk.gray('$ lint-pilot lint --debug')}
-    Use legacy ESLint config:
-      ${chalk.gray('$ lint-pilot lint --eslint-use-legacy-config')}
-
-  Combining Options:
-    Run all linters with caching, fixing, and watching for changes:
-      ${chalk.gray('$ lint-pilot lint --cache --fix --watch')}
+  Automatically fix problems:
+    ${chalk.gray('$ lint-pilot lint --fix')}
+  Watch for file changes and re-run linters:
+    ${chalk.gray('$ lint-pilot lint --watch')}
+  Customise the emoji and title:
+    ${chalk.gray('$ lint-pilot lint -e 🐳 -t "Ocean Lint"')}
+  Enable caching for faster linting:
+    ${chalk.gray('$ lint-pilot lint --cache')}
+  Clear the cache:
+    ${chalk.gray('$ lint-pilot lint --clear-cache')}
+  Ignore specific directories:
+    ${chalk.gray('$ lint-pilot lint --ignore-dirs generated')}
+  Ignore specific file patterns:
+    ${chalk.gray('$ lint-pilot lint --ignore-patterns "*.cjs"')}
+  Include additional file patterns for ESLint:
+    ${chalk.gray('$ lint-pilot lint --eslint-include "**/*.mdx"')}
+  Output debug information (e.g., configuration details, file paths):
+    ${chalk.gray('$ lint-pilot lint --debug')}
+  Use legacy ESLint config:
+    ${chalk.gray('$ lint-pilot lint --eslint-use-legacy-config')}
+  Run all linters with caching, fixing, and watching for changes:
+    ${chalk.gray('$ lint-pilot lint --cache --fix --watch')}
 `
 
 const command = (program: Command) => {
@@ -70,8 +58,9 @@ const command = (program: Command) => {
 
     .action(action)
 
+    .addHelpText('before', 'Command: lint')
     .addHelpText('after', helpText)
-    .showHelpAfterError(`\n💡 Run \`lint-pilot lint --help\` for more information.`)
+    .showHelpAfterError(`\n💡 Run \`lint-pilot --help\` for more information.`)
 }
 
 export default command
