@@ -1,11 +1,77 @@
+import chalk from 'chalk'
 import { Command } from 'commander'
 
 import action from './action'
 
+const helpText = `
+Examples:
+
+  Basic Usage:
+    Automatically fix problems:
+      ${chalk.gray('$ lint-pilot lint --fix')}
+    Watch for file changes and re-run linters:
+      ${chalk.gray('$ lint-pilot lint --watch')}
+
+  Customisation:
+    Customise the emoji and title:
+      ${chalk.gray('$ lint-pilot lint -e 🐳 -t "Ocean Lint"')}
+
+  Caching:
+    Enable caching for faster linting:
+      ${chalk.gray('$ lint-pilot lint --cache')}
+    Clear the cache:
+      ${chalk.gray('$ lint-pilot lint --clear-cache')}
+
+  Ignore and Include:
+    Ignore specific directories:
+      ${chalk.gray('$ lint-pilot lint --ignore-dirs generated')}
+    Ignore specific file patterns:
+      ${chalk.gray('$ lint-pilot lint --ignore-patterns "*.cjs"')}
+    Include additional file patterns for ESLint:
+      ${chalk.gray('$ lint-pilot lint --eslint-include "**/*.mdx"')}
+
+  Debugging and Legacy:
+    Output debug information (e.g., configuration details, file paths):
+      ${chalk.gray('$ lint-pilot lint --debug')}
+    Use legacy ESLint config:
+      ${chalk.gray('$ lint-pilot lint --eslint-use-legacy-config')}
+
+  Combining Options:
+    Run all linters with caching, fixing, and watching for changes:
+      ${chalk.gray('$ lint-pilot lint --cache --fix --watch')}
+`
+
 const command = (program: Command) => {
   program
-    .command('lint')
+    .command('lint', { isDefault: true })
+    .description('Run all linters: ESLint, Stylelint, and Markdownlint (default command).')
+    .summary('run all linters (default command)')
+
+    // Core Behavior Options
+    .option('--fix', 'automatically fix problems', false)
+    .option('-w, --watch', 'watch for file changes and re-run the linters', false)
+
+    // Customisation Options
+    .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
+    .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
+
+    // Caching Options
+    .option('--cache', 'cache linting results', false)
+    .option('--clear-cache', 'clear the cache', false)
+
+    // Ignore and Include Options
+    .option('--ignore-dirs <directories...>', 'define directories to ignore')
+    .option('--ignore-patterns <patterns...>', 'define file patterns to ignore')
+    .option('--eslint-include <patterns...>', 'define additional file patterns for ESLint')
+
+    // Debugging and Legacy Options
+    .option('--debug', 'output additional debug information', false)
+    .option('--eslint-use-legacy-config', 'use legacy ESLint config', false)
+
     .action(action)
+
+    .addHelpText('after', helpText)
+    .showHelpAfterError(`\n💡 Run \`lint-pilot lint --help\` for more information.`)
 }
 
 export default command
