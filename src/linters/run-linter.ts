@@ -1,10 +1,12 @@
 import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 
-import type { LintCommandOptions } from '@Types/commands'
-import type { FilePatterns } from '@Types/lint'
-
+import linters from './linters'
+import { reportSummary } from './reporting'
 import sourceFiles from './source-files'
+
+import type { LintCommandOptions } from '@Types/commands'
+import type { FilePatterns, LintReport } from '@Types/lint'
 
 type RunLinterOptions = Pick<LintCommandOptions, 'cache' | 'eslintUseLegacyConfig' | 'fix'> & {
   filePattern: FilePatterns['includePatterns'][Linter]
@@ -12,7 +14,7 @@ type RunLinterOptions = Pick<LintCommandOptions, 'cache' | 'eslintUseLegacyConfi
   linter: Linter
 }
 
-const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinterOptions) => {
+const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinterOptions): Promise<LintReport> => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
@@ -22,7 +24,16 @@ const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linte
     linter,
   })
 
-  console.log('Files:', files)
+  const report: LintReport = await linters[linter].lintFiles({
+    cache,
+    eslintUseLegacyConfig,
+    files,
+    fix,
+  })
+
+  reportSummary(report.summary, startTime)
+
+  return report
 }
 
 export default runLinter
