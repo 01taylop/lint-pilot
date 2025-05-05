@@ -1,19 +1,13 @@
-import eslint from './eslint'
-import stylelint from './stylelint'
-import markdownlint from './markdownlint'
+import type { LintCommandOptions } from '@Types/commands'
+import type { FilePatterns, Linter } from '@Types/lint'
 
-import { Linter, type LintFiles, type LintReport } from '@Types'
-
-type Linters = {
-  [key in Linter]: {
-    lintFiles: (options: LintFiles) => Promise<LintReport>
-  }
+type RunLintersOptions = Pick<LintCommandOptions, 'cache' | 'eslintUseLegacyConfig' | 'fix' | 'title' | 'watch'> & {
+  filePatterns: FilePatterns
+  linters?: Array<Linter>
 }
 
-const linters: Linters = {
-  [Linter.ESLint]: eslint,
-  [Linter.Markdownlint]: markdownlint,
-  [Linter.Stylelint]: stylelint,
+const runLinters = ({ cache, eslintUseLegacyConfig, filePatterns, fix, linters, title, watch }: RunLintersOptions) => {
+  console.log('Running linters...')
 }
 
-export default linters
+export default runLinters
