@@ -1,13 +1,13 @@
 import stylelint from 'stylelint'
 
-import { Linter, RuleSeverity } from '@Types'
+import { Linter, RuleSeverity } from '@Types/lint'
 import { getCacheDirectory } from '@Utils/cache'
-import colourLog from '@Utils/colourLog'
-import { formatResult } from '@Utils/transform'
+import colourLog from '@Utils/colour-log'
+import { formatResult } from '@Utils/format-result'
 
-import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFilesOptions, LintReport, ReportResults, ReportSummary } from '@Types/lint'
 
-const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> => {
+const lintFiles = async ({ cache, files, fix }: LintFilesOptions): Promise<LintReport> => {
   try {
     // TODO: Stylelint config, extensible?
     const {
@@ -16,7 +16,7 @@ const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> 
     } = await stylelint.lint({
       allowEmptyInput: true,
       cache,
-      cacheLocation: cache ? getCacheDirectory('.stylelintcache') : undefined,
+      cacheLocation: cache ? getCacheDirectory('stylelint') : undefined,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,
@@ -45,7 +45,10 @@ const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> 
     lintResults.forEach(({ deprecations, source, warnings }) => {
       const file = source ? source.replace(`${process.cwd()}/`, '') : 'unknown-source'
 
-      reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...deprecations.map(({ text }) => text)])]
+      const deprecatedRulesSet = new Set(reportSummary.deprecatedRules)
+      deprecations.forEach(({ text }) => deprecatedRulesSet.add(text))
+
+      reportSummary.deprecatedRules = Array.from(deprecatedRulesSet)
       reportSummary.errorCount += warnings.length
 
       warnings.forEach(({ column, line, rule, text }) => {
@@ -56,7 +59,7 @@ const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> 
         reportResults[file].push(formatResult({
           column,
           lineNumber: line,
-          message: text.replace(`(${rule})`, '').trim(),
+          message: text.replace(`(${rule})`, ''),
           rule,
           severity: RuleSeverity.ERROR,
         }))
