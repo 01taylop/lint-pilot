@@ -1,13 +1,13 @@
 import { ESLint, loadESLint } from 'eslint'
 
-import { Linter, RuleSeverity } from '@Types'
+import { Linter, RuleSeverity } from '@Types/lint'
 import { getCacheDirectory } from '@Utils/cache'
-import colourLog from '@Utils/colourLog'
-import { formatResult } from '@Utils/transform'
+import colourLog from '@Utils/colour-log'
+import { formatResult } from '@Utils/format-result'
 
-import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
+import type { LintFilesOptions, LintReport, ReportResults, ReportSummary } from '@Types/lint'
 
-const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles): Promise<LintReport> => {
+const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFilesOptions): Promise<LintReport> => {
   try {
     const CustomESLint = await loadESLint({
       useFlatConfig: !eslintUseLegacyConfig,
@@ -15,7 +15,7 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
 
     const eslint = new CustomESLint({
       cache,
-      cacheLocation: cache ? getCacheDirectory('.eslintcache') : undefined,
+      cacheLocation: cache ? getCacheDirectory('eslint') : undefined,
       fix,
     })
 
@@ -36,7 +36,10 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
     lintResults.forEach(({ errorCount, filePath, fixableErrorCount, fixableWarningCount, messages, usedDeprecatedRules, warningCount }) => {
       const file = filePath.replace(`${process.cwd()}/`, '')
 
-      reportSummary.deprecatedRules = [...new Set([...reportSummary.deprecatedRules, ...usedDeprecatedRules.map(({ ruleId }) => ruleId)])]
+      const deprecatedRulesSet = new Set(reportSummary.deprecatedRules)
+      usedDeprecatedRules.forEach(({ ruleId }) => deprecatedRulesSet.add(ruleId))
+
+      reportSummary.deprecatedRules = Array.from(deprecatedRulesSet)
       reportSummary.errorCount += errorCount
       reportSummary.fixableErrorCount += fixableErrorCount
       reportSummary.fixableWarningCount += fixableWarningCount
@@ -50,7 +53,7 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
         reportResults[file].push(formatResult({
           column: line ? column : undefined,
           lineNumber: line || 0,
-          message: message.trim(),
+          message,
           rule: ruleId || 'core-error',
           severity: severity === 1 ? RuleSeverity.WARNING : RuleSeverity.ERROR,
         }))
