@@ -3,23 +3,25 @@ import path from 'node:path'
 
 import colourLog from './colour-log'
 
-const CACHE_FOLDER = '.lintpilotcache'
+type CacheSubDirectory = 'eslint' | 'stylelint'
 
-const clearCacheDirectory = () => {
-  const cacheDirectory = path.resolve(process.cwd(), CACHE_FOLDER)
+const CACHE_DIRECTORY = '.lintpilotcache'
+
+const clearCacheDirectory = (subDir?: CacheSubDirectory) => {
+  const cacheDirectory = path.resolve(process.cwd(), CACHE_DIRECTORY, subDir || '')
 
   if (fs.existsSync(cacheDirectory)) {
     fs.rmSync(cacheDirectory, {
       force: true,
       recursive: true,
     })
-    colourLog.info('Cache cleared.\n')
+    colourLog.info(`Cache cleared${subDir ? ` for ${subDir}` : ''}.\n`)
   } else {
-    colourLog.info('No cache to clear.\n')
+    colourLog.info(`No cache to clear${subDir ? ` for ${subDir}` : ''}.\n`)
   }
 }
 
-const getCacheDirectory = (file: string) => path.resolve(process.cwd(), CACHE_FOLDER, file)
+const getCacheDirectory = (subDir: CacheSubDirectory) => path.resolve(process.cwd(), CACHE_DIRECTORY, subDir)
 
 export {
   clearCacheDirectory,
