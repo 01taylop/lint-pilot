@@ -1,4 +1,4 @@
-interface LintOptions {
+interface LintCommandOptions {
   cache: boolean
   clearCache: boolean
   debug: boolean
@@ -13,5 +13,5 @@ interface LintOptions {
 }
 
 export type {
-  LintOptions,
+  LintCommandOptions,
 }
