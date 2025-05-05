@@ -1,6 +1,6 @@
 {
   "name": "lint-pilot",
-  "description": "Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.",
+  "description": "Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/01taylop/lint-pilot.git"
@@ -33,7 +33,6 @@
     "eslint-plugin-sort-destructure-keys": "2.0.0",
     "eslint-plugin-sort-exports": "0.9.1",
     "glob": "10.4.5",
-    "log-symbols": "7.0.0",
     "markdownlint": "0.35.0",
     "markdownlint-rule-helpers": "0.26.0",
     "node-notifier": "10.0.1",
@@ -50,6 +49,7 @@
     "@babel/core": "7.25.2",
     "@babel/preset-env": "7.25.4",
     "@babel/preset-typescript": "7.24.7",
+    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-typescript": "11.1.6",
     "@types/eslint": "9.6.1",
