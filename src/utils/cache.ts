@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import colourLog from './colour-log'
+import colourLog from '@Utils/colour-log'
 
 type CacheSubDirectory = 'eslint' | 'stylelint'
 
