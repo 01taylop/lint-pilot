@@ -7,7 +7,7 @@ import { EVENTS, fileChangeEvent, watchFiles } from '@Utils/watch-files'
 
 import type { LintCommandOptions } from '@Types/commands'
 
-const action = ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegacyConfig, fix, ignoreDirs, ignorePatterns, title, watch }: LintCommandOptions) => {
+const action = async ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegacyConfig, fix, ignoreDirs, ignorePatterns, title, watch }: LintCommandOptions) => {
   global.debug = debug
 
   clearTerminal()
@@ -32,15 +32,15 @@ const action = ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegac
     watch,
   }
 
-  runLinters(lintOptions)
+  await runLinters(lintOptions)
 
   if (watch) {
     watchFiles(filePatterns)
 
-    fileChangeEvent.on(EVENTS.FILE_CHANGED, ({ message }: { message: string }) => {
+    fileChangeEvent.on(EVENTS.FILE_CHANGED, async ({ message }: { message: string }) => {
       clearTerminal()
       colourLog.info(`${message}\n`)
-      runLinters(lintOptions)
+      await runLinters(lintOptions)
     })
   }
 }
