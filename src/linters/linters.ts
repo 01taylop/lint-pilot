@@ -1,8 +1,8 @@
+import { Linter } from '@Types/lint'
+
 import eslint from './eslint'
 import markdownlint from './markdownlint'
 import stylelint from './stylelint'
-
-import { Linter } from '@Types/lint'
 
 import type { LintFilesOptions, LintReport } from '@Types/lint'
 
