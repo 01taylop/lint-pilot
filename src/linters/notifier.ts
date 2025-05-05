@@ -2,9 +2,9 @@ import notifier from 'node-notifier'
 
 import { pluralise } from '@Utils/transform'
 
-import type { LintReport } from '@Types'
+import type { LintReport } from '@Types/lint'
 
-const notifyResults = (reports: Array<LintReport>, title: string) => {
+const notifyResults = (reports: Array<LintReport>, title: string): 0 | 1 => {
   // Errors
   let totalErrorCount = reports.reduce((total, { summary: { errorCount } }) => total + errorCount, 0)
   if (totalErrorCount > 0) {
