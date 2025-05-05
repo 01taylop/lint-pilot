@@ -20,7 +20,7 @@ const colourLog = {
       ? `[${config.join(', ')}]`
       : config[0]
 
-    console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
+    console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
   },
 
   configDebug: (message: string, config: unknown) => {
