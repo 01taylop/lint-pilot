@@ -4,21 +4,26 @@ import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
+import type { FilePatterns, Linter } from '@Types/lint'
+
 enum EVENTS {
   FILE_CHANGED = 'FILE_CHANGED',
 }
 
-interface WatchFiles {
-  filePatterns: Array<string>
-  ignorePatterns: Array<string>
+interface WatchFilesOptions extends FilePatterns {
+  linters?: Array<Linter>
 }
 
 const fileChangeEvent = new EventEmitter()
 
 const fileHashes = new Map<string, string>()
 
-const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
-  const watcher = chokidar.watch(filePatterns, {
+const watchFiles = ({ includePatterns, ignorePatterns, linters }: WatchFilesOptions) => {
+  const filteredPatterns = linters
+    ? linters.flatMap(linter => includePatterns[linter] || [])
+    : Object.values(includePatterns).flat()
+
+  const watcher = chokidar.watch(filteredPatterns, {
     ignored: ignorePatterns,
     ignoreInitial: true,
     persistent: true,
