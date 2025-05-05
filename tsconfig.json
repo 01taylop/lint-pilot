@@ -7,6 +7,7 @@
     "outDir": "./lib",
     "paths": {
       "@Jest/*": ["./jest-config/*"],
+      "@Linters": ["./src/linters/index.ts"],
       "@Types/*": ["./src/types/*"],
       "@Utils/*": ["./src/utils/*"],
     },

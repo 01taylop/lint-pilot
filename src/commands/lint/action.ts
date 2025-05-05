@@ -1,3 +1,4 @@
+import runLinters from '@Linters'
 import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
 import { getFilePatterns } from '@Utils/file-patterns'
@@ -31,7 +32,7 @@ const action = ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegac
     watch,
   }
 
-  console.log('Run Lint', lintOptions) // TODO: Run lint
+  runLinters(lintOptions)
 
   if (watch) {
     watchFiles(filePatterns)
@@ -39,7 +40,7 @@ const action = ({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegac
     fileChangeEvent.on(EVENTS.FILE_CHANGED, ({ message }: { message: string }) => {
       clearTerminal()
       colourLog.info(`${message}\n`)
-      console.log('Run Lint', lintOptions) // TODO: Run lint
+      runLinters(lintOptions)
     })
   }
 }
