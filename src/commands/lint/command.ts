@@ -26,8 +26,7 @@ Examples:
   Use legacy ESLint config:
     ${chalk.gray('$ lint-pilot lint --eslint-use-legacy-config')}
   Run all linters with caching, fixing, and watching for changes:
-    ${chalk.gray('$ lint-pilot lint --cache --fix --watch')}
-`
+    ${chalk.gray('$ lint-pilot lint --cache --fix --watch')}`
 
 const command = (program: Command) => {
   program
