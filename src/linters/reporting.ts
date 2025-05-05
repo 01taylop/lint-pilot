@@ -1,8 +1,25 @@
 import chalk from 'chalk'
+import { spaceLog } from 'space-log'
 
 import { pluralise } from '@Utils/transform'
 
-import type { ReportSummary } from '@Types/lint'
+import type { LintReport, ReportSummary } from '@Types/lint'
+
+const reportResults = ({ results, summary }: LintReport) => {
+  if (Object.keys(results).length === 0) {
+    return
+  }
+
+  console.log(chalk.blue(`\nLogging ${summary.linter.toLowerCase()} results:`))
+
+  Object.entries(results).forEach(([file, formattedResults]) => {
+    console.log(`\n${chalk.underline(file)}`)
+    spaceLog({
+      columnKeys: ['severity', 'position', 'message', 'rule'],
+      spaceSize: 2,
+    }, formattedResults)
+  })
+}
 
 const reportSummary = (summary: ReportSummary, startTime: number) => {
   const { deprecatedRules, errorCount, fileCount, fixableErrorCount, fixableWarningCount, linter, warningCount } = summary
@@ -46,6 +63,28 @@ const reportSummary = (summary: ReportSummary, startTime: number) => {
   }
 }
 
+const reportSummaryBlock = ({ errorCount, linter, warningCount }: ReportSummary) => {
+  // Errors
+  if (errorCount > 0) {
+    const message = chalk.bgRed.black(` ${errorCount} ${linter} ${pluralise('Error', errorCount)} `)
+    console.log(`\n🚨 ${message}`)
+  }
+
+  // Warnings
+  if (warningCount > 0) {
+    const message = chalk.bgYellow.black(` ${warningCount} ${linter} ${pluralise('Warning', warningCount)} `)
+    console.log(`\n🚧 ${message}`)
+  }
+
+  // Success
+  if (errorCount === 0 && warningCount === 0) {
+    const message = chalk.bgGreen.black(` ${linter} Success! `)
+    console.log(`\n✅ ${message}`)
+  }
+}
+
 export {
+  reportResults,
   reportSummary,
+  reportSummaryBlock,
 }
