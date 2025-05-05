@@ -1,10 +1,12 @@
 import { Linter } from '@Types/lint'
+import colourLog from '@Utils/colour-log'
 
 import type { LintCommandOptions } from '@Types/commands'
 import type { FilePatterns, LintReport } from '@Types/lint'
 
 import { reportResults, reportSummaryBlock } from './reporting'
 import runLinter from './run-linter'
+import { notifyResults } from './notifier'
 
 type RunLintersOptions = Pick<LintCommandOptions, 'cache' | 'eslintUseLegacyConfig' | 'fix' | 'title' | 'watch'> & {
   filePatterns: FilePatterns
@@ -45,6 +47,16 @@ const runLinters = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, lin
     reports.forEach(({ summary }) => {
       reportSummaryBlock(summary)
     })
+
+    const exitCode = notifyResults(reports, title)
+
+    if (watch) {
+      colourLog.info('Watching for changes...')
+    } else if (results.length !== reports.length) {
+      process.exit(1)
+    } else {
+      process.exit(exitCode)
+    }
   })
 }
 
