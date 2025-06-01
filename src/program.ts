@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 
-import { description, version } from '../package.json'
+import { description, name, version } from '../package.json'
 import { lintCommand } from './commands'
 
 const helpText = `
@@ -15,11 +15,11 @@ Examples:
   Enable caching for faster linting:
     ${chalk.gray('$ lint-pilot --cache --fix --watch')}`
 
-const createProgram = () => {
+const createProgram = (): Command => {
   const program = new Command()
 
   program
-    .name('lint-pilot')
+    .name(name)
     .description(description)
     .version(version)
 
