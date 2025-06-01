@@ -8,6 +8,25 @@ enum Linter {
   Stylelint = 'Stylelint',
 }
 
+enum RuleSeverity {
+  ERROR = 'error',
+  WARNING = 'warning',
+}
+
+/*
+ * REPORTING
+ */
+
+interface FormattedResult {
+  message: string
+  messageTheme: (input: string) => string
+  position: string
+  positionTheme: (input: string) => string
+  rule: string
+  ruleTheme: (input: string) => string
+  severity: string
+}
+
 /*
  * LINTING
  */
@@ -21,8 +40,10 @@ interface FilePatterns {
 
 export type {
   FilePatterns,
+  FormattedResult,
 }
 
 export {
   Linter,
+  RuleSeverity,
 }

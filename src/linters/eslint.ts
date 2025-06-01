@@ -3,7 +3,7 @@ import { ESLint, loadESLint } from 'eslint'
 import { Linter, RuleSeverity } from '@Types'
 import { getCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
-import { formatResult } from '@Utils/transform'
+import { formatResult } from '@Utils/format-result'
 
 import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
