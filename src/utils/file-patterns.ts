@@ -1,20 +1,17 @@
-import { type FilePatterns, Linter } from '@Types'
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 
-type StringOrArray = string | Array<string>
+import type { LintCommandOptions } from '@Types/commands'
+import type { FilePatterns } from '@Types/lint'
 
-interface GetFilePatterns {
-  eslintInclude?: StringOrArray
-  ignoreDirs?: StringOrArray
-  ignorePatterns?: StringOrArray
+type GetFilePatternsOptions = Pick<LintCommandOptions, 'eslintInclude' | 'ignoreDirs' | 'ignorePatterns'> & {
+  linters?: Array<Linter>
 }
 
-const enforceArray = (value: StringOrArray = []): Array<string> => Array.of(value).flat()
-
-const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFilePatterns): FilePatterns => {
+const getFilePatterns = ({ eslintInclude = [], ignoreDirs = [], ignorePatterns = [], linters }: GetFilePatternsOptions): FilePatterns => {
   const eslintIncludePatterns = [
     '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-    ...enforceArray(eslintInclude),
+    ...Array.of(eslintInclude).flat(),
   ]
 
   const ignoreDirectories = [
@@ -24,12 +21,12 @@ const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFileP
     'tmp',
     'tscOutput',
     'vendor',
-    ...enforceArray(ignoreDirs),
+    ...Array.of(ignoreDirs).flat(),
   ].sort()
 
   const ignoreGlobs = [
     '**/*.+(map|min).*',
-    ...enforceArray(ignorePatterns),
+    ...Array.of(ignorePatterns).flat(),
   ].sort()
 
   const filePatterns = {
@@ -44,13 +41,21 @@ const getFilePatterns = ({ eslintInclude, ignoreDirs, ignorePatterns }: GetFileP
     ],
   }
 
-  colourLog.config('ESLint Patterns', filePatterns.includePatterns[Linter.ESLint])
-  colourLog.config('Markdownlint Patterns', filePatterns.includePatterns[Linter.Markdownlint])
-  colourLog.config('Stylelint Patterns', filePatterns.includePatterns[Linter.Stylelint])
+  if (!linters || linters.includes(Linter.ESLint)) {
+    colourLog.config('ESLint Patterns', filePatterns.includePatterns[Linter.ESLint])
+  }
+  if (!linters || linters.includes(Linter.Markdownlint)) {
+    colourLog.config('Markdownlint Patterns', filePatterns.includePatterns[Linter.Markdownlint])
+  }
+  if (!linters || linters.includes(Linter.Stylelint)) {
+    colourLog.config('Stylelint Patterns', filePatterns.includePatterns[Linter.Stylelint])
+  }
   colourLog.config('Ignore', filePatterns.ignorePatterns)
   console.log()
 
   return filePatterns
 }
 
-export default getFilePatterns
+export {
+  getFilePatterns,
+}

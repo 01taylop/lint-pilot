@@ -1,6 +1,6 @@
 {
   "name": "lint-pilot",
-  "description": "Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.",
+  "description": "Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/01taylop/lint-pilot.git"

@@ -8,7 +8,7 @@ enum Events {
 
 enum Linter {
   ESLint = 'ESLint',
-  Markdownlint = 'MarkdownLint',
+  Markdownlint = 'Markdownlint',
   Stylelint = 'Stylelint',
 }
 

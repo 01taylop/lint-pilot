@@ -7,7 +7,7 @@ import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
-import getFilePatterns from '@Utils/file-patterns'
+import { getFilePatterns } from '@Utils/file-patterns'
 
 import linters from './linters/index'
 import sourceFiles from './source-files'
@@ -83,7 +83,7 @@ const createProgram = (): Command => {
 
   program
     .name('lint-pilot')
-    .description('Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and MarkdownLint integration.')
+    .description('Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.')
     .version('0.0.1')
     .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
     .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')

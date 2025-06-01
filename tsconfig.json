@@ -8,6 +8,7 @@
     "paths": {
       "@Jest/*": ["./jest-config/*"],
       "@Types": ["./src/types/index.ts"],
+      "@Types/*": ["./src/types/*"],
       "@Utils/*": ["./src/utils/*"],
     },
     "rootDir": "./",
