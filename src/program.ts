@@ -7,8 +7,8 @@ import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
+import getFilePatterns from '@Utils/file-patterns'
 
-import getFilePatterns from './file-patterns'
 import linters from './linters/index'
 import sourceFiles from './source-files'
 import { fileChangeEvent, watchFiles } from './watch-files'
