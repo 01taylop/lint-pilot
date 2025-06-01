@@ -1,5 +1,5 @@
 import { type FilePatterns, Linter } from '@Types'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 type StringOrArray = string | Array<string>
 

@@ -2,9 +2,9 @@ import fs from 'node:fs'
 
 import markdownlint from 'markdownlint'
 
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
-import loadConfig from '../loadConfig'
+import loadConfig from '../load-config'
 
 jest.mock('node:fs')
 

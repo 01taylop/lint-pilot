@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
 jest.mock('node:fs')
-jest.mock('@Utils/colourLog', () => ({
+jest.mock('@Utils/colour-log', () => ({
   info: jest.fn(),
 }))
 

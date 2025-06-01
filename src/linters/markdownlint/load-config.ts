@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 import markdownlint, { type Configuration } from 'markdownlint'
 
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 const loadConfig = (): [string, Configuration] => {
   try {

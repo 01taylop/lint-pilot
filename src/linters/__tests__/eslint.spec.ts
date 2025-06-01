@@ -1,12 +1,12 @@
 import { ESLint, loadESLint } from 'eslint'
 
 import { expectedResultThemes } from '@Jest/testData'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 import eslintLib from '../eslint'
 
 jest.mock('eslint')
-jest.mock('@Utils/colourLog')
+jest.mock('@Utils/colour-log')
 
 describe('eslint', () => {
 

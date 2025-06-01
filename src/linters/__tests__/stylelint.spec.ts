@@ -1,14 +1,14 @@
 import stylelint, { type LintResult } from 'stylelint'
 
 import { expectedResultThemes } from '@Jest/testData'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 import stylelintLib from '../stylelint'
 
 jest.mock('stylelint', () => ({
   lint: jest.fn(),
 }))
-jest.mock('@Utils/colourLog')
+jest.mock('@Utils/colour-log')
 
 describe('stylelint', () => {
 
