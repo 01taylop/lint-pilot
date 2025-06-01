@@ -2,7 +2,7 @@ import markdownlint, { type LintError, type Options } from 'markdownlint'
 
 import { markdownlintError } from '@Jest/testData'
 
-import markdownlintAsync from '../markdownlintAsync'
+import markdownlintAsync from '../markdownlint-async'
 
 jest.mock('markdownlint')
 

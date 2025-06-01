@@ -1,7 +1,7 @@
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 import { Linter } from '@Types'
 
-import getFilePatterns from '../filePatterns'
+import getFilePatterns from '../file-patterns'
 
 describe('filePatterns', () => {
 

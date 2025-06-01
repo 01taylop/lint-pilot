@@ -3,16 +3,16 @@ import { Command } from 'commander'
 
 import { Events, Linter } from '@Types'
 import { clearCacheDirectory } from '@Utils/cache'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 
-import getFilePatterns from './filePatterns'
+import getFilePatterns from './file-patterns'
 import linters from './linters/index'
-import sourceFiles from './sourceFiles'
-import { fileChangeEvent, watchFiles } from './watchFiles'
+import sourceFiles from './source-files'
+import { fileChangeEvent, watchFiles } from './watch-files'
 
 const program = new Command()
 

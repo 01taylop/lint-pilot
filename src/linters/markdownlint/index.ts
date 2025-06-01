@@ -1,11 +1,11 @@
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
 import type { LintFiles, LintReport } from '@Types'
 
-import fixFile from './fixFile'
-import loadConfig from './loadConfig'
-import markdownlintAsync, { type LintResults } from './markdownlintAsync'
-import processResults from './processResults'
+import fixFile from './fix-file'
+import loadConfig from './load-config'
+import markdownlintAsync, { type LintResults } from './markdownlint-async'
+import processResults from './process-results'
 
 const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
   try {

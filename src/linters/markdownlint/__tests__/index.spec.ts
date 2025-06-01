@@ -1,15 +1,15 @@
 import { markdownlintError } from '@Jest/testData'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
-import fixFile from '../fixFile'
-import loadConfig from '../loadConfig'
-import markdownlintAsync, { type LintResults } from '../markdownlintAsync'
+import fixFile from '../fix-file'
+import loadConfig from '../load-config'
+import markdownlintAsync, { type LintResults } from '../markdownlint-async'
 import markdownlintLib from '..'
 
-jest.mock('@Utils/colourLog')
-jest.mock('../fixFile')
-jest.mock('../loadConfig')
-jest.mock('../markdownlintAsync')
+jest.mock('@Utils/colour-log')
+jest.mock('../fix-file')
+jest.mock('../load-config')
+jest.mock('../markdownlint-async')
 
 describe('markdownlint', () => {
 

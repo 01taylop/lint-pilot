@@ -1,7 +1,7 @@
 import { glob } from 'glob'
 
 import { Linter } from '@Types'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 import { pluralise } from '@Utils/transform'
 
 interface SourceFiles {

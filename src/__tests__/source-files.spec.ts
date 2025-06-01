@@ -1,9 +1,9 @@
 import { glob } from 'glob'
 
 import { Linter } from '@Types'
-import colourLog from '@Utils/colourLog'
+import colourLog from '@Utils/colour-log'
 
-import sourceFiles from '../sourceFiles'
+import sourceFiles from '../source-files'
 
 jest.mock('glob')
 

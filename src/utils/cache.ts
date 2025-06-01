@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import colourLog from './colourLog'
+import colourLog from './colour-log'
 
 const CACHE_FOLDER = '.lintpilotcache'
 

@@ -5,7 +5,7 @@ import { applyFixes } from 'markdownlint-rule-helpers'
 
 import { markdownlintError } from '@Jest/testData'
 
-import fixFile from '../fixFile'
+import fixFile from '../fix-file'
 
 jest.mock('fs', () => ({
   readFileSync: jest.fn(),

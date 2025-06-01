@@ -4,7 +4,7 @@ import chokidar from 'chokidar'
 
 import { Events } from '@Types'
 
-import { fileChangeEvent, watchFiles } from '../watchFiles'
+import { fileChangeEvent, watchFiles } from '../watch-files'
 
 jest.mock('fs')
 jest.mock('chokidar')

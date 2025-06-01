@@ -3,7 +3,7 @@ import spaceLog from 'space-log'
 
 import { Linter, type ReportSummary } from '@Types'
 
-import colourLog from '../colourLog'
+import colourLog from '../colour-log'
 
 jest.mock('chalk', () => ({
   bgGreen: {
