@@ -15,7 +15,7 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
 
     const eslint = new CustomESLint({
       cache,
-      cacheLocation: cache ? getCacheDirectory('.eslintcache') : undefined,
+      cacheLocation: cache ? getCacheDirectory('eslint') : undefined,
       fix,
     })
 
