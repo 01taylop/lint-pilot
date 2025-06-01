@@ -79,7 +79,7 @@ describe('eslint', () => {
 
     expect(ESLint).toHaveBeenCalledOnceWith({
       cache: true,
-      cacheLocation: expect.stringContaining('.lintpilotcache/.eslintcache'),
+      cacheLocation: expect.stringContaining('.lintpilotcache/eslint'),
       fix: false,
     })
   })

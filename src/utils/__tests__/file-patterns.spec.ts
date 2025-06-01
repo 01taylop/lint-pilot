@@ -1,14 +1,15 @@
 import colourLog from '@Utils/colour-log'
 import { Linter } from '@Types'
 
-import getFilePatterns from '../file-patterns'
+import { getFilePatterns } from '../file-patterns'
+
+jest.mock('@Utils/colour-log')
 
 describe('filePatterns', () => {
 
-  jest.spyOn(colourLog, 'config').mockImplementation(() => {})
   jest.spyOn(console, 'log').mockImplementation(() => {})
 
-  it('returns the correct file patterns for eslint', () => {
+  it('returns the default include patterns for ESLint', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
@@ -19,7 +20,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
-  it('returns the correct file patterns for eslint with an additional include pattern', () => {
+  it('returns the include patterns for ESLint with an additional pattern', () => {
     const filePatterns = getFilePatterns({
       eslintInclude: 'foo'
     })
@@ -33,7 +34,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
-  it('returns the correct file patterns for eslint with several additional include patterns', () => {
+  it('returns the include patterns for ESLint with several additional patterns', () => {
     const filePatterns = getFilePatterns({
       eslintInclude: ['foo', 'bar'],
     })
@@ -48,7 +49,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expectedPatterns)
   })
 
-  it('returns the correct file patterns for markdownlint', () => {
+  it('returns the include patterns for Markdownlint', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
@@ -59,7 +60,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Markdownlint Patterns', expectedPatterns)
   })
 
-  it('returns the correct file patterns for stylelint', () => {
+  it('returns the include patterns for Stylelint', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
@@ -70,7 +71,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Stylelint Patterns', expectedPatterns)
   })
 
-  it('returns the correct ignore file patterns', () => {
+  it('returns the default ignore patterns', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
@@ -82,7 +83,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
-  it('returns the correct ignore file patterns with an additional directory ignored', () => {
+  it('returns the ignore patterns with an additional directory ignored', () => {
     const filePatterns = getFilePatterns({
       ignoreDirs: 'foo'
     })
@@ -96,7 +97,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
-  it('returns the correct ignore file patterns with several additional directories ignored', () => {
+  it('returns the ignore patterns with several additional directories ignored', () => {
     const filePatterns = getFilePatterns({
       ignoreDirs: ['foo', 'bar'],
     })
@@ -110,7 +111,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
-  it('returns the correct ignore file patterns with an additional pattern ignored', () => {
+  it('returns the ignore patterns with an additional pattern ignored', () => {
     const filePatterns = getFilePatterns({
       ignorePatterns: 'foo'
     })
@@ -125,7 +126,7 @@ describe('filePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
   })
 
-  it('returns the correct ignore file patterns with several additional patterns ignored', () => {
+  it('returns the ignore patterns with several additional patterns ignored', () => {
     const filePatterns = getFilePatterns({
       ignorePatterns: ['foo', 'bar'],
     })
@@ -139,6 +140,28 @@ describe('filePatterns', () => {
 
     expect(filePatterns.ignorePatterns).toStrictEqual(expectedPatterns)
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expectedPatterns)
+  })
+
+  it('logs the file patterns for all linters when no specific linters are provided', () => {
+    getFilePatterns({})
+
+    expect(colourLog.config).toHaveBeenCalledTimes(4)
+    expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenCalledWith('Markdownlint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenCalledWith('Stylelint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenCalledWith('Ignore', expect.any(Array))
+  })
+
+  test.each([
+    [Linter.ESLint, 'ESLint Patterns'],
+    [Linter.Markdownlint, 'Markdownlint Patterns'],
+    [Linter.Stylelint, 'Stylelint Patterns'],
+  ])('logs the file patterns for %s when specified', (linter, patternName) => {
+    getFilePatterns({ linters: [linter] })
+
+    expect(colourLog.config).toHaveBeenCalledTimes(2)
+    expect(colourLog.config).toHaveBeenNthCalledWith(1, patternName, expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(2, 'Ignore', expect.any(Array))
   })
 
 })

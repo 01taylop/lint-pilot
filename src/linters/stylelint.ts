@@ -3,7 +3,7 @@ import stylelint from 'stylelint'
 import { Linter, RuleSeverity } from '@Types'
 import { getCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
-import { formatResult } from '@Utils/transform'
+import { formatResult } from '@Utils/format-result'
 
 import type { LintFiles, LintReport, ReportResults, ReportSummary } from '@Types'
 
@@ -16,7 +16,7 @@ const lintFiles = async ({ cache, files, fix }: LintFiles): Promise<LintReport> 
     } = await stylelint.lint({
       allowEmptyInput: true,
       cache,
-      cacheLocation: cache ? getCacheDirectory('.stylelintcache') : undefined,
+      cacheLocation: cache ? getCacheDirectory('stylelint') : undefined,
       config: {
         rules: {
           'declaration-block-no-duplicate-properties': true,

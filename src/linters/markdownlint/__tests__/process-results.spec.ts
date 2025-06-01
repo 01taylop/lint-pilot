@@ -16,7 +16,7 @@ describe('processResults', () => {
         fileCount: 0,
         fixableErrorCount: 0,
         fixableWarningCount: 0,
-        linter: 'MarkdownLint',
+        linter: 'Markdownlint',
         warningCount: 0,
       },
     })
@@ -37,7 +37,7 @@ describe('processResults', () => {
         fileCount: 1,
         fixableErrorCount: 0,
         fixableWarningCount: 0,
-        linter: 'MarkdownLint',
+        linter: 'Markdownlint',
         warningCount: 0,
       },
     })
@@ -130,7 +130,7 @@ describe('processResults', () => {
         fileCount: 3,
         fixableErrorCount: 2,
         fixableWarningCount: 0,
-        linter: 'MarkdownLint',
+        linter: 'Markdownlint',
         warningCount: 0,
       },
     })
