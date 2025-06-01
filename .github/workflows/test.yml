@@ -16,21 +16,30 @@ jobs:
         node-version: [18.x, 20.x, 22.x]
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Use Node ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install Dependencies
-      run: yarn install --immutable
+    - name: Install dependencies
+      run: |
+        YARN_VERSION=$(jq -r '.packageManager' package.json | cut -d '@' -f2)
+        echo -e "\033[34mYarn version:\033[0m $YARN_VERSION"
 
-    - name: Run Tests
+        echo -e "\033[35mEnabling Corepack\033[0m"
+        corepack enable
+        corepack prepare yarn@$YARN_VERSION --activate
+
+        echo -e "\033[35mInstalling dependencies\033[0m"
+        yarn install --immutable
+
+    - name: Run tests
       run: yarn test --coverage
 
-    - name: Run Build
+    - name: Run build
       run: yarn build
 
     - name: Lint
