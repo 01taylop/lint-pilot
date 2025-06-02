@@ -33,7 +33,11 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
   })
 
   watcher.on('change', (path, _stats) => {
-    readFile(path, 'utf8', (_error, data) => {
+    readFile(path, 'utf8', (error, data) => {
+      /* istanbul ignore next */
+      if (error) {
+        return
+      }
       const newHash = createHash('md5').update(data).digest('hex')
       if (fileHashes.get(path) !== newHash) {
         fileHashes.set(path, newHash)
