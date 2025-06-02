@@ -61,6 +61,8 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
       path,
     } satisfies FileChangedEventPayload)
   })
+
+  return watcher
 }
 
 export type {

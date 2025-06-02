@@ -55,6 +55,15 @@ describe('watchFiles', () => {
     fileWatcherEvents.removeAllListeners()
   })
 
+  it('returns the watcher instance', () => {
+    const watcher = watchFiles({
+      includePatterns: getIncludePatterns(),
+      ignorePatterns: [],
+    })
+
+    expect(watcher).toBe(mockWatcher)
+  })
+
   it('initialises chokidar for all linters when no specific linters are provided', () => {
     watchFiles({
       includePatterns: getIncludePatterns(),
