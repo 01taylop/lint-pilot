@@ -36,6 +36,9 @@ jobs:
         echo -e "\033[35mInstalling dependencies\033[0m"
         yarn install --immutable
 
+    - name: Run TypeScript checks
+      run: npx tsc --noEmit
+
     - name: Run tests
       run: yarn test --coverage
 

@@ -23,12 +23,13 @@ enum RuleSeverity {
 
 interface FormattedResult {
   message: string
-  messageTheme: Function
+  messageTheme: (input: string) => string
   position: string
-  positionTheme: Function
+  positionTheme: (input: string) => string
   rule: string
-  ruleTheme: Function
+  ruleTheme: (input: string) => string
   severity: string
+  severityTheme: (input: string) => string
 }
 
 interface ReportResults {
