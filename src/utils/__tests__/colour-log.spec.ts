@@ -153,12 +153,13 @@ describe('colourLog', () => {
     it('logs the results', () => {
       const commonResult = {
         message: 'Foo',
-        messageTheme: () => {},
+        messageTheme: (str: string) => str,
         position: '1:1',
-        positionTheme: () => {},
+        positionTheme: (str: string) => str,
         rule: 'bar',
-        ruleTheme: () => {},
+        ruleTheme: (str: string) => str,
         severity: '  ×',
+        severityTheme: (str: string) => str,
       }
 
       colourLog.results({

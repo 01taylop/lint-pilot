@@ -1,13 +1,15 @@
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
-import { Linter } from '@Types'
 
 import { getFilePatterns } from '../file-patterns'
 
 jest.mock('@Utils/colour-log')
 
-describe('filePatterns', () => {
+describe('getFilePatterns', () => {
 
-  jest.spyOn(console, 'log').mockImplementation(() => {})
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => true)
+  })
 
   it('returns the default include patterns for ESLint', () => {
     const filePatterns = getFilePatterns({})
