@@ -1,9 +1,10 @@
-import { jest } from '@jest/globals'
 import notifier from 'node-notifier'
 
-import { Linter, type LintReport } from '@Types'
+import { Linter } from '@Types/lint'
 
 import { notifyResults } from '../notifier'
+
+import type { LintReport } from '@Types/lint'
 
 jest.mock('node-notifier', () => ({
   notify: jest.fn(),
@@ -63,7 +64,7 @@ describe('notifyResults', () => {
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '1 error found. Please fix it before continuing.',
       sound: 'Frog',
-      title: '🚨 Lint Pilot 🚨',
+      title: '🚨 Lint Pilot',
     })
   })
 
@@ -77,7 +78,7 @@ describe('notifyResults', () => {
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '7 errors found. Please fix them before continuing.',
       sound: 'Frog',
-      title: '🚨 Lint Pilot 🚨',
+      title: '🚨 Lint Pilot',
     })
   })
 
@@ -91,7 +92,7 @@ describe('notifyResults', () => {
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '1 warning found. Please review before continuing.',
       sound: 'Frog',
-      title: '🚧 Lint Pilot 🚧',
+      title: '⚠️ Lint Pilot',
     })
   })
 
@@ -105,7 +106,7 @@ describe('notifyResults', () => {
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '9 warnings found. Please review them before continuing.',
       sound: 'Frog',
-      title: '🚧 Lint Pilot 🚧',
+      title: '⚠️ Lint Pilot',
     })
   })
 
@@ -118,7 +119,7 @@ describe('notifyResults', () => {
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: 'All lint checks have passed. Your code is clean!',
       sound: 'Purr',
-      title: '✅ Lint Pilot ✅',
+      title: '✅ Lint Pilot',
     })
   })
 

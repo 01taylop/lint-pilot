@@ -14,6 +14,17 @@ enum RuleSeverity {
 }
 
 /*
+ * LINTING
+ */
+
+interface FilePatterns {
+  includePatterns: {
+    [key in Linter]: Array<string>
+  }
+  ignorePatterns: Array<string>
+}
+
+/*
  * REPORTING
  */
 
@@ -28,20 +39,35 @@ interface FormattedResult {
   severityTheme: (input: string) => string
 }
 
-/*
- * LINTING
- */
-
-interface FilePatterns {
-  includePatterns: {
-    [key in Linter]: Array<string>
-  }
-  ignorePatterns: Array<string>
+interface ReportResults {
+  [file: string]: Array<FormattedResult>
 }
+
+interface ReportSummary {
+  deprecatedRules: Array<string>
+  errorCount: number
+  fileCount: number
+  fixableErrorCount: number
+  fixableWarningCount: number
+  linter: Linter
+  warningCount: number
+}
+
+interface LintReport {
+  results: ReportResults
+  summary: ReportSummary
+}
+
+/*
+ * EXPORTS
+ */
 
 export type {
   FilePatterns,
   FormattedResult,
+  LintReport,
+  ReportResults,
+  ReportSummary,
 }
 
 export {
