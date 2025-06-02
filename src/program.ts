@@ -133,10 +133,7 @@ const createProgram = (): Command => {
       runLintPilot(lintPilotOptions)
 
       if (watch) {
-        watchFiles({
-          filePatterns: Object.values(filePatterns.includePatterns).flat(),
-          ignorePatterns: filePatterns.ignorePatterns,
-        })
+        watchFiles(filePatterns)
 
         fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }) => {
           clearTerminal()

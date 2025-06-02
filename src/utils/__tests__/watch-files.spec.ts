@@ -2,13 +2,23 @@ import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
+import { Linter } from '@Types/lint'
+
 import { EVENTS, fileWatcherEvents, watchFiles } from '../watch-files'
+
+import type { FilePatterns } from '@Types/lint'
 
 jest.mock('node:fs')
 jest.mock('chokidar')
 
 describe('watchFiles', () => {
   let mockWatcher: chokidar.FSWatcher
+
+  const getIncludePatterns = (esPattern: string = '**/*.ts'): FilePatterns['includePatterns'] => ({
+    [Linter.ESLint]: [esPattern],
+    [Linter.Markdownlint]: ['**/*.md'],
+    [Linter.Stylelint]: ['**/*.css'],
+  })
 
   const saveFile = (path: string, content: string, event: 'add' | 'change' | 'unlink') => {
     jest.mocked(readFile).mockImplementationOnce((_path: any, _encoding: any, callback?: (error: any, data: any) => void): void => {
@@ -38,14 +48,31 @@ describe('watchFiles', () => {
     fileWatcherEvents.removeAllListeners()
   })
 
-  it('initialises chokidar with the correct file and ignore patterns', () => {
-    const filePatterns = ['**/*.ts']
-    const ignorePatterns = ['node_modules']
+  it('initialises chokidar for all linters when no specific linters are provided', () => {
+    watchFiles({
+      includePatterns: getIncludePatterns(),
+      ignorePatterns: ['node_modules'],
+    })
 
-    watchFiles({ filePatterns, ignorePatterns })
+    expect(chokidar.watch).toHaveBeenCalledWith(['**/*.ts', '**/*.md', '**/*.css'], {
+      ignored: ['node_modules'],
+      ignoreInitial: true,
+      persistent: true,
+    })
+  })
 
-    expect(chokidar.watch).toHaveBeenCalledWith(filePatterns, {
-      ignored: ignorePatterns,
+  test.each([
+    [Linter.ESLint, '**/*.ts'],
+    [Linter.Markdownlint, '**/*.md'],
+    [Linter.Stylelint, '**/*.css'],
+  ])('initialises chokidar for %s when specified', (linter, expectedPattern) => {
+    watchFiles({
+      includePatterns: getIncludePatterns(),
+      ignorePatterns: ['node_modules'],
+    }, [linter])
+
+    expect(chokidar.watch).toHaveBeenCalledWith([expectedPattern], {
+      ignored: ['node_modules'],
       ignoreInitial: true,
       persistent: true,
     })
@@ -64,7 +91,10 @@ describe('watchFiles', () => {
       done()
     })
 
-    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+    watchFiles({
+      includePatterns: getIncludePatterns(mockPath),
+      ignorePatterns: [],
+    })
 
     saveFile(mockPath, 'hello-world', 'change')
   })
@@ -81,7 +111,10 @@ describe('watchFiles', () => {
       })
     })
 
-    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+    watchFiles({
+      includePatterns: getIncludePatterns(mockPath),
+      ignorePatterns: [],
+    })
 
     saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
     saveFile(mockPath, 'new-content', 'change') // Second save - content hash is different
@@ -103,7 +136,10 @@ describe('watchFiles', () => {
       })
     })
 
-    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+    watchFiles({
+      includePatterns: getIncludePatterns(mockPath),
+      ignorePatterns: [],
+    })
 
     saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
     saveFile(mockPath, 'old-content', 'change') // Second save - content hash is the same
@@ -127,7 +163,10 @@ describe('watchFiles', () => {
       done()
     })
 
-    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+    watchFiles({
+      includePatterns: getIncludePatterns(mockPath),
+      ignorePatterns: [],
+    })
 
     saveFile(mockPath, 'new-content', 'add')
   })
@@ -145,7 +184,10 @@ describe('watchFiles', () => {
       done()
     })
 
-    watchFiles({ filePatterns: [mockPath], ignorePatterns: [] })
+    watchFiles({
+      includePatterns: getIncludePatterns(mockPath),
+      ignorePatterns: [],
+    })
 
     saveFile(mockPath, 'legacy-content', 'unlink')
   })
