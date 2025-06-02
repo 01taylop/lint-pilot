@@ -2,10 +2,6 @@
  * ENUMS
  */
 
-enum Events {
-  FILE_CHANGED = 'FILE_CHANGED',
-}
-
 enum Linter {
   ESLint = 'ESLint',
   Markdownlint = 'Markdownlint',
@@ -103,7 +99,6 @@ export type {
 }
 
 export {
-  Events,
   Linter,
   RuleSeverity,
 }

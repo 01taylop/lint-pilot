@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 
-import { Events, Linter } from '@Types'
+import { Linter } from '@Types/lint'
 import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
 import { notifyResults } from '@Utils/notifier'
@@ -9,9 +9,16 @@ import { clearTerminal } from '@Utils/terminal'
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 import { getFilePatterns } from '@Utils/file-patterns'
 import sourceFiles from '@Utils/source-files'
-import { fileChangeEvent, watchFiles } from '@Utils/watch-files'
+import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import linters from './linters/index'
+
+import type { FSWatcher } from 'chokidar'
+import type { FileChangedEventPayload } from '@Utils/watch-files'
+
+interface CreateProgramOptions {
+  setWatcher: (watcher: FSWatcher) => void
+}
 
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
@@ -78,7 +85,7 @@ const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, 
   })
 }
 
-const createProgram = (): Command => {
+const createProgram = ({ setWatcher }: CreateProgramOptions): Command => {
   const program = new Command()
 
   program
@@ -133,12 +140,10 @@ const createProgram = (): Command => {
       runLintPilot(lintPilotOptions)
 
       if (watch) {
-        watchFiles({
-          filePatterns: Object.values(filePatterns.includePatterns).flat(),
-          ignorePatterns: filePatterns.ignorePatterns,
-        })
+        const watcher = watchFiles(filePatterns)
+        setWatcher(watcher)
 
-        fileChangeEvent.on(Events.FILE_CHANGED, ({ message }) => {
+        fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }: FileChangedEventPayload) => {
           clearTerminal()
           colourLog.info(message)
           console.log()
