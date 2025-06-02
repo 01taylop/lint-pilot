@@ -4,7 +4,7 @@ import chokidar from 'chokidar'
 
 import { Events } from '@Types'
 
-import { fileChangeEvent, watchFiles } from '../watch-files'
+import { fileWatcherEvents, watchFiles } from '../watch-files'
 
 jest.mock('node:fs')
 jest.mock('chokidar')
@@ -37,7 +37,7 @@ describe('watchFiles', () => {
   })
 
   afterEach(() => {
-    fileChangeEvent.removeAllListeners()
+    fileWatcherEvents.removeAllListeners()
   })
 
   it('initialises chokidar with the correct file and ignore patterns', () => {
@@ -58,7 +58,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/existing-file.ts'
 
-    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -76,7 +76,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/update-file.ts'
 
-    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -98,7 +98,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/unchanged-file.ts'
 
-    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -121,7 +121,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/new-file.ts'
 
-    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been added.`,
         path: mockPath,
@@ -139,7 +139,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/legacy-file.ts'
 
-    fileChangeEvent.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been removed.`,
         path: mockPath,

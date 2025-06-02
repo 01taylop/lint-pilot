@@ -9,7 +9,7 @@ import { clearTerminal } from '@Utils/terminal'
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 import { getFilePatterns } from '@Utils/file-patterns'
 import sourceFiles from '@Utils/source-files'
-import { fileChangeEvent, watchFiles } from '@Utils/watch-files'
+import { fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import linters from './linters/index'
 
@@ -138,7 +138,7 @@ const createProgram = (): Command => {
           ignorePatterns: filePatterns.ignorePatterns,
         })
 
-        fileChangeEvent.on(Events.FILE_CHANGED, ({ message }) => {
+        fileWatcherEvents.on(Events.FILE_CHANGED, ({ message }) => {
           clearTerminal()
           colourLog.info(message)
           console.log()
