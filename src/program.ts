@@ -13,7 +13,12 @@ import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import linters from './linters/index'
 
+import type { FSWatcher } from 'chokidar'
 import type { FileChangedEventPayload } from '@Utils/watch-files'
+
+interface CreateProgramOptions {
+  setWatcher: (watcher: FSWatcher) => void
+}
 
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
@@ -80,7 +85,7 @@ const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, 
   })
 }
 
-const createProgram = (): Command => {
+const createProgram = ({ setWatcher }: CreateProgramOptions): Command => {
   const program = new Command()
 
   program
@@ -135,7 +140,8 @@ const createProgram = (): Command => {
       runLintPilot(lintPilotOptions)
 
       if (watch) {
-        watchFiles(filePatterns)
+        const watcher = watchFiles(filePatterns)
+        setWatcher(watcher)
 
         fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }: FileChangedEventPayload) => {
           clearTerminal()
