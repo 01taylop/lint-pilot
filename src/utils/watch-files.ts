@@ -55,6 +55,7 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
   })
 
   watcher.on('unlink', path => {
+    fileHashes.delete(path)
     fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
       message: `File \`${path}\` has been removed.`,
       path,
