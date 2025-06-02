@@ -1,4 +1,4 @@
-import { readFile } from 'fs'
+import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
@@ -6,7 +6,7 @@ import { Events } from '@Types'
 
 import { fileChangeEvent, watchFiles } from '../watch-files'
 
-jest.mock('fs')
+jest.mock('node:fs')
 jest.mock('chokidar')
 
 describe('watchFiles', () => {

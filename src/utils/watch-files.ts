@@ -1,6 +1,6 @@
-import { createHash } from 'crypto'
-import { EventEmitter } from 'events'
-import { readFile } from 'fs'
+import { createHash } from 'node:crypto'
+import { EventEmitter } from 'node:events'
+import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
