@@ -8,10 +8,10 @@ import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 import { getFilePatterns } from '@Utils/file-patterns'
+import sourceFiles from '@Utils/source-files'
+import { fileChangeEvent, watchFiles } from '@Utils/watch-files'
 
 import linters from './linters/index'
-import sourceFiles from './source-files'
-import { fileChangeEvent, watchFiles } from './watch-files'
 
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
