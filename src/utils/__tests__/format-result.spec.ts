@@ -21,7 +21,8 @@ describe('formatResult', () => {
     positionTheme: chalk.dim,
     rule: 'test-rule',
     ruleTheme: chalk.dim,
-    severity: 'X',
+    severity: '  ×',
+    severityTheme: chalk.red,
   }
 
   it('formats a result with a severity of ERROR', () => {
@@ -38,7 +39,8 @@ describe('formatResult', () => {
 
     expect(formattedResult).toStrictEqual({
       ...commonFormattedResult,
-      severity: '!',
+      severity: '  ⚠',
+      severityTheme: chalk.yellow,
     })
   })
 

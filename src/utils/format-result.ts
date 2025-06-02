@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import logSymbols from 'log-symbols'
 
 import { RuleSeverity } from '@Types/lint'
 
@@ -20,7 +19,8 @@ const formatResult = ({ column, lineNumber, message, rule, severity }: Result): 
   positionTheme: chalk.dim,
   rule,
   ruleTheme: chalk.dim,
-  severity: severity === RuleSeverity.WARNING ? logSymbols.warning : logSymbols.error,
+  severity: severity === RuleSeverity.WARNING ? '  ⚠' : '  ×',
+  severityTheme: severity === RuleSeverity.WARNING ? chalk.yellow : chalk.red,
 })
 
 export {

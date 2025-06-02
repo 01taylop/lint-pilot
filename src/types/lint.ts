@@ -25,6 +25,7 @@ interface FormattedResult {
   rule: string
   ruleTheme: (input: string) => string
   severity: string
+  severityTheme: (input: string) => string
 }
 
 /*
