@@ -4960,13 +4960,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-unicode-supported@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "is-unicode-supported@npm:2.0.0"
-  checksum: 10c0/3013dfb8265fe9f9a0d1e9433fc4e766595631a8d85d60876c457b4bedc066768dab1477c553d02e2f626d88a4e019162706e04263c94d74994ef636a33b5f94
-  languageName: node
-  linkType: hard
-
 "is-wsl@npm:^2.2.0":
   version: 2.2.0
   resolution: "is-wsl@npm:2.2.0"
@@ -5743,7 +5736,6 @@ __metadata:
     eslint-plugin-sort-exports: "npm:0.9.1"
     glob: "npm:10.4.5"
     jest: "npm:29.7.0"
-    log-symbols: "npm:7.0.0"
     markdownlint: "npm:0.35.0"
     markdownlint-rule-helpers: "npm:0.26.0"
     node-notifier: "npm:10.0.1"
@@ -5812,16 +5804,6 @@ __metadata:
   version: 4.4.2
   resolution: "lodash.truncate@npm:4.4.2"
   checksum: 10c0/4e870d54e8a6c86c8687e057cec4069d2e941446ccab7f40b4d9555fa5872d917d0b6aa73bece7765500a3123f1723bcdba9ae881b679ef120bba9e1a0b0ed70
-  languageName: node
-  linkType: hard
-
-"log-symbols@npm:7.0.0":
-  version: 7.0.0
-  resolution: "log-symbols@npm:7.0.0"
-  dependencies:
-    is-unicode-supported: "npm:^2.0.0"
-    yoctocolors: "npm:^2.1.1"
-  checksum: 10c0/209eeb0009da6c3f9ebb736d3d65ff1ad3cb757b0c3ba66a5089d7463f77155ade88084c4db31b53341c89aeae3dc89dbc56888d2ae6ffd082bf96c4d2ac429d
   languageName: node
   linkType: hard
 
@@ -7956,12 +7938,5 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
-  languageName: node
-  linkType: hard
-
-"yoctocolors@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "yoctocolors@npm:2.1.1"
-  checksum: 10c0/85903f7fa96f1c70badee94789fade709f9d83dab2ec92753d612d84fcea6d34c772337a9f8914c6bed2f5fc03a428ac5d893e76fab636da5f1236ab725486d0
   languageName: node
   linkType: hard

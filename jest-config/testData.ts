@@ -4,6 +4,7 @@ const expectedResultThemes = {
   messageTheme: expect.any(Function),
   positionTheme: expect.any(Function),
   ruleTheme: expect.any(Function),
+  severityTheme: expect.any(Function),
 }
 
 const markdownlintError: LintError = {

@@ -158,7 +158,7 @@ describe('colourLog', () => {
         positionTheme: () => {},
         rule: 'bar',
         ruleTheme: () => {},
-        severity: 'X',
+        severity: '  ×',
       }
 
       colourLog.results({
