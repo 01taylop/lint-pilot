@@ -4,7 +4,9 @@ import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
-import { Events } from '@Types'
+enum EVENTS {
+  FILE_CHANGED = 'FILE_CHANGED',
+}
 
 interface WatchFiles {
   filePatterns: Array<string>
@@ -23,7 +25,7 @@ const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
   })
 
   watcher.on('add', (path, _stats) => {
-    fileWatcherEvents.emit(Events.FILE_CHANGED, {
+    fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
       message: `File \`${path}\` has been added.`,
       path,
     })
@@ -34,7 +36,7 @@ const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
       const newHash = createHash('md5').update(data).digest('hex')
       if (fileHashes.get(path) !== newHash) {
         fileHashes.set(path, newHash)
-        fileWatcherEvents.emit(Events.FILE_CHANGED, {
+        fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
           message: `File \`${path}\` has been changed.`,
           path,
         })
@@ -43,7 +45,7 @@ const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
   })
 
   watcher.on('unlink', path => {
-    fileWatcherEvents.emit(Events.FILE_CHANGED, {
+    fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
       message: `File \`${path}\` has been removed.`,
       path,
     })
@@ -51,6 +53,7 @@ const watchFiles = ({ filePatterns, ignorePatterns }: WatchFiles) => {
 }
 
 export {
+  EVENTS,
   fileWatcherEvents,
   watchFiles,
 }

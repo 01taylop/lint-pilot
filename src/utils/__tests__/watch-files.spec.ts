@@ -2,9 +2,7 @@ import { readFile } from 'node:fs'
 
 import chokidar from 'chokidar'
 
-import { Events } from '@Types'
-
-import { fileWatcherEvents, watchFiles } from '../watch-files'
+import { EVENTS, fileWatcherEvents, watchFiles } from '../watch-files'
 
 jest.mock('node:fs')
 jest.mock('chokidar')
@@ -58,7 +56,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/existing-file.ts'
 
-    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -76,7 +74,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/update-file.ts'
 
-    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -98,7 +96,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/unchanged-file.ts'
 
-    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been changed.`,
         path: mockPath,
@@ -121,7 +119,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/new-file.ts'
 
-    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been added.`,
         path: mockPath,
@@ -139,7 +137,7 @@ describe('watchFiles', () => {
 
     const mockPath = 'mock/legacy-file.ts'
 
-    fileWatcherEvents.on(Events.FILE_CHANGED, params => {
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, params => {
       expect(params).toStrictEqual({
         message: `File \`${mockPath}\` has been removed.`,
         path: mockPath,
