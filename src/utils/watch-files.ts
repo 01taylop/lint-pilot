@@ -10,6 +10,11 @@ enum EVENTS {
   FILE_CHANGED = 'FILE_CHANGED',
 }
 
+interface FileChangedEventPayload {
+  message: string
+  path: string
+}
+
 const fileWatcherEvents = new EventEmitter()
 
 const fileHashes = new Map<string, string>()
@@ -29,7 +34,7 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
     fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
       message: `File \`${path}\` has been added.`,
       path,
-    })
+    } satisfies FileChangedEventPayload)
   })
 
   watcher.on('change', (path, _stats) => {
@@ -44,7 +49,7 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
         fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
           message: `File \`${path}\` has been changed.`,
           path,
-        })
+        } satisfies FileChangedEventPayload)
       }
     })
   })
@@ -53,8 +58,12 @@ const watchFiles = ({ includePatterns, ignorePatterns }: FilePatterns, linters?:
     fileWatcherEvents.emit(EVENTS.FILE_CHANGED, {
       message: `File \`${path}\` has been removed.`,
       path,
-    })
+    } satisfies FileChangedEventPayload)
   })
+}
+
+export type {
+  FileChangedEventPayload,
 }
 
 export {

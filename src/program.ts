@@ -13,6 +13,8 @@ import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import linters from './linters/index'
 
+import type { FileChangedEventPayload } from '@Utils/watch-files'
+
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
@@ -135,7 +137,7 @@ const createProgram = (): Command => {
       if (watch) {
         watchFiles(filePatterns)
 
-        fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }) => {
+        fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }: FileChangedEventPayload) => {
           clearTerminal()
           colourLog.info(message)
           console.log()
