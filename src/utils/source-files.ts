@@ -1,22 +1,34 @@
 import { glob } from 'glob'
 
-import { Linter } from '@Types'
 import colourLog from '@Utils/colour-log'
 import { pluralise } from '@Utils/transform'
 
-interface SourceFiles {
-  filePattern: Array<string>
-  ignore: Array<string>
-  linter: Linter
-}
+import type { FilePatterns, Linter } from '@Types/lint'
 
-const sourceFiles = async ({ filePattern, ignore, linter }: SourceFiles) => {
+type FileList = Array<string>
+
+const sourceFiles = async ({ includePatterns, ignorePatterns }: FilePatterns, linter: Linter): Promise<FileList> => {
   try {
-    const files = await glob(filePattern, { ignore })
-    colourLog.configDebug(`Sourced ${files.length} ${pluralise('file', files.length)} matching "${filePattern}" for ${linter}:`, files)
+    const include = includePatterns[linter]
+
+    if (!include.length) {
+      colourLog.warning(`\nNo file patterns provided for ${linter}. Skipping.`)
+      return []
+    }
+
+    const files = [...new Set(await glob(include, {
+      ignore: ignorePatterns,
+    }))]
+
+    if (!files.length) {
+      colourLog.info(`\nNo files found for ${linter}.`)
+      return []
+    }
+
+    colourLog.configDebug(`Sourced ${files.length} ${pluralise('file', files.length)} for ${linter}:`, files)
     return files
   } catch (error) {
-    colourLog.error(`An error occurred while trying to source files matching ${filePattern}`, error)
+    colourLog.error(`An error occurred while sourcing files for ${linter}`, error)
     process.exit(1)
   }
 }

@@ -31,6 +31,7 @@ jest.useFakeTimers().setSystemTime(1718971200)
 describe('colourLog', () => {
 
   const mockedConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const mockedConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {})
 
   const commonSummary: ReportSummary = {
     deprecatedRules: [],
@@ -399,6 +400,17 @@ describe('colourLog', () => {
 
       expect(chalk.cyan).toHaveBeenCalledOnceWith('✈️ Lint Pilot ✈️')
       expect(mockedConsoleLog).toHaveBeenCalledOnceWith('✈️ Lint Pilot ✈️')
+    })
+
+  })
+
+  describe('warning', () => {
+
+    it('logs the text in yellow', () => {
+      colourLog.warning('Be careful!')
+
+      expect(chalk.yellow).toHaveBeenCalledOnceWith('Be careful!')
+      expect(mockedConsoleWarn).toHaveBeenCalledOnceWith('Be careful!')
     })
 
   })
