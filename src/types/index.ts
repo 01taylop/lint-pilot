@@ -68,9 +68,8 @@ interface LintFiles {
 interface RunLinter {
   cache: boolean
   eslintUseLegacyConfig?: boolean
-  filePattern: Array<string>
+  filePatterns: FilePatterns
   fix: boolean
-  ignore: Array<string>
   linter: Linter
 }
 

@@ -20,15 +20,11 @@ interface CreateProgramOptions {
   setWatcher: (watcher: FSWatcher) => void
 }
 
-const runLinter = async ({ cache, eslintUseLegacyConfig, filePattern, fix, linter, ignore }: RunLinter) => {
+const runLinter = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, linter }: RunLinter) => {
   const startTime = new Date().getTime()
   colourLog.info(`Running ${linter.toLowerCase()}...`)
 
-  const files = await sourceFiles({
-    filePattern,
-    ignore,
-    linter,
-  })
+  const files = await sourceFiles(filePatterns, linter)
 
   const report: LintReport = await linters[linter].lintFiles({
     cache,
@@ -46,24 +42,21 @@ const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, 
   const commonArgs = {
     cache,
     fix,
-    ignore: filePatterns.ignorePatterns,
+    filePatterns,
   }
 
   Promise.all([
     runLinter({
       ...commonArgs,
       eslintUseLegacyConfig,
-      filePattern: filePatterns.includePatterns[Linter.ESLint],
       linter: Linter.ESLint,
     }),
     runLinter({
       ...commonArgs,
-      filePattern: filePatterns.includePatterns[Linter.Markdownlint],
       linter: Linter.Markdownlint,
     }),
     runLinter({
       ...commonArgs,
-      filePattern: filePatterns.includePatterns[Linter.Stylelint],
       linter: Linter.Stylelint,
     }),
   ]).then((reports) => {

@@ -5,11 +5,11 @@ lib/
 node_modules
 
 # tests
-.lintpilotcache/
 coverage/
 
 # misc
 .DS_Store
+.cache/
 .idea/
 .iml
 .log

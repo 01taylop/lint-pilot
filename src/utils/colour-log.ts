@@ -116,6 +116,8 @@ const colourLog = {
   },
 
   title: (title: string) => console.log(chalk.cyan(title)),
+
+  warning: (text: string) => console.warn(chalk.yellow(text)),
 }
 
 export default colourLog
