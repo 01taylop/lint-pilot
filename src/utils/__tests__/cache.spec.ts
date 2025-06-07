@@ -10,7 +10,7 @@ jest.mock('@Utils/colour-log')
 
 describe('clearCacheDirectory', () => {
 
-  const expectedCacheDirectory = `${process.cwd()}/.lintpilotcache`
+  const expectedCacheDirectory = `${process.cwd()}/.cache/lint`
 
   it('clears the cache directory if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -62,13 +62,13 @@ describe('clearCacheDirectory', () => {
 
 describe('getCacheDirectory', () => {
 
-  it('returns the resolved path to the cache sub-directory for a given tool', () => {
+  it('returns the resolved path to a cache sub-directory', () => {
     jest.spyOn(path, 'resolve')
 
     const result = getCacheDirectory('eslint')
 
-    expect(path.resolve).toHaveBeenCalledOnceWith(process.cwd(), '.lintpilotcache', 'eslint')
-    expect(result).toBe(`${process.cwd()}/.lintpilotcache/eslint`)
+    expect(path.resolve).toHaveBeenCalledOnceWith(process.cwd(), '.cache/lint', 'eslint')
+    expect(result).toBe(`${process.cwd()}/.cache/lint/eslint`)
   })
 
 })

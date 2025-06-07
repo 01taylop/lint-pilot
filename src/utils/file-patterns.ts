@@ -11,7 +11,7 @@ type GetFilePatternsOptions = Pick<LintCommandOptions, 'eslintInclude' | 'ignore
 const getFilePatterns = ({ eslintInclude = [], ignoreDirs = [], ignorePatterns = [], linters }: GetFilePatternsOptions): FilePatterns => {
   const eslintIncludePatterns = [
     '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-    ...Array.of(eslintInclude).flat(),
+    ...Array.of(eslintInclude).flat().sort(),
   ]
 
   const ignoreDirectories = [

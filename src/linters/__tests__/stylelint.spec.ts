@@ -76,7 +76,7 @@ describe('stylelint', () => {
     expect(stylelint.lint).toHaveBeenCalledOnceWith({
       allowEmptyInput: true,
       cache: true,
-      cacheLocation: expect.stringContaining('.lintpilotcache/stylelint'),
+      cacheLocation: expect.stringContaining('.cache/lint/stylelint'),
       config: expect.anything(),
       files: testFiles,
       fix: false,
