@@ -5,7 +5,7 @@ import colourLog from '@Utils/colour-log'
 
 type CacheSubDirectory = 'eslint' | 'stylelint'
 
-const CACHE_DIRECTORY = '.lintpilotcache'
+const CACHE_DIRECTORY = '.cache/lint'
 
 const clearCacheDirectory = (subDir?: CacheSubDirectory) => {
   const cacheDirectory = path.resolve(process.cwd(), CACHE_DIRECTORY, subDir || '')

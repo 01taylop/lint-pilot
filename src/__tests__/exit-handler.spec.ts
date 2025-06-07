@@ -11,6 +11,8 @@ describe('exitHandler', () => {
   })
 
   it('exits with an exit code of 0', () => {
+    expect.assertions(3)
+
     try {
       exitHandler(0, 'Normal Exit', undefined)
     } catch {
@@ -21,6 +23,8 @@ describe('exitHandler', () => {
   })
 
   it('exits with an exit code of 1', () => {
+    expect.assertions(3)
+
     try {
       exitHandler(1, 'Error Exit', undefined)
     } catch {
@@ -31,6 +35,8 @@ describe('exitHandler', () => {
   })
 
   it('logs an error when the exit code is 1 and there is an error', () => {
+    expect.assertions(3)
+
     const err = new Error('Test Error')
 
     try {
@@ -43,6 +49,8 @@ describe('exitHandler', () => {
   })
 
   it('closes the watcher if provided', () => {
+    expect.assertions(3)
+
     const mockWatcher = { close: jest.fn() }
 
     try {

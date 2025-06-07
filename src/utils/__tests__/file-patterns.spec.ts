@@ -43,8 +43,8 @@ describe('getFilePatterns', () => {
 
     const expectedPatterns = [
       '**/*.{cjs,js,jsx,mjs,ts,tsx}',
-      'foo',
       'bar',
+      'foo',
     ]
 
     expect(filePatterns.includePatterns[Linter.ESLint]).toStrictEqual(expectedPatterns)
@@ -152,6 +152,7 @@ describe('getFilePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledWith('Markdownlint Patterns', expect.any(Array))
     expect(colourLog.config).toHaveBeenCalledWith('Stylelint Patterns', expect.any(Array))
     expect(colourLog.config).toHaveBeenCalledWith('Ignore', expect.any(Array))
+    expect(console.log).toHaveBeenCalledOnceWith()
   })
 
   test.each([
@@ -164,6 +165,7 @@ describe('getFilePatterns', () => {
     expect(colourLog.config).toHaveBeenCalledTimes(2)
     expect(colourLog.config).toHaveBeenNthCalledWith(1, patternName, expect.any(Array))
     expect(colourLog.config).toHaveBeenNthCalledWith(2, 'Ignore', expect.any(Array))
+    expect(console.log).toHaveBeenCalledOnceWith()
   })
 
 })
