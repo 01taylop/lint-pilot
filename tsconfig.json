@@ -11,6 +11,7 @@
       "@Types/*": ["./src/types/*"],
       "@Utils/*": ["./src/utils/*"],
     },
+    "resolveJsonModule": true,
     "rootDir": "./",
     "strict": true,
     "target": "ESNext"
