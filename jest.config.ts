@@ -36,7 +36,7 @@ const config: JestConfigWithTsJest = {
   },
   transformIgnorePatterns: [
     './node_modules/(?!(chalk)/)',
-  ]
+  ],
 }
 
 export default config
