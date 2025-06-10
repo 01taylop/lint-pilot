@@ -4,9 +4,6 @@ lib/
 # dependencies
 node_modules
 
-# tests
-coverage/
-
 # misc
 .DS_Store
 .cache/
@@ -14,6 +11,9 @@ coverage/
 .iml
 .log
 .vscode/
+
+# tests
+coverage/
 
 # yarn
 .yarn/*

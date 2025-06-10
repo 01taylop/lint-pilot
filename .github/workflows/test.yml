@@ -36,19 +36,20 @@ jobs:
         echo -e "\033[35mInstalling dependencies\033[0m"
         yarn install --immutable
 
-    - name: Run TypeScript checks
+    - name: Check TypeScript types
       run: npx tsc --noEmit
 
-    - name: Run tests
+    - name: Run tests with coverage
       run: yarn test --coverage
 
-    - name: Run build
+    - name: Build project
       run: yarn build
 
-    - name: Lint
-      run: |
-        yarn lint --ignore-patterns '**/*.ts'
-        yarn lint --eslint-use-legacy-config --ignore-patterns '**/*.ts'
+    - name: Run lint
+      run: yarn lint --ignore-patterns '**/*.ts'
+
+    - name: Run lint with legacy ESLint config
+      run: yarn lint --eslint-use-legacy-config --ignore-patterns '**/*.ts'
 
     - name: Depcheck
       run: npx depcheck
