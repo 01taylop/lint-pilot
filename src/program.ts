@@ -11,6 +11,7 @@ import { getFilePatterns } from '@Utils/file-patterns'
 import sourceFiles from '@Utils/source-files'
 import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
+import { description, name, version } from '../package.json'
 import linters from './linters/index'
 
 import type { FSWatcher } from 'chokidar'
@@ -82,9 +83,9 @@ const createProgram = ({ setWatcher }: CreateProgramOptions): Command => {
   const program = new Command()
 
   program
-    .name('lint-pilot')
-    .description('Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.')
-    .version('0.0.1')
+    .name(name)
+    .description(description)
+    .version(version)
     .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
     .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
