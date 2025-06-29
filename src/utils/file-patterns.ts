@@ -17,6 +17,7 @@ const getFilePatterns = ({ eslintInclude = [], ignoreDirs = [], ignorePatterns =
   const ignoreDirectories = [
     'coverage',
     'dist',
+    'generated',
     'node_modules',
     'tmp',
     'tscOutput',
