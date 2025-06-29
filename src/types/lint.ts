@@ -30,13 +30,13 @@ interface FilePatterns {
 
 interface FormattedResult {
   message: string
-  messageTheme: (input: string) => string
+  messageTheme: (message: string) => string
   position: string
-  positionTheme: (input: string) => string
+  positionTheme: (position: string) => string
   rule: string
-  ruleTheme: (input: string) => string
+  ruleTheme: (rule: string) => string
   severity: string
-  severityTheme: (input: string) => string
+  severityTheme: (severity: string) => string
 }
 
 interface ReportResults {

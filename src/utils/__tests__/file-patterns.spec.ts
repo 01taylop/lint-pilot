@@ -77,7 +77,7 @@ describe('getFilePatterns', () => {
     const filePatterns = getFilePatterns({})
 
     const expectedPatterns = [
-      '**/+(coverage|dist|node_modules|tmp|tscOutput|vendor)/**',
+      '**/+(coverage|dist|generated|node_modules|tmp|tscOutput|vendor)/**',
       '**/*.+(map|min).*',
     ]
 
@@ -91,7 +91,7 @@ describe('getFilePatterns', () => {
     })
 
     const expectedPatterns = [
-      '**/+(coverage|dist|foo|node_modules|tmp|tscOutput|vendor)/**',
+      '**/+(coverage|dist|foo|generated|node_modules|tmp|tscOutput|vendor)/**',
       '**/*.+(map|min).*',
     ]
 
@@ -105,7 +105,7 @@ describe('getFilePatterns', () => {
     })
 
     const expectedPatterns = [
-      '**/+(bar|coverage|dist|foo|node_modules|tmp|tscOutput|vendor)/**',
+      '**/+(bar|coverage|dist|foo|generated|node_modules|tmp|tscOutput|vendor)/**',
       '**/*.+(map|min).*',
     ]
 
@@ -119,7 +119,7 @@ describe('getFilePatterns', () => {
     })
 
     const expectedPatterns = [
-      '**/+(coverage|dist|node_modules|tmp|tscOutput|vendor)/**',
+      '**/+(coverage|dist|generated|node_modules|tmp|tscOutput|vendor)/**',
       '**/*.+(map|min).*',
       'foo',
     ]
@@ -134,7 +134,7 @@ describe('getFilePatterns', () => {
     })
 
     const expectedPatterns = [
-      '**/+(coverage|dist|node_modules|tmp|tscOutput|vendor)/**',
+      '**/+(coverage|dist|generated|node_modules|tmp|tscOutput|vendor)/**',
       '**/*.+(map|min).*',
       'bar',
       'foo',

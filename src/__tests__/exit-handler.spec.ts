@@ -2,6 +2,8 @@ import colourLog from '@Utils/colour-log'
 
 import { exitHandler } from '../exit-handler'
 
+import type { FSWatcher } from 'chokidar'
+
 jest.mock('@Utils/colour-log')
 
 describe('exitHandler', () => {
@@ -18,7 +20,7 @@ describe('exitHandler', () => {
     } catch {
       expect(colourLog.error).not.toHaveBeenCalled()
       expect(console.log).toHaveBeenCalledOnceWith()
-      expect(process.exit).toHaveBeenCalledWith(0)
+      expect(process.exit).toHaveBeenCalledOnceWith(0)
     }
   })
 
@@ -30,7 +32,7 @@ describe('exitHandler', () => {
     } catch {
       expect(colourLog.error).not.toHaveBeenCalled()
       expect(console.log).toHaveBeenCalledOnceWith()
-      expect(process.exit).toHaveBeenCalledWith(1)
+      expect(process.exit).toHaveBeenCalledOnceWith(1)
     }
   })
 
@@ -44,7 +46,7 @@ describe('exitHandler', () => {
     } catch {
       expect(colourLog.error).toHaveBeenCalledOnceWith('Error Exit', err)
       expect(console.log).toHaveBeenCalledOnceWith()
-      expect(process.exit).toHaveBeenCalledWith(1)
+      expect(process.exit).toHaveBeenCalledOnceWith(1)
     }
   })
 
@@ -54,11 +56,11 @@ describe('exitHandler', () => {
     const mockWatcher = { close: jest.fn() }
 
     try {
-      exitHandler(0, 'Normal Exit', mockWatcher as any)
+      exitHandler(0, 'Normal Exit', mockWatcher as Partial<FSWatcher> as FSWatcher)
     } catch {
       expect(mockWatcher.close).toHaveBeenCalled()
       expect(console.log).toHaveBeenCalledOnceWith()
-      expect(process.exit).toHaveBeenCalledWith(0)
+      expect(process.exit).toHaveBeenCalledOnceWith(0)
     }
   })
 

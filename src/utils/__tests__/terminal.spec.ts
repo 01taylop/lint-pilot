@@ -7,7 +7,7 @@ describe('clearTerminal', () => {
 
     clearTerminal()
 
-    expect(stdoutSpy).toHaveBeenCalledWith('\x1Bc\x1B[3J\x1B[2J\x1B[H')
+    expect(stdoutSpy).toHaveBeenCalledOnceWith('\x1Bc\x1B[3J\x1B[2J\x1B[H')
   })
 
 })

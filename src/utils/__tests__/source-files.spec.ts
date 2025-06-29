@@ -8,6 +8,7 @@ import sourceFiles from '../source-files'
 import type { FilePatterns } from '@Types/lint'
 
 jest.mock('glob')
+jest.mock('@Utils/colour-log')
 
 describe('sourceFiles', () => {
 
@@ -20,20 +21,13 @@ describe('sourceFiles', () => {
     ignorePatterns: ['node_modules'],
   })
 
-  beforeEach(() => {
-    jest.spyOn(colourLog, 'configDebug').mockImplementation(() => {})
-    jest.spyOn(colourLog, 'error').mockImplementation(() => {})
-    jest.spyOn(colourLog, 'info').mockImplementation(() => {})
-    jest.spyOn(colourLog, 'warning').mockImplementation(() => {})
-  })
-
-  it('logs a warning and returns an empty array when no includePatterns are provided for the linter', async () => {
+  it('logs a warning and returns an empty array when no include patterns are provided for the linter', async () => {
     expect.assertions(3)
 
     const files = await sourceFiles(getFilePatterns([]), Linter.ESLint)
 
     expect(glob).not.toHaveBeenCalled()
-    expect(colourLog.warning).toHaveBeenCalledWith('\nNo file patterns provided for ESLint. Skipping.')
+    expect(colourLog.warning).toHaveBeenCalledOnceWith('\nNo file patterns provided for ESLint. Skipping.')
     expect(files).toStrictEqual([])
   })
 
@@ -48,7 +42,7 @@ describe('sourceFiles', () => {
 
     await sourceFiles(getFilePatterns(), linter)
 
-    expect(glob).toHaveBeenCalledWith(expectedFilePattern, { ignore: [ 'node_modules' ] })
+    expect(glob).toHaveBeenCalledOnceWith(expectedFilePattern, { ignore: [ 'node_modules' ] })
   })
 
   it('logs an info message and returns an empty array when no files are sourced for the linter', async () => {
@@ -58,8 +52,8 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(getFilePatterns(), Linter.ESLint)
 
-    expect(glob).toHaveBeenCalledWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
-    expect(colourLog.info).toHaveBeenCalledWith('\nNo files found for ESLint.')
+    expect(glob).toHaveBeenCalledOnceWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
+    expect(colourLog.info).toHaveBeenCalledOnceWith('\nNo files found for ESLint.')
     expect(files).toStrictEqual([])
   })
 
@@ -72,9 +66,9 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(getFilePatterns(), Linter.ESLint)
 
-    expect(glob).toHaveBeenCalledWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
+    expect(glob).toHaveBeenCalledOnceWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
     expect(files).toStrictEqual(mockedFiles)
-    expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 1 file for ESLint:', mockedFiles)
+    expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Sourced 1 file for ESLint:', mockedFiles)
   })
 
   it('returns multiple files sourced for the file pattern - excluding any duplicates', async () => {
@@ -87,9 +81,9 @@ describe('sourceFiles', () => {
 
     const files = await sourceFiles(getFilePatterns(), Linter.ESLint)
 
-    expect(glob).toHaveBeenCalledWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
+    expect(glob).toHaveBeenCalledOnceWith(['**/*.ts'], { ignore: [ 'node_modules' ] })
     expect(files).toStrictEqual(expectedFiles)
-    expect(colourLog.configDebug).toHaveBeenCalledWith('Sourced 2 files for ESLint:', expectedFiles)
+    expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Sourced 2 files for ESLint:', expectedFiles)
   })
 
   it('catches any errors and exists the process', async () => {
@@ -102,8 +96,8 @@ describe('sourceFiles', () => {
     try {
       await sourceFiles(getFilePatterns(), Linter.ESLint)
     } catch {
-      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while sourcing files for ESLint', error)
-      expect(process.exit).toHaveBeenCalledWith(1)
+      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while sourcing files for ESLint', error)
+      expect(process.exit).toHaveBeenCalledOnceWith(1)
     }
   })
 

@@ -11,7 +11,7 @@ const notifyResults = (reports: Array<LintReport>, title: string): ExitCode => {
   let totalErrorCount = reports.reduce((total, { summary: { errorCount } }) => total + errorCount, 0)
   if (totalErrorCount > 0) {
     notifier.notify({
-      message: `${totalErrorCount} ${pluralise('error', totalErrorCount)} found. Please fix ${totalErrorCount > 1 ? 'them ' : 'it '}before continuing.`,
+      message: `${totalErrorCount} ${pluralise('error', totalErrorCount)} found. Please fix ${totalErrorCount === 1 ? 'it ' : 'them '}before continuing.`,
       sound: 'Frog',
       title: `🚨 ${title}`,
     })
@@ -22,7 +22,7 @@ const notifyResults = (reports: Array<LintReport>, title: string): ExitCode => {
   let totalWarningCount = reports.reduce((total, { summary: { warningCount } }) => total + warningCount, 0)
   if (totalWarningCount > 0) {
     notifier.notify({
-      message: `${totalWarningCount} ${pluralise('warning', totalWarningCount)} found. Please review ${totalWarningCount > 1 ? 'them ' : ''}before continuing.`,
+      message: `${totalWarningCount} ${pluralise('warning', totalWarningCount)} found. Please review ${totalWarningCount === 1 ? '' : 'them '}before continuing.`,
       sound: 'Frog',
       title: `⚠️ ${title}`,
     })

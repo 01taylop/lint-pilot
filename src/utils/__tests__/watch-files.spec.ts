@@ -6,13 +6,14 @@ import { Linter } from '@Types/lint'
 
 import { EVENTS, fileWatcherEvents, watchFiles } from '../watch-files'
 
+import type { FSWatcher } from 'chokidar'
 import type { FilePatterns } from '@Types/lint'
 
 jest.mock('node:fs')
 jest.mock('chokidar')
 
 describe('watchFiles', () => {
-  let mockWatcher: chokidar.FSWatcher
+  let mockWatcher: FSWatcher
 
   const getEventPromise = (eventHandler: jest.Mock): Promise<void> => new Promise<void>(resolve => {
     fileWatcherEvents.on(EVENTS.FILE_CHANGED, (params: Record<string, unknown>) => {
@@ -46,7 +47,7 @@ describe('watchFiles', () => {
       close: jest.fn(),
       on: jest.fn(),
       unwatch: jest.fn(),
-    } as unknown as chokidar.FSWatcher
+    } as Partial<FSWatcher> as FSWatcher
 
     jest.mocked(chokidar.watch).mockReturnValue(mockWatcher)
   })
@@ -70,7 +71,7 @@ describe('watchFiles', () => {
       ignorePatterns: ['node_modules'],
     })
 
-    expect(chokidar.watch).toHaveBeenCalledWith(['**/*.ts', '**/*.md', '**/*.css'], {
+    expect(chokidar.watch).toHaveBeenCalledOnceWith(['**/*.ts', '**/*.md', '**/*.css'], {
       ignored: ['node_modules'],
       ignoreInitial: true,
       persistent: true,
@@ -87,7 +88,7 @@ describe('watchFiles', () => {
       ignorePatterns: ['node_modules'],
     }, [linter])
 
-    expect(chokidar.watch).toHaveBeenCalledWith([expectedPattern], {
+    expect(chokidar.watch).toHaveBeenCalledOnceWith([expectedPattern], {
       ignored: ['node_modules'],
       ignoreInitial: true,
       persistent: true,
