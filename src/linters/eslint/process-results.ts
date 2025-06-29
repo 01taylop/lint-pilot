@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { Linter, RuleSeverity } from '@Types/lint'
 import { formatResult } from '@Utils/format-result'
 
@@ -20,10 +22,8 @@ const processResults = (results: Array<ESLint.LintResult>): LintReport => {
   const deprecatedRulesSet = new Set<string>()
 
   results.forEach(({ errorCount, filePath, fixableErrorCount, fixableWarningCount, messages, usedDeprecatedRules, warningCount }) => {
-    // Normalise file path relative to cwd (handle Windows and POSIX)
-    const file = filePath.startsWith(cwd)
-      ? filePath.slice(cwd.length + 1)
-      : filePath
+    // Normalise file path relative to cwd
+    const file = path.relative(cwd, filePath)
 
     // Aggregate counts
     reportSummary.errorCount += errorCount
@@ -38,8 +38,8 @@ const processResults = (results: Array<ESLint.LintResult>): LintReport => {
       }
 
       reportResults[file].push(formatResult({
-        column: line ? column : undefined,
-        lineNumber: line || 0,
+        column,
+        lineNumber: line,
         message,
         rule: ruleId || 'core-error',
         severity: severity === 1 ? RuleSeverity.WARNING : RuleSeverity.ERROR,

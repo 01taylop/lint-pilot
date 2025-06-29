@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import { Linter, RuleSeverity } from '@Types/lint'
 import { formatResult } from '@Utils/format-result'
 
@@ -22,12 +24,8 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
   const deprecatedRulesSet = new Set<string>()
 
   results.forEach(({ deprecations, source, warnings }) => {
-    // Normalise file path relative to cwd (handle Windows and POSIX)
-    const file = source
-      ? source.startsWith(cwd)
-        ? source.slice(cwd.length + 1)
-        : source
-      : 'unknown source'
+    // Normalise file path relative to cwd
+    const file = source ? path.relative(cwd, source) : 'unknown-source'
 
     // Process warnings
     warnings.forEach(({ column, line, rule, text, severity }) => {
