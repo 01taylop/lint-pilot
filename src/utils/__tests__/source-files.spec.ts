@@ -3,7 +3,7 @@ import { glob } from 'glob'
 import { Linter } from '@Types'
 import colourLog from '@Utils/colour-log'
 
-import sourceFiles from '../source-files'
+import { sourceFiles } from '../source-files'
 
 import type { FilePatterns } from '@Types/lint'
 
