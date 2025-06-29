@@ -8,7 +8,7 @@ import { clearTerminal } from '@Utils/terminal'
 
 import type { LintReport, RunLinter, RunLintPilot } from '@Types'
 import { getFilePatterns } from '@Utils/file-patterns'
-import sourceFiles from '@Utils/source-files'
+import { sourceFiles } from '@Utils/source-files'
 import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import { description, name, version } from '../package.json'
