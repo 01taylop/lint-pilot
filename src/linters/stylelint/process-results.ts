@@ -24,14 +24,12 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
   const deprecatedRulesSet = new Set<string>()
 
   results.forEach(({ deprecations, source, warnings }) => {
-    // Normalise file path relative to cwd
+    // Normalise source relative to cwd
     const file = source ? path.relative(cwd, source) : 'unknown-source'
 
     // Process warnings
     warnings.forEach(({ column, line, rule, text, severity }) => {
       const isWarning = severity === 'warning'
-
-      reportSummary[isWarning ? 'warningCount' : 'errorCount'] += 1
 
       if (!reportResults[file]) {
         reportResults[file] = []
@@ -45,6 +43,8 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
         severity: isWarning ? RuleSeverity.WARNING : RuleSeverity.ERROR,
       }))
 
+      // Aggregate counts
+      reportSummary[isWarning ? 'warningCount' : 'errorCount'] += 1
       if (ruleMetadata[rule]?.fixable) {
         if (isWarning) {
           reportSummary.fixableWarningCount += 1
