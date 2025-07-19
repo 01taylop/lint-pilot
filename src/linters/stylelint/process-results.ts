@@ -58,7 +58,7 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
     deprecations.forEach(({ text }) => deprecatedRulesSet.add(text))
   })
 
-  reportSummary.deprecatedRules = Array.from(deprecatedRulesSet)
+  reportSummary.deprecatedRules = Array.from(deprecatedRulesSet).sort()
 
   return {
     results: reportResults,

@@ -50,7 +50,7 @@ const processResults = (results: Array<ESLint.LintResult>): LintReport => {
     usedDeprecatedRules.forEach(({ ruleId }) => deprecatedRulesSet.add(ruleId))
   })
 
-  reportSummary.deprecatedRules = Array.from(deprecatedRulesSet)
+  reportSummary.deprecatedRules = Array.from(deprecatedRulesSet).sort()
 
   return {
     results: reportResults,
