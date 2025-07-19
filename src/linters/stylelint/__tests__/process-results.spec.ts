@@ -14,7 +14,7 @@ describe('processResults', () => {
     ignored: false,
     invalidOptionWarnings: [],
     parseErrors: [],
-    source: path.join(process.cwd(), 'file.js'),
+    source: path.join(process.cwd(), 'file.scss'),
     warnings: [],
   }
 
@@ -46,13 +46,13 @@ describe('processResults', () => {
   it('normalises file paths relative to the cwd', () => {
     const report = processResults([{
       ...commonResult,
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [commonWarning],
     }], {})
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': expect.any(Array),
+        'file.scss': expect.any(Array),
       },
       summary: expect.objectContaining({
         fileCount: 1,
@@ -63,17 +63,17 @@ describe('processResults', () => {
   it('does not report results for files which have no warnings', () => {
     const report = processResults([{
       ...commonResult,
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [commonWarning],
     }, {
       ...commonResult,
-      source: path.join(process.cwd(), 'file-2.js'),
+      source: path.join(process.cwd(), 'file-2.scss'),
       warnings: [],
     }], {})
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': expect.any(Array),
+        'file.scss': expect.any(Array),
       },
       summary: expect.objectContaining({
         fileCount: 2,
@@ -84,21 +84,21 @@ describe('processResults', () => {
   it('aggregates error and warning counts', () => {
     const report = processResults([{
       ...commonResult,
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [
         { ...commonWarning, severity: 'error' },
         { ...commonWarning, severity: 'warning' }
       ],
     }, {
       ...commonResult,
-      source: path.join(process.cwd(), 'file-2.js'),
+      source: path.join(process.cwd(), 'file-2.scss'),
       warnings: [
         { ...commonWarning, severity: 'error', rule: 'fixable-rule' },
         { ...commonWarning, severity: 'error' },
       ],
     }, {
       ...commonResult,
-      source: path.join(process.cwd(), 'file-3.js'),
+      source: path.join(process.cwd(), 'file-3.scss'),
       warnings: [
         { ...commonWarning, severity: 'error', rule: 'fixable-rule' },
         { ...commonWarning, severity: 'warning', rule: 'fixable-rule' },
@@ -109,9 +109,9 @@ describe('processResults', () => {
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': expect.any(Array),
-        'file-2.js': expect.any(Array),
-        'file-3.js': expect.any(Array),
+        'file.scss': expect.any(Array),
+        'file-2.scss': expect.any(Array),
+        'file-3.scss': expect.any(Array),
       },
       summary: {
         deprecatedRules: [],
@@ -128,7 +128,7 @@ describe('processResults', () => {
   it('formats warning messages', () => {
     const report = processResults([{
       ...commonResult,
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [{
         column: 2,
         line: 3,
@@ -140,7 +140,7 @@ describe('processResults', () => {
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': [{
+        'file.scss': [{
           ...expectedResultThemes,
           position: '3:2',
           message: 'Test warning',
@@ -163,7 +163,7 @@ describe('processResults', () => {
   it('formats error messages', () => {
     const report = processResults([{
       ...commonResult,
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [{
         column: 10,
         line: 8,
@@ -175,7 +175,7 @@ describe('processResults', () => {
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': [{
+        'file.scss': [{
           ...expectedResultThemes,
           position: '8:10',
           message: 'Test error',
@@ -203,21 +203,21 @@ describe('processResults', () => {
       }, {
         text: 'deprecated-rule-2',
       }],
-      source: path.join(process.cwd(), 'file.js'),
+      source: path.join(process.cwd(), 'file.scss'),
       warnings: [commonWarning],
     }, {
       ...commonResult,
       deprecations: [{
         text: 'deprecated-rule-1',
       }],
-      source: path.join(process.cwd(), 'file-2.js'),
+      source: path.join(process.cwd(), 'file-2.scss'),
       warnings: [commonWarning],
     }], {})
 
     expect(report).toStrictEqual({
       results: {
-        'file.js': expect.any(Array),
-        'file-2.js': expect.any(Array),
+        'file.scss': expect.any(Array),
+        'file-2.scss': expect.any(Array),
       },
       summary: {
         deprecatedRules: ['deprecated-rule-1', 'deprecated-rule-2'],
