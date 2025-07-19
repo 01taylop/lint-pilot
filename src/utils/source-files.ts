@@ -33,4 +33,6 @@ const sourceFiles = async ({ includePatterns, ignorePatterns }: FilePatterns, li
   }
 }
 
-export default sourceFiles
+export {
+  sourceFiles,
+}
