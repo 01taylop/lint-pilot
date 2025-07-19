@@ -14,14 +14,12 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
       useFlatConfig: !eslintUseLegacyConfig,
     })
 
-    const eslint = new ESLint({
+    // Run ESLint
+    const results = await new ESLint({
       cache,
       cacheLocation: cache ? getCacheDirectory('eslint') : undefined,
       fix,
-    })
-
-    // Run ESLint
-    const results = await eslint.lintFiles(files)
+    }).lintFiles(files)
 
     // Process results
     const report = processResults(results)
