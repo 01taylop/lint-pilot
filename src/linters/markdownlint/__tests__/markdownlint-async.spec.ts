@@ -1,8 +1,10 @@
-import markdownlint, { type LintError, type Options } from 'markdownlint'
+import markdownlint from 'markdownlint'
 
 import { markdownlintError } from '@Jest/testData'
 
-import markdownlintAsync from '../markdownlint-async'
+import { markdownlintAsync } from '../markdownlint-async'
+
+import type { LintError, Options } from 'markdownlint'
 
 jest.mock('markdownlint')
 
@@ -29,7 +31,7 @@ describe('markdownlintAsync', () => {
       'test.md': result,
     }))
 
-    await expect(markdownlintAsync(options)).resolves.toEqual({
+    await expect(markdownlintAsync(options)).resolves.toStrictEqual({
       'test.md': result,
     })
   })
@@ -37,7 +39,7 @@ describe('markdownlintAsync', () => {
   it('resolves with an empty object when no result is provided', async () => {
     jest.mocked(markdownlint).mockImplementationOnce((_options, callback) => callback(null, undefined))
 
-    await expect(markdownlintAsync(options)).resolves.toEqual({})
+    await expect(markdownlintAsync(options)).resolves.toStrictEqual({})
   })
 
 })
