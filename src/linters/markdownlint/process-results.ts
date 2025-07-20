@@ -1,4 +1,4 @@
-import { Linter, RuleSeverity } from '@Types'
+import { Linter, RuleSeverity } from '@Types/lint'
 import { formatResult } from '@Utils/format-result'
 
 import type { LintResults } from 'markdownlint'
