@@ -16,6 +16,12 @@ jest.mock('@Utils/colour-log')
 describe('lintFiles', () => {
 
   const commonLintOptions = {
+    cache: false,
+    files: ['index.scss'],
+    fix: false,
+  }
+
+  const commonStylelintOptions = {
     allowEmptyInput: true,
     cache: false,
     cacheLocation: undefined,
@@ -38,7 +44,7 @@ describe('lintFiles', () => {
     warnings: [],
   }]
 
-  jest.mocked(stylelint.lint).mockImplementation(async () => ({
+  const stylelintLintMock = jest.mocked(stylelint.lint).mockImplementation(async () => ({
     cwd: '',
     errored: false,
     output: '',
@@ -48,82 +54,63 @@ describe('lintFiles', () => {
     ruleMetadata: {},
   }))
 
-  it('exists the process when stylelint throws an error', async () => {
-    expect.assertions(2)
-
-    const error = new Error('Test error')
-
-    jest.mocked(stylelint.lint).mockRejectedValueOnce(error)
-
-    try {
-      await lintFiles({
-        cache: false,
-        files: ['index.scss'],
-        fix: false
-      })
-    } catch {
-      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running stylelint', error)
-      expect(process.exit).toHaveBeenCalledWith(1)
-    }
-  })
-
-  it('calls stylelint.lint with cacheing disabled by default', async () => {
+  it('lints files with cacheing disabled when `cache` is false', async () => {
     expect.assertions(1)
 
     await lintFiles({
-      cache: false,
-      files: ['index.scss'],
-      fix: false
-    })
-
-    expect(stylelint.lint).toHaveBeenCalledOnceWith({
       ...commonLintOptions,
       cache: false,
-      cacheLocation: undefined,
     })
+
+    expect(stylelintLintMock).toHaveBeenCalledOnceWith(commonStylelintOptions)
   })
 
-  it('calls stylelint.lint with cacheing enabled', async () => {
+  it('lints files with cacheing enabled when `cache` is true', async () => {
     expect.assertions(1)
 
     await lintFiles({
+      ...commonLintOptions,
       cache: true,
-      files: ['index.scss'],
-      fix: false
     })
 
-    expect(stylelint.lint).toHaveBeenCalledOnceWith({
-      ...commonLintOptions,
+    expect(stylelintLintMock).toHaveBeenCalledOnceWith({
+      ...commonStylelintOptions,
       cache: true,
       cacheLocation: expect.stringContaining('.cache/lint/stylelint'),
     })
   })
 
-  it('calls stylelint.lint with fix enabled', async () => {
+  it('lints files with fix disabled when `fix` is false', async () => {
     expect.assertions(1)
 
     await lintFiles({
-      cache: false,
-      files: ['index.scss'],
+      ...commonLintOptions,
+      fix: false
+    })
+
+    expect(stylelintLintMock).toHaveBeenCalledOnceWith(commonStylelintOptions)
+  })
+
+  it('lints files with fix enabled when `fix` is true', async () => {
+    expect.assertions(1)
+
+    await lintFiles({
+      ...commonLintOptions,
       fix: true
     })
 
-    expect(stylelint.lint).toHaveBeenCalledOnceWith({
-      ...commonLintOptions,
+    expect(stylelintLintMock).toHaveBeenCalledOnceWith({
+      ...commonStylelintOptions,
       fix: true,
     })
   })
 
-  it('returns a report when stylelint successfully lints', async () => {
+  it('returns a report when Stylelint successfully lints', async () => {
     expect.assertions(2)
 
-    const result = await lintFiles({
-      cache: false,
-      files: ['index.scss'],
-      fix: false
-    })
+    const result = await lintFiles(commonLintOptions)
 
-    expect(stylelint.lint).toHaveBeenCalledOnceWith(commonLintOptions)
+    expect(stylelintLintMock).toHaveBeenCalledOnceWith(commonStylelintOptions)
     expect(result).toStrictEqual({
       results: {},
       summary: {
@@ -136,6 +123,21 @@ describe('lintFiles', () => {
         warningCount: 0,
       },
     })
+  })
+
+  it('exits the process when `stylelint.lint` throws an error', async () => {
+    expect.assertions(2)
+
+    const error = new Error('Test error')
+
+    stylelintLintMock.mockRejectedValueOnce(error)
+
+    try {
+      await lintFiles(commonLintOptions)
+    } catch {
+      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while running Stylelint', error)
+      expect(process.exit).toHaveBeenCalledWith(1)
+    }
   })
 
 })

@@ -7,7 +7,7 @@ const config: JestConfigWithTsJest = {
   collectCoverageFrom: [
     'src/**/*',
     '!src/(index|program).ts',
-    '!src/linters/index.ts',
+    '!src/linters/**/index.ts',
   ],
   coverageDirectory: 'coverage',
   coverageThreshold: {

@@ -1,5 +1,6 @@
 import { loadESLint } from 'eslint'
 
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 import { getCacheDirectory } from '@Utils/cache'
 
@@ -32,7 +33,7 @@ const lintFiles = async ({ cache, eslintUseLegacyConfig, files, fix }: LintFiles
     // Return report
     return report
   } catch (error) {
-    colourLog.error('An error occurred while running eslint', error)
+    colourLog.error(`An error occurred while running ${Linter.ESLint}`, error)
     process.exit(1)
   }
 }

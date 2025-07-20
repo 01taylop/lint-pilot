@@ -1,5 +1,6 @@
 import stylelint from 'stylelint'
 
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 import { getCacheDirectory } from '@Utils/cache'
 
@@ -33,7 +34,7 @@ const lintFiles = async ({ cache, files, fix }: LintFilesOptions): Promise<LintR
     // Return report
     return report
   } catch (error) {
-    colourLog.error('An error occurred while running stylelint', error)
+    colourLog.error(`An error occurred while running ${Linter.Stylelint}`, error)
     process.exit(1)
   }
 }

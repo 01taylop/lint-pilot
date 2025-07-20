@@ -86,7 +86,7 @@ describe('sourceFiles', () => {
     expect(colourLog.configDebug).toHaveBeenCalledOnceWith('Sourced 2 files for ESLint:', expectedFiles)
   })
 
-  it('catches any errors and exists the process', async () => {
+  it('catches any errors and exits the process', async () => {
     expect.assertions(2)
 
     const error = new Error('Test error')
