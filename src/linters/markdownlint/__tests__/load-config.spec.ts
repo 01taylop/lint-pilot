@@ -38,12 +38,12 @@ describe('loadConfig', () => {
   test.each([
     ['fs.existsSync', fs.existsSync],
     ['readConfigSync', readConfigSync],
-  ])('exits the process when `%s` throws an error', (_name, testFn) => {
+  ])('exits the process when `%s` throws an error', (_name, mock) => {
     expect.assertions(2)
 
     const error = new Error('Test error')
 
-    jest.mocked(testFn).mockImplementation(() => {
+    jest.mocked(mock).mockImplementation(() => {
       throw error
     })
 

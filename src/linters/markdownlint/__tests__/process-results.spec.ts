@@ -3,10 +3,19 @@ import { expectedResultThemes, markdownlintError } from '@Jest/testData'
 import { processResults } from '../process-results'
 
 import type { LintResults } from 'markdownlint'
+import type { FormattedResult } from '@Types/lint'
 
 describe('processResults', () => {
 
-  it('returns results and a summary when there are no lint results', () => {
+  const commonResult: FormattedResult = {
+    ...expectedResultThemes,
+    position: '1:1',
+    message: 'test-rule-description: test-error-detail',
+    rule: 'test-rule-name',
+    severity: '  ×',
+  }
+
+  it('returns a report when there are no results', () => {
     const report = processResults({})
 
     expect(report).toStrictEqual({
@@ -23,18 +32,66 @@ describe('processResults', () => {
     })
   })
 
-  it('returns results and a summary when there are no errors', () => {
-    const lintResults: LintResults = {
-      'README.md': [],
-    }
-
-    const report = processResults(lintResults)
+  it('does not report results for files which have no errors', () => {
+    const report = processResults({
+      'file.md': [markdownlintError],
+      'file-2.md': [],
+    })
 
     expect(report).toStrictEqual({
-      results: {},
+      results: {
+        'file.md': expect.any(Array),
+      },
+      summary: expect.objectContaining({
+        fileCount: 2,
+      }),
+    })
+  })
+
+  it('aggregates error counts', () => {
+    const fixableError = {
+      ...markdownlintError,
+      fixInfo: {
+        lineNumber: 1,
+        insertText: 'test-insert-text',
+      },
+    }
+
+    const report = processResults({
+      'file.md': [markdownlintError, fixableError],
+      'file-2.md': [markdownlintError],
+      'file-3.md': [],
+    })
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.md': expect.any(Array),
+        'file-2.md': expect.any(Array),
+      },
       summary: {
         deprecatedRules: [],
-        errorCount: 0,
+        errorCount: 3,
+        fileCount: 3,
+        fixableErrorCount: 1,
+        fixableWarningCount: 0,
+        linter: 'Markdownlint',
+        warningCount: 0,
+      },
+    })
+  })
+
+  it('formats error messages', () => {
+    const report = processResults({
+      'file.md': [markdownlintError],
+    })
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.md': [commonResult],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 1,
         fileCount: 1,
         fixableErrorCount: 0,
         fixableWarningCount: 0,
@@ -44,41 +101,109 @@ describe('processResults', () => {
     })
   })
 
-  it('returns results sorted by lineNumber and a summary when there are errors', () => {
-    const lintResults: LintResults = {
-      // No errors
-      'CHANGELOG.md': [],
-      'CONTRIBUTING.md': [markdownlintError],
-      // 5 errors
-      'README.md': [{
+  it('formats error messages with no error range', () => {
+    const report = processResults({
+      'file.md': [{
         ...markdownlintError,
-        lineNumber: 7,
         errorRange: [],
-        ruleDescription: 'no-error-range',
-      }, {
+      }],
+    })
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.md': [{
+          ...commonResult,
+          position: '1',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 1,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'Markdownlint',
+        warningCount: 0,
+      },
+    })
+  })
+
+  it('formats error messages with no error detail', () => {
+    const report = processResults({
+      'file.md': [{
         ...markdownlintError,
         errorDetail: '',
-        fixInfo: undefined,
-        lineNumber: 9,
-        ruleDescription: 'no-error-detail',
-      }, {
+      }],
+    })
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.md': [{
+          ...commonResult,
+          message: 'test-rule-description',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 1,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'Markdownlint',
+        warningCount: 0,
+      },
+    })
+  })
+
+  it('formats error messages with missing rule names', () => {
+    const report = processResults({
+      'file.md': [{
         ...markdownlintError,
-        fixInfo: undefined,
-        lineNumber: 13,
-        ruleNames: ['MD000', 'test-rule-b'],
-        ruleDescription: 'sorted-by-name',
-      }, {
+        ruleNames: ['MD000'],
+      }],
+    })
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.md': [{
+          ...commonResult,
+          rule: 'MD000',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 1,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'Markdownlint',
+        warningCount: 0,
+      },
+    })
+  })
+
+  it('sorts results by lineNumber and then by rule name', () => {
+    const lintResults: LintResults = {
+      'file.md': [{
         ...markdownlintError,
-        fixInfo: undefined,
-        lineNumber: 13,
-        ruleNames: ['MD000', 'test-rule-a'],
-        ruleDescription: 'sorted-by-name',
-      }, {
-        ...markdownlintError,
-        fixInfo: undefined,
-        errorDetail: '',
         lineNumber: 3,
-        ruleDescription: 'sort-by-line-number',
+        ruleNames: ['MD000', 'test-rule-d'],
+      }, {
+        ...markdownlintError,
+        lineNumber: 5,
+        ruleNames: ['MD000', 'test-rule-e'],
+      }, {
+        ...markdownlintError,
+        lineNumber: 3,
+        ruleNames: ['MD000', 'test-rule-c'],
+      }, {
+        ...markdownlintError,
+        lineNumber: 1,
+        ruleNames: ['MD000', 'test-rule-a'],
+      }, {
+        ...markdownlintError,
+        lineNumber: 3,
+        ruleNames: ['MD000', 'test-rule-b'],
       }],
     }
 
@@ -86,50 +211,33 @@ describe('processResults', () => {
 
     expect(report).toStrictEqual({
       results: {
-        'CONTRIBUTING.md': [{
-          ...expectedResultThemes,
-          message: 'test-rule-description: test-error-detail',
+        'file.md': [{
+          ...commonResult,
           position: '1:1',
-          rule: 'test-rule-name',
-          severity: '  ×',
-        }],
-        'README.md': [{
-          ...expectedResultThemes,
-          message: 'sort-by-line-number',
-          position: '3:1',
-          rule: 'test-rule-name',
-          severity: '  ×',
-        }, {
-          ...expectedResultThemes,
-          message: 'no-error-range: test-error-detail',
-          position: '7',
-          rule: 'test-rule-name',
-          severity: '  ×',
-        }, {
-          ...expectedResultThemes,
-          message: 'no-error-detail',
-          position: '9:1',
-          rule: 'test-rule-name',
-          severity: '  ×',
-        }, {
-          ...expectedResultThemes,
-          message: 'sorted-by-name: test-error-detail',
-          position: '13:1',
           rule: 'test-rule-a',
-          severity: '  ×',
         }, {
-          ...expectedResultThemes,
-          message: 'sorted-by-name: test-error-detail',
-          position: '13:1',
+          ...commonResult,
+          position: '3:1',
           rule: 'test-rule-b',
-          severity: '  ×',
+        }, {
+          ...commonResult,
+          position: '3:1',
+          rule: 'test-rule-c',
+        }, {
+          ...commonResult,
+          position: '3:1',
+          rule: 'test-rule-d',
+        }, {
+          ...commonResult,
+          position: '5:1',
+          rule: 'test-rule-e',
         }],
       },
       summary: {
         deprecatedRules: [],
-        errorCount: 6,
-        fileCount: 3,
-        fixableErrorCount: 2,
+        errorCount: 5,
+        fileCount: 1,
+        fixableErrorCount: 0,
         fixableWarningCount: 0,
         linter: 'Markdownlint',
         warningCount: 0,
