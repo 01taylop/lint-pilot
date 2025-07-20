@@ -1,13 +1,14 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'node:fs'
 
-import { type LintError } from 'markdownlint'
 import { applyFixes } from 'markdownlint-rule-helpers'
 
 import { markdownlintError } from '@Jest/testData'
 
-import fixFile from '../fix-file'
+import { fixFile } from '../fix-file'
 
-jest.mock('fs', () => ({
+import type { LintError } from 'markdownlint'
+
+jest.mock('node:fs', () => ({
   readFileSync: jest.fn(),
   writeFileSync: jest.fn(),
 }))

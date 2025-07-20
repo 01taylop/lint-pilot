@@ -1,7 +1,9 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 
-import { type LintError } from 'markdownlint'
 import { applyFixes } from 'markdownlint-rule-helpers'
+
+import type { LintError } from 'markdownlint'
 
 interface FixFile {
   errors: Array<LintError>
@@ -9,11 +11,13 @@ interface FixFile {
 }
 
 const fixFile = ({ errors, file }: FixFile) => {
-  const filePath = `${process.cwd()}/${file}`
+  const filePath = path.join(process.cwd(), file)
   const fileContent = readFileSync(filePath, 'utf8')
   const fixedContent = applyFixes(fileContent, errors)
 
   writeFileSync(filePath, fixedContent)
 }
 
-export default fixFile
+export {
+  fixFile,
+}
