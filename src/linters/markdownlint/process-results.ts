@@ -1,8 +1,8 @@
 import { Linter, RuleSeverity } from '@Types'
 import { formatResult } from '@Utils/format-result'
 
+import type { LintResults } from 'markdownlint'
 import type { LintReport, ReportResults, ReportSummary } from '@Types'
-import type { LintResults } from './markdownlint-async'
 
 const processResults = (lintResults: LintResults): LintReport => {
   const reportResults: ReportResults = {}
@@ -49,4 +49,6 @@ const processResults = (lintResults: LintResults): LintReport => {
   }
 }
 
-export default processResults
+export {
+  processResults,
+}

@@ -1,7 +1,8 @@
 import { expectedResultThemes, markdownlintError } from '@Jest/testData'
 
-import { type LintResults } from '../markdownlint-async'
-import processResults from '../process-results'
+import { processResults } from '../process-results'
+
+import type { LintResults } from 'markdownlint'
 
 describe('processResults', () => {
 

@@ -35,29 +35,15 @@ describe('loadConfig', () => {
     expect(config).toStrictEqual({ default: true })
   })
 
-  it('exits the process when `fs.existsSync` throws an error', () => {
+  test.each([
+    ['fs.existsSync', fs.existsSync],
+    ['readConfigSync', readConfigSync],
+  ])('exits the process when `%s` throws an error', (_name, testFn) => {
     expect.assertions(2)
 
     const error = new Error('Test error')
 
-    jest.mocked(fs.existsSync).mockImplementation(() => {
-      throw error
-    })
-
-    try {
-      loadConfig()
-    } catch {
-      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while loading the Markdownlint config', error)
-      expect(process.exit).toHaveBeenCalledWith(1)
-    }
-  })
-
-  it('exits the process when `readConfigSync` throws an error', () => {
-    expect.assertions(2)
-
-    const error = new Error('Test error')
-
-    jest.mocked(readConfigSync).mockImplementation(() => {
+    jest.mocked(testFn).mockImplementation(() => {
       throw error
     })
 
