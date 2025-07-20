@@ -29,9 +29,7 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
 
     // Process warnings
     warnings.forEach(({ column, line, rule, text, severity }) => {
-      if (!reportResults[file]) {
-        reportResults[file] = []
-      }
+      reportResults[file] = []
 
       const isWarning = severity === 'warning'
 

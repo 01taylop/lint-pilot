@@ -60,6 +60,23 @@ describe('processResults', () => {
     })
   })
 
+  it('returns "unknown-source" for results without a source', () => {
+    const report = processResults([{
+      ...commonResult,
+      source: '',
+      warnings: [commonWarning],
+    }], {})
+
+    expect(report).toStrictEqual({
+      results: {
+        'unknown-source': expect.any(Array),
+      },
+      summary: expect.objectContaining({
+        fileCount: 1,
+      }),
+    })
+  })
+
   it('does not report results for files which have no warnings', () => {
     const report = processResults([{
       ...commonResult,

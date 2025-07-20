@@ -191,7 +191,7 @@ describe('processResults', () => {
     })
   })
 
-  it('returns a "core-error" when ruleId is null', () => {
+  it('formats errors with no ruleId as "core-error"', () => {
     const report = processResults([{
       ...commonResult,
       errorCount: 1,
