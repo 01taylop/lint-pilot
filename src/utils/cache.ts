@@ -1,27 +1,26 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
-
-type CacheSubDirectory = 'eslint' | 'stylelint'
 
 const CACHE_DIRECTORY = '.cache/lint'
 
-const clearCacheDirectory = (subDir?: CacheSubDirectory) => {
-  const cacheDirectory = path.resolve(process.cwd(), CACHE_DIRECTORY, subDir || '')
+const clearCacheDirectory = (linter?: Linter) => {
+  const cacheDirectory = path.resolve(process.cwd(), CACHE_DIRECTORY, linter?.toLowerCase() || '')
 
   if (fs.existsSync(cacheDirectory)) {
     fs.rmSync(cacheDirectory, {
       force: true,
       recursive: true,
     })
-    colourLog.info(`Cache cleared${subDir ? ` for ${subDir}` : ''}.\n`)
+    colourLog.info(`Cache cleared${linter ? ` for ${linter}` : ''}.\n`)
   } else {
-    colourLog.info(`No cache to clear${subDir ? ` for ${subDir}` : ''}.\n`)
+    colourLog.info(`No cache to clear${linter ? ` for ${linter}` : ''}.\n`)
   }
 }
 
-const getCacheDirectory = (subDir: CacheSubDirectory) => path.resolve(process.cwd(), CACHE_DIRECTORY, subDir)
+const getCacheDirectory = (linter: Linter) => path.resolve(process.cwd(), CACHE_DIRECTORY, linter?.toLowerCase())
 
 export {
   clearCacheDirectory,

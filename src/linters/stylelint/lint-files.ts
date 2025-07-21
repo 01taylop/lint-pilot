@@ -14,7 +14,7 @@ const lintFiles = async ({ cache, files, fix }: LintFilesOptions): Promise<LintR
     const { results, ruleMetadata } = await stylelint.lint({
       allowEmptyInput: true,
       cache,
-      cacheLocation: cache ? getCacheDirectory('stylelint') : undefined,
+      cacheLocation: cache ? getCacheDirectory(Linter.Stylelint) : undefined,
       config: { // TODO: Replace with externally loaded or user-provided Stylelint config
         rules: {
           'declaration-block-no-duplicate-properties': true,

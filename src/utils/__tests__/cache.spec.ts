@@ -1,15 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
 jest.mock('node:fs')
 
-describe('clearCacheDirectory', () => {
+const expectedCacheDirectory = path.join(process.cwd(), '.cache/lint')
+const expectedCacheSubDirectory = path.join(expectedCacheDirectory, 'eslint')
 
-  const expectedCacheDirectory = `${process.cwd()}/.cache/lint`
+describe('clearCacheDirectory', () => {
 
   it('clears the cache directory if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -24,17 +26,17 @@ describe('clearCacheDirectory', () => {
     expect(colourLog.info).toHaveBeenCalledOnceWith('Cache cleared.\n')
   })
 
-  it('clears a cache sub-directory if it exists', () => {
+  it('clears the cache directory for a specific linter if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
 
-    clearCacheDirectory('eslint')
+    clearCacheDirectory(Linter.ESLint)
 
-    expect(fs.existsSync).toHaveBeenCalledOnceWith(`${expectedCacheDirectory}/eslint`)
-    expect(fs.rmSync).toHaveBeenCalledOnceWith(`${expectedCacheDirectory}/eslint`, {
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheSubDirectory)
+    expect(fs.rmSync).toHaveBeenCalledOnceWith(expectedCacheSubDirectory, {
       force: true,
       recursive: true,
     })
-    expect(colourLog.info).toHaveBeenCalledOnceWith('Cache cleared for eslint.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('Cache cleared for ESLint.\n')
   })
 
   it('does not attempt to clear the cache if the directory does not exist', () => {
@@ -47,27 +49,27 @@ describe('clearCacheDirectory', () => {
     expect(colourLog.info).toHaveBeenCalledOnceWith('No cache to clear.\n')
   })
 
-  it('does not attempt to clear the cache if the sub-directory does not exist', () => {
+  it('does not attempt to clear the cache for a specific linter if the directory does not exist', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(false)
 
-    clearCacheDirectory('eslint')
+    clearCacheDirectory(Linter.ESLint)
 
-    expect(fs.existsSync).toHaveBeenCalledOnceWith(`${expectedCacheDirectory}/eslint`)
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheSubDirectory)
     expect(fs.rmSync).not.toHaveBeenCalled()
-    expect(colourLog.info).toHaveBeenCalledOnceWith('No cache to clear for eslint.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('No cache to clear for ESLint.\n')
   })
 
 })
 
 describe('getCacheDirectory', () => {
 
-  it('returns the resolved path to a cache sub-directory', () => {
+  it('returns the resolved path to a cache directory', () => {
     jest.spyOn(path, 'resolve')
 
-    const result = getCacheDirectory('eslint')
+    const result = getCacheDirectory(Linter.ESLint)
 
     expect(path.resolve).toHaveBeenCalledOnceWith(process.cwd(), '.cache/lint', 'eslint')
-    expect(result).toBe(`${process.cwd()}/.cache/lint/eslint`)
+    expect(result).toBe(expectedCacheSubDirectory)
   })
 
 })
