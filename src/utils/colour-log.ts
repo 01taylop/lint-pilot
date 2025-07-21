@@ -3,7 +3,7 @@ import { spaceLog } from 'space-log'
 
 import { pluralise } from '@Utils/transform'
 
-import type { LintReport, ReportSummary } from '@Types'
+import type { LintReport, ReportSummary } from '@Types/lint'
 
 const colourLog = {
   config: (key: string, configArray: Array<string>) => {

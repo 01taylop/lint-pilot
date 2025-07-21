@@ -24,6 +24,17 @@ interface FilePatterns {
   ignorePatterns: Array<string>
 }
 
+interface LintFilesOptions {
+  cache: boolean
+  eslintUseLegacyConfig?: boolean
+  files: Array<string>
+  fix: boolean
+}
+
+interface LinterInterface {
+  lintFiles: (options: LintFilesOptions) => Promise<LintReport>
+}
+
 /*
  * REPORTING
  */
@@ -65,6 +76,8 @@ interface LintReport {
 export type {
   FilePatterns,
   FormattedResult,
+  LintFilesOptions,
+  LinterInterface,
   LintReport,
   ReportResults,
   ReportSummary,

@@ -1,31 +1,32 @@
-import { Linter, RuleSeverity } from '@Types'
+import { Linter, RuleSeverity } from '@Types/lint'
 import { formatResult } from '@Utils/format-result'
 
-import type { LintReport, ReportResults, ReportSummary } from '@Types'
-import type { LintResults } from './markdownlint-async'
+import type { LintResults } from 'markdownlint'
+import type { LintReport, ReportResults, ReportSummary } from '@Types/lint'
 
-const processResults = (lintResults: LintResults): LintReport => {
+const processResults = (results: LintResults): LintReport => {
   const reportResults: ReportResults = {}
-
   const reportSummary: ReportSummary = {
     deprecatedRules: [],
     errorCount: 0,
-    fileCount: Object.keys(lintResults).length,
+    fileCount: Object.keys(results).length,
     fixableErrorCount: 0,
     fixableWarningCount: 0,
     linter: Linter.Markdownlint,
     warningCount: 0,
   }
 
-  Object.entries(lintResults).forEach(([file, errors]) => {
+  Object.entries(results).forEach(([file, errors]) => {
     if (!errors.length) {
       return
     }
 
     reportResults[file] = []
 
+    // Aggregate counts
     reportSummary.errorCount += errors.length
 
+    // Process errors
     errors
       .sort((a, b) => a.lineNumber - b.lineNumber || a.ruleNames[1].localeCompare(b.ruleNames[1]))
       .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
@@ -33,7 +34,7 @@ const processResults = (lintResults: LintResults): LintReport => {
           column: errorRange?.length ? errorRange[0] : undefined,
           lineNumber,
           message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
-          rule: ruleNames[1],
+          rule: ruleNames.at(1) ?? ruleNames[0],
           severity: RuleSeverity.ERROR,
         }))
 
@@ -49,4 +50,6 @@ const processResults = (lintResults: LintResults): LintReport => {
   }
 }
 
-export default processResults
+export {
+  processResults,
+}

@@ -2,8 +2,8 @@ import lintFiles from './lint-files'
 
 import type { LinterInterface } from '@Types/lint'
 
-const markdownlintAdapter: LinterInterface = {
+const stylelintAdapter: LinterInterface = {
   lintFiles,
 }
 
-export default markdownlintAdapter
+export default stylelintAdapter

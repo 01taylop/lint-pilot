@@ -1,49 +1,56 @@
 import fs from 'node:fs'
+import path from 'node:path'
 
 import markdownlint from 'markdownlint'
 
 import colourLog from '@Utils/colour-log'
 
-import loadConfig from '../load-config'
+import { loadConfig } from '../load-config'
 
 jest.mock('node:fs')
+jest.mock('markdownlint', () => ({
+  readConfigSync: jest.fn().mockImplementation(() => ({ default: true })),
+}))
+jest.mock('@Utils/colour-log')
 
 describe('loadConfig', () => {
-
-  jest.spyOn(colourLog, 'error').mockImplementation(() => {})
-  jest.spyOn(markdownlint, 'readConfigSync').mockImplementation(() => ({ default: true }))
 
   it('returns the custom config if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
 
-    expect(loadConfig()).toStrictEqual(['custom', {
-      default: true,
-    }])
-    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(`${process.cwd()}/.markdownlint.json`)
+    const config = loadConfig()
+
+    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(path.join(process.cwd(), '.markdownlint.json'))
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Using custom Markdownlint config:', { default: true })
+    expect(config).toStrictEqual({ default: true })
   })
 
   it('returns the default config if no custom config exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(false)
 
-    expect(loadConfig()).toStrictEqual(['default', {
-      default: true,
-    }])
+    const config = loadConfig()
+
     expect(markdownlint.readConfigSync).toHaveBeenCalledWith(expect.stringContaining('markdownlint/markdownlint.json'))
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Using default Markdownlint config:', { default: true })
+    expect(config).toStrictEqual({ default: true })
   })
 
-  it('catches and logs any errors', () => {
+  test.each([
+    ['fs.existsSync', fs.existsSync],
+    ['readConfigSync', markdownlint.readConfigSync],
+  ])('exits the process when `%s` throws an error', (_name, mock) => {
     expect.assertions(2)
 
     const error = new Error('Test error')
 
-    jest.mocked(fs.existsSync).mockImplementationOnce(() => {
+    jest.mocked(mock).mockImplementation(() => {
       throw error
     })
 
     try {
       loadConfig()
     } catch {
-      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while loading the markdownlint config', error)
+      expect(colourLog.error).toHaveBeenCalledWith('An error occurred while loading the Markdownlint config', error)
       expect(process.exit).toHaveBeenCalledWith(1)
     }
   })
