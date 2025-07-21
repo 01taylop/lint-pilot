@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { readConfigSync } from 'markdownlint'
+import markdownlint from 'markdownlint'
 
 import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
@@ -14,7 +14,7 @@ const loadConfig = (): Configuration => {
     // Custom config
     const customConfigPath = path.join(process.cwd(), '.markdownlint.json')
     if (fs.existsSync(customConfigPath)) {
-      const config = readConfigSync(customConfigPath)
+      const config = markdownlint.readConfigSync(customConfigPath)
 
       colourLog.configDebug(`Using custom ${Linter.Markdownlint} config:`, config)
       return config
@@ -23,7 +23,7 @@ const loadConfig = (): Configuration => {
     // Default config
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
     const localConfigPath = path.resolve(__dirname, './markdownlint.json')
-    const config = readConfigSync(localConfigPath)
+    const config = markdownlint.readConfigSync(localConfigPath)
 
     colourLog.configDebug(`Using default ${Linter.Markdownlint} config:`, config)
     return config

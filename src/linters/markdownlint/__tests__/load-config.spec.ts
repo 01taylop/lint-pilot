@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { readConfigSync } from 'markdownlint'
+import markdownlint from 'markdownlint'
 
 import colourLog from '@Utils/colour-log'
 
@@ -20,7 +20,7 @@ describe('loadConfig', () => {
 
     const config = loadConfig()
 
-    expect(readConfigSync).toHaveBeenCalledWith(path.join(process.cwd(), '.markdownlint.json'))
+    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(path.join(process.cwd(), '.markdownlint.json'))
     expect(colourLog.configDebug).toHaveBeenCalledWith('Using custom Markdownlint config:', { default: true })
     expect(config).toStrictEqual({ default: true })
   })
@@ -30,14 +30,14 @@ describe('loadConfig', () => {
 
     const config = loadConfig()
 
-    expect(readConfigSync).toHaveBeenCalledWith(expect.stringContaining('markdownlint/markdownlint.json'))
+    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(expect.stringContaining('markdownlint/markdownlint.json'))
     expect(colourLog.configDebug).toHaveBeenCalledWith('Using default Markdownlint config:', { default: true })
     expect(config).toStrictEqual({ default: true })
   })
 
   test.each([
     ['fs.existsSync', fs.existsSync],
-    ['readConfigSync', readConfigSync],
+    ['readConfigSync', markdownlint.readConfigSync],
   ])('exits the process when `%s` throws an error', (_name, mock) => {
     expect.assertions(2)
 
