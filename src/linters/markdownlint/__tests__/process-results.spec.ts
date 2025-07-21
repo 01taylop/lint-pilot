@@ -1,4 +1,4 @@
-import { expectedResultThemes, markdownlintError } from '@Jest/testData'
+import { expectedResultThemes, fixableMarkdownlintError, markdownlintError } from '@Jest/testData'
 
 import { processResults } from '../process-results'
 
@@ -49,16 +49,8 @@ describe('processResults', () => {
   })
 
   it('aggregates error counts', () => {
-    const fixableError = {
-      ...markdownlintError,
-      fixInfo: {
-        lineNumber: 1,
-        insertText: 'test-insert-text',
-      },
-    }
-
     const report = processResults({
-      'file.md': [markdownlintError, fixableError],
+      'file.md': [markdownlintError, fixableMarkdownlintError],
       'file-2.md': [markdownlintError],
       'file-3.md': [],
     })

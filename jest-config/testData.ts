@@ -17,7 +17,16 @@ const markdownlintError: LintError = {
   ruleNames: ['MD000', 'test-rule-name'],
 }
 
+const fixableMarkdownlintError = {
+  ...markdownlintError,
+  fixInfo: {
+    insertText: 'test-insert-text',
+    lineNumber: 1,
+  },
+}
+
 export {
   expectedResultThemes,
+  fixableMarkdownlintError,
   markdownlintError,
 }
