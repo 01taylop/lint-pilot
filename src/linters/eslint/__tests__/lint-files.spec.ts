@@ -7,7 +7,6 @@ import colourLog from '@Utils/colour-log'
 import lintFiles from '../lint-files'
 
 jest.mock('eslint')
-jest.mock('@Utils/colour-log')
 
 describe('lintFiles', () => {
 

@@ -8,7 +8,6 @@ import { sourceFiles } from '../source-files'
 import type { FilePatterns } from '@Types/lint'
 
 jest.mock('glob')
-jest.mock('@Utils/colour-log')
 
 describe('sourceFiles', () => {
 

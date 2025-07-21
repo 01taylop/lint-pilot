@@ -3,8 +3,6 @@ import colourLog from '@Utils/colour-log'
 
 import { getFilePatterns } from '../file-patterns'
 
-jest.mock('@Utils/colour-log')
-
 describe('getFilePatterns', () => {
 
   beforeEach(() => {

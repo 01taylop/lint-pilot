@@ -4,8 +4,6 @@ import { exitHandler } from '../exit-handler'
 
 import type { FSWatcher } from 'chokidar'
 
-jest.mock('@Utils/colour-log')
-
 describe('exitHandler', () => {
 
   it('exits with an exit code of 0', async () => {

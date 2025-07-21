@@ -6,7 +6,6 @@ import colourLog from '@Utils/colour-log'
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
 jest.mock('node:fs')
-jest.mock('@Utils/colour-log')
 
 describe('clearCacheDirectory', () => {
 

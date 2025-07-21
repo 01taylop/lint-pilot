@@ -2,6 +2,8 @@
  * MOCKS AND SPIES
  */
 
+jest.mock('@Utils/colour-log')
+
 jest.spyOn(process, 'exit').mockImplementation(code => {
   throw new Error(`process.exit(${code})`)
 })

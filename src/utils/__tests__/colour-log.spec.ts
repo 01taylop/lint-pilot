@@ -26,6 +26,8 @@ jest.mock('chalk', () => ({
 
 jest.mock('space-log')
 
+jest.unmock('@Utils/colour-log')
+
 jest.useFakeTimers().setSystemTime(1718971200)
 
 describe('colourLog', () => {
