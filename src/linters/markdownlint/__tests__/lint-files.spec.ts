@@ -6,7 +6,6 @@ import lintFiles from '../lint-files'
 import { loadConfig } from '../load-config'
 import { markdownlintAsync } from '../markdownlint-async'
 
-jest.mock('@Utils/colour-log')
 jest.mock('../fix-file')
 jest.mock('../load-config')
 jest.mock('../markdownlint-async')

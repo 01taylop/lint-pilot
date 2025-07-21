@@ -11,7 +11,6 @@ jest.mock('node:fs')
 jest.mock('markdownlint', () => ({
   readConfigSync: jest.fn().mockImplementation(() => ({ default: true })),
 }))
-jest.mock('@Utils/colour-log')
 
 describe('loadConfig', () => {
 
