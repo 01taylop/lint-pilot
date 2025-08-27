@@ -32,7 +32,7 @@ const processResults = (results: LintResults): LintReport => {
       .forEach(({ errorDetail, errorRange, fixInfo, lineNumber, ruleDescription, ruleNames }) => {
         reportResults[file].push(formatResult({
           column: errorRange?.length ? errorRange[0] : undefined,
-          lineNumber,
+          line: lineNumber,
           message: errorDetail?.length ? `${ruleDescription}: ${errorDetail}` : ruleDescription,
           rule: ruleNames.at(1) ?? ruleNames[0],
           severity: RuleSeverity.ERROR,

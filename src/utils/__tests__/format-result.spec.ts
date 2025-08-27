@@ -8,7 +8,7 @@ describe('formatResult', () => {
 
   const commonResult = {
     column: 5,
-    lineNumber: 10,
+    line: 10,
     message: 'Test message',
     rule: 'test-rule',
     severity: RuleSeverity.ERROR,
@@ -53,6 +53,19 @@ describe('formatResult', () => {
     expect(formattedResult).toStrictEqual({
       ...commonFormattedResult,
       position: '10',
+    })
+  })
+
+  it('formats a result without a line', () => {
+    const formattedResult = formatResult({
+      ...commonResult,
+      column: undefined,
+      line: undefined,
+    })
+
+    expect(formattedResult).toStrictEqual({
+      ...commonFormattedResult,
+      position: '0',
     })
   })
 
