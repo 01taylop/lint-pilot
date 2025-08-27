@@ -16,6 +16,10 @@ beforeEach(() => {
   global.debug = false
 })
 
+afterEach(() => {
+  jest.useRealTimers()
+})
+
 /*
  * EXTEND EXPECT
  */

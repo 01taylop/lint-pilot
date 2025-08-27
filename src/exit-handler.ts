@@ -10,12 +10,25 @@ const exitHandler = async (
   watcher: FSWatcher | undefined,
   error?: Error | string | unknown
 ): Promise<never> => {
-  if (exitCode === 1 && error) {
+  if (error) {
     colourLog.error(reason, error)
   }
 
   if (watcher) {
-    await watcher.close()
+    let watcherTimeout: NodeJS.Timeout
+
+    try {
+      await Promise.race([
+        watcher.close(),
+        new Promise((_, reject) => {
+          watcherTimeout = setTimeout(() => reject(new Error('Watcher close timeout')), 5000)
+        })
+      ])
+    } catch (watcherError) {
+      colourLog.error('Failed to close file watcher', watcherError)
+    }
+
+    clearTimeout(watcherTimeout!)
   }
 
   process.exit(exitCode)

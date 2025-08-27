@@ -15,4 +15,6 @@ const program = createProgram({
   setWatcher: (w: FSWatcher) => { watcher = w },
 })
 
-program.parseAsync(process.argv)
+program.parseAsync(process.argv).catch(error =>
+  exitHandler(1, 'Program Parse Error', watcher, error)
+)
