@@ -123,4 +123,17 @@ describe('notifyResults', () => {
     })
   })
 
+  it('does not throw if notifier fails', () => {
+    (notifier.notify as jest.Mock).mockImplementationOnce(() => {
+      throw new Error('Notification failed')
+    })
+
+    const exitCode = notifyResults([
+      generateReport(0, 0),
+      generateReport(0, 0),
+    ], 'Lint Pilot')
+
+    expect(exitCode).toBe(0)
+  })
+
 })
