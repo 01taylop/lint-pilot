@@ -1,9 +1,6 @@
-import chalk from 'chalk'
 import spaceLog from 'space-log'
 
 import { Linter, type ReportSummary } from '@Types'
-
-import colourLog from '../colourLog'
 
 jest.mock('chalk', () => ({
   bgGreen: {
@@ -19,7 +16,6 @@ jest.mock('chalk', () => ({
   cyan: jest.fn().mockImplementation(text => text),
   dim: jest.fn().mockImplementation(text => text),
   magenta: jest.fn().mockImplementation(text => text),
-  red: jest.fn().mockImplementation(text => text),
   underline: jest.fn().mockImplementation(text => `_${text}_`),
   yellow: jest.fn().mockImplementation(text => text),
 }))
@@ -29,8 +25,6 @@ jest.mock('space-log')
 jest.useFakeTimers().setSystemTime(1718971200)
 
 describe('colourLog', () => {
-
-  const mockedConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
 
   const commonSummary: ReportSummary = {
     deprecatedRules: [],
@@ -82,48 +76,6 @@ describe('colourLog', () => {
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nDebug message')
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(2, 'config')
-    })
-
-  })
-
-  describe('error', () => {
-
-    const error = new Error('Oops')
-
-    it('logs the text in red', () => {
-      colourLog.error('An error occurred')
-
-      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred.')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred.')
-    })
-
-    it('logs additional debug information if there is an error and global.debug is false', () => {
-      colourLog.error('An error occurred', error)
-
-      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
-    })
-
-    it('does not log the error if global.debug is false', () => {
-      global.debug = false
-
-      colourLog.error('An error occurred', error)
-
-      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred. Run with --debug for more information.')
-      expect(mockedConsoleLog).toHaveBeenCalledTimes(1)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred. Run with --debug for more information.')
-    })
-
-    it('logs the error if global.debug is true', () => {
-      global.debug = true
-
-      colourLog.error('An error occurred', error)
-
-      expect(chalk.red).toHaveBeenCalledOnceWith('\nAn error occurred.')
-      expect(mockedConsoleLog).toHaveBeenCalledTimes(3)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nAn error occurred.')
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(2)
-      expect(mockedConsoleLog).toHaveBeenNthCalledWith(3, error)
     })
 
   })

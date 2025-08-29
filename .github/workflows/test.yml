@@ -35,8 +35,8 @@ jobs:
 
     - name: Lint
       run: |
-        yarn lint --ignore-patterns '**/*.ts'
-        yarn lint --eslint-use-legacy-config --ignore-patterns '**/*.ts'
+        yarn lint
+        yarn lint --eslint-use-legacy-config
 
     - name: Depcheck
       run: npx depcheck

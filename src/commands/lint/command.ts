@@ -10,7 +10,7 @@ Examples:
   Watch for file changes and re-run linters:
     ${chalk.gray('$ lint-pilot lint --watch')}
   Customise the emoji and title:
-    ${chalk.gray('$ lint-pilot lint -e 🐳 -t "Ocean Lint"')}
+    ${chalk.gray('$ lint-pilot lint -e 🚀 -t "Rocket Lint"')}
   Enable caching for faster linting:
     ${chalk.gray('$ lint-pilot lint --cache')}
   Clear the cache:
@@ -21,7 +21,7 @@ Examples:
     ${chalk.gray('$ lint-pilot lint --ignore-patterns "*.cjs"')}
   Include additional file patterns for ESLint:
     ${chalk.gray('$ lint-pilot lint --eslint-include "**/*.mdx"')}
-  Output debug information (e.g., configuration details, file paths):
+  Output debug information (e.g., configuration details, error stacks, file paths):
     ${chalk.gray('$ lint-pilot lint --debug')}
   Use legacy ESLint config:
     ${chalk.gray('$ lint-pilot lint --eslint-use-legacy-config')}
@@ -59,7 +59,7 @@ const command = (program: Command) => {
 
     .addHelpText('before', 'Command: lint')
     .addHelpText('after', helpText)
-    .showHelpAfterError(`\n💡 Run \`lint-pilot --help\` for more information.`)
+    .showHelpAfterError(`\n💡 Run \`lint-pilot lint --help\` for more information.`)
 }
 
 export default command

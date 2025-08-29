@@ -78,10 +78,16 @@
     "code_blocks": false,
     "html_elements": false,
     "names": [
+      "ESLint",
+      "github.com",
+      "GitHub",
+      "GraphQL",
       "JavaScript",
+      "Markdownlint",
       "Next.js",
       "Node.js",
       "Redux",
+      "Stylelint",
       "TypeScript",
       "Vue.js"
     ]

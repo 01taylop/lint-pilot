@@ -1,11 +1,11 @@
 import colourLog from '@Utils/colourLog'
 
-import type { LintFiles, LintReport } from '@Types'
-
 import fixFile from './fixFile'
 import loadConfig from './loadConfig'
 import markdownlintAsync, { type LintResults } from './markdownlintAsync'
 import processResults from './processResults'
+
+import type { LintFiles, LintReport } from '@Types'
 
 const lintFiles = async ({ files, fix }: LintFiles): Promise<LintReport> => {
   try {

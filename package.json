@@ -1,6 +1,6 @@
 {
   "name": "lint-pilot",
-  "description": "Lint Pilot: Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.",
+  "description": "Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/01taylop/lint-pilot.git"
@@ -10,12 +10,10 @@
   "engines": {
     "node": ">=18.18.0"
   },
-  "bin": {
-    "lint-pilot": "index.min.js"
-  },
+  "bin": "index.min.js",
   "scripts": {
     "build": "rimraf lib && mkdir lib && rollup -c",
-    "lint": "tsx src/index.js --ignore-dirs lib",
+    "lint": "tsx src/index.ts --ignore-dirs lib --ignore-patterns '**/src2/**' '**/old-tests/**'",
     "publishLib": "yarn test --coverage && yarn build && cd lib && npm publish",
     "test": "jest"
   },
@@ -86,5 +84,6 @@
     "stylelint-declaration-strict-value",
     "stylelint-order",
     "stylelint-scss"
-  ]
+  ],
+  "packageManager": "yarn@1.22.22"
 }

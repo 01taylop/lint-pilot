@@ -3,54 +3,86 @@ import chalk from 'chalk'
 import colourLog from '../colour-log'
 
 jest.mock('chalk', () => ({
-  blue: jest.fn().mockImplementation(text => text),
-  cyan: jest.fn().mockImplementation(text => text),
-  dim: jest.fn().mockImplementation(text => text),
-  magenta: jest.fn().mockImplementation(text => text),
+  gray: jest.fn().mockImplementation(text => text),
+  red: jest.fn().mockImplementation(text => text),
 }))
 
 describe('colourLog', () => {
 
-  const mockedConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const mockedConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
 
-  describe('config', () => {
+  describe('error', () => {
 
-    it('logs the key in magenta and a single config item in dim', () => {
-      colourLog.config('setting', ['foo'])
+    const error = new Error('Oops')
 
-      expect(chalk.magenta).toHaveBeenCalledOnceWith('setting: ')
-      expect(chalk.dim).toHaveBeenCalledOnceWith('foo')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('setting: ', 'foo')
+    it('logs the text in red', () => {
+      colourLog.error('An error occurred')
+
+      expect(chalk.red).toHaveBeenCalledOnceWith('\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenCalledOnceWith('\n× An error occurred.')
     })
 
-    it('logs the key in magenta and a config array in dim', () => {
-      colourLog.config('setting', ['foo', 'bar', 'baz'])
+    it('logs the text with debug instructions if there is an error and global.debug is false', () => {
+      colourLog.error('An error occurred', error)
 
-      expect(chalk.magenta).toHaveBeenCalledOnceWith('setting: ')
-      expect(chalk.dim).toHaveBeenCalledOnceWith('[foo, bar, baz]')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('setting: ', '[foo, bar, baz]')
+      expect(chalk.red).toHaveBeenCalledOnceWith('\n× An error occurred. Run with --debug for more information.')
+      expect(mockedConsoleError).toHaveBeenCalledOnceWith('\n× An error occurred. Run with --debug for more information.')
     })
 
-  })
+    it('logs the error if global.debug is true', () => {
+      global.debug = true
 
-  describe('info', () => {
+      colourLog.error('An error occurred', error)
 
-    it('logs the text in blue', () => {
-      colourLog.info('Starting lint...')
-
-      expect(chalk.blue).toHaveBeenCalledOnceWith('Starting lint...')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('Starting lint...')
+      expect(mockedConsoleError).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(1, '\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(2, `\n${error.stack}`)
     })
 
-  })
+    it('logs the error message if error is an Error without a stack', () => {
+      global.debug = true
 
-  describe('title', () => {
+      const noStackError = new Error('No stack')
+      noStackError.stack = undefined
 
-    it('logs the title in cyan', () => {
-      colourLog.title('✈️ Lint Pilot')
+      colourLog.error('An error occurred', noStackError)
 
-      expect(chalk.cyan).toHaveBeenCalledOnceWith('✈️ Lint Pilot')
-      expect(mockedConsoleLog).toHaveBeenCalledOnceWith('✈️ Lint Pilot')
+      expect(mockedConsoleError).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(1, '\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(2, `\n${noStackError.message}`)
+    })
+
+    it('logs the error if error is a string', () => {
+      global.debug = true
+
+      colourLog.error('An error occurred', 'String error')
+
+      expect(mockedConsoleError).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(1, '\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(2, '\nString error')
+    })
+
+    it('logs the error if error is a plain object', () => {
+      global.debug = true
+
+      colourLog.error('An error occurred', { foo: 'bar' })
+
+      expect(mockedConsoleError).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(1, '\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(2, `\n${JSON.stringify({ foo: 'bar' }, null, 2)}`)
+    })
+
+    it('logs a fallback message if error cannot be stringified', () => {
+      global.debug = true
+
+      const circular: any = {}
+      circular.self = circular
+
+      colourLog.error('An error occurred', circular)
+
+      expect(mockedConsoleError).toHaveBeenCalledTimes(2)
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(1, '\n× An error occurred.')
+      expect(mockedConsoleError).toHaveBeenNthCalledWith(2, '\nUnable to stringify error')
     })
 
   })
