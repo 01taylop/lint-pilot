@@ -5,17 +5,15 @@ import { pluralise } from '@Utils/transform'
 
 import type { FilePatterns, Linter } from '@Types/lint'
 
-type FileList = Array<string>
+const sourceFiles = async ({ ignorePatterns, includePatterns }: FilePatterns, linter: Linter): Promise<Array<string>> => {
+  const include = includePatterns[linter]
 
-const sourceFiles = async ({ includePatterns, ignorePatterns }: FilePatterns, linter: Linter): Promise<FileList> => {
+  if (!include.length) {
+    colourLog.warning(`\nNo file patterns provided for ${linter}. Skipping.`)
+    return []
+  }
+
   try {
-    const include = includePatterns[linter]
-
-    if (!include.length) {
-      colourLog.warning(`\nNo file patterns provided for ${linter}. Skipping.`)
-      return []
-    }
-
     const files = [...new Set(await glob(include, {
       ignore: ignorePatterns,
     }))]
@@ -28,7 +26,7 @@ const sourceFiles = async ({ includePatterns, ignorePatterns }: FilePatterns, li
     colourLog.configDebug(`Sourced ${files.length} ${pluralise('file', files.length)} for ${linter}:`, files)
     return files
   } catch (error) {
-    colourLog.error(`An error occurred while sourcing files for ${linter}`, error)
+    colourLog.error(`Failed to source files for ${linter}`, error)
     process.exit(1)
   }
 }

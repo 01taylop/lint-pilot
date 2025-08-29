@@ -95,7 +95,7 @@ describe('sourceFiles', () => {
     try {
       await sourceFiles(getFilePatterns(), Linter.ESLint)
     } catch {
-      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while sourcing files for ESLint', error)
+      expect(colourLog.error).toHaveBeenCalledOnceWith('Failed to source files for ESLint', error)
       expect(process.exit).toHaveBeenCalledOnceWith(1)
     }
   })
