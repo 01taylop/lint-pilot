@@ -6,25 +6,26 @@ import colourLog from '@Utils/colour-log'
 import { clearCacheDirectory, getCacheDirectory } from '../cache'
 
 jest.mock('node:fs')
-jest.mock('@Utils/colour-log', () => ({
-  info: jest.fn(),
-}))
 
 describe('clearCacheDirectory', () => {
 
   const expectedCacheDirectory = `${process.cwd()}/.lintpilotcache`
+
+  beforeEach(() => {
+    jest.spyOn(colourLog, 'info').mockImplementation(() => true)
+  })
 
   it('clears the cache directory if it exists', () => {
     jest.mocked(fs.existsSync).mockReturnValueOnce(true)
 
     clearCacheDirectory()
 
-    expect(fs.existsSync).toHaveBeenCalledWith(expectedCacheDirectory)
-    expect(fs.rmSync).toHaveBeenCalledWith(expectedCacheDirectory, {
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheDirectory)
+    expect(fs.rmSync).toHaveBeenCalledOnceWith(expectedCacheDirectory, {
       force: true,
       recursive: true,
     })
-    expect(colourLog.info).toHaveBeenCalledWith('Cache cleared.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('Cache cleared.\n')
   })
 
   it('does not attempt to clear the cache if the directory does not exist', () => {
@@ -32,21 +33,21 @@ describe('clearCacheDirectory', () => {
 
     clearCacheDirectory()
 
-    expect(fs.existsSync).toHaveBeenCalledWith(expectedCacheDirectory)
+    expect(fs.existsSync).toHaveBeenCalledOnceWith(expectedCacheDirectory)
     expect(fs.rmSync).not.toHaveBeenCalled()
-    expect(colourLog.info).toHaveBeenCalledWith('No cache to clear.\n')
+    expect(colourLog.info).toHaveBeenCalledOnceWith('No cache to clear.\n')
   })
 
 })
 
 describe('getCacheDirectory', () => {
 
-  it('returns the correct cache directory path for a given file', () => {
+  it('returns the cache directory for a given file', () => {
     jest.spyOn(path, 'resolve')
 
     const result = getCacheDirectory('.eslintcache')
 
-    expect(path.resolve).toHaveBeenCalledWith(process.cwd(), '.lintpilotcache', '.eslintcache')
+    expect(path.resolve).toHaveBeenCalledOnceWith(process.cwd(), '.lintpilotcache', '.eslintcache')
     expect(result).toBe(`${process.cwd()}/.lintpilotcache/.eslintcache`)
   })
 
