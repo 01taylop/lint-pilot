@@ -3,8 +3,6 @@ import colourLog from '@Utils/colour-log'
 
 import { getFilePatterns } from '../file-patterns'
 
-jest.mock('@Utils/colour-log')
-
 describe('getFilePatterns', () => {
 
   beforeEach(() => {
@@ -148,22 +146,22 @@ describe('getFilePatterns', () => {
     getFilePatterns({})
 
     expect(colourLog.config).toHaveBeenCalledTimes(4)
-    expect(colourLog.config).toHaveBeenCalledWith('ESLint Patterns', expect.any(Array))
-    expect(colourLog.config).toHaveBeenCalledWith('Markdownlint Patterns', expect.any(Array))
-    expect(colourLog.config).toHaveBeenCalledWith('Stylelint Patterns', expect.any(Array))
-    expect(colourLog.config).toHaveBeenCalledWith('Ignore', expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(1, 'ESLint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(2, 'Markdownlint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(3, 'Stylelint Patterns', expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(4, 'Ignore', expect.any(Array))
     expect(console.log).toHaveBeenCalledOnceWith()
   })
 
   test.each([
-    [Linter.ESLint, 'ESLint Patterns'],
-    [Linter.Markdownlint, 'Markdownlint Patterns'],
-    [Linter.Stylelint, 'Stylelint Patterns'],
-  ])('logs the file patterns for %s when specified', (linter, patternName) => {
+    Linter.ESLint,
+    Linter.Markdownlint,
+    Linter.Stylelint,
+  ])('logs the file patterns for %s when specified', linter => {
     getFilePatterns({ linters: [linter] })
 
     expect(colourLog.config).toHaveBeenCalledTimes(2)
-    expect(colourLog.config).toHaveBeenNthCalledWith(1, patternName, expect.any(Array))
+    expect(colourLog.config).toHaveBeenNthCalledWith(1, `${linter} Patterns`, expect.any(Array))
     expect(colourLog.config).toHaveBeenNthCalledWith(2, 'Ignore', expect.any(Array))
     expect(console.log).toHaveBeenCalledOnceWith()
   })

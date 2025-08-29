@@ -12,7 +12,9 @@ process.on('uncaughtException', error => exitHandler(1, 'Unexpected Error', watc
 process.on('unhandledRejection', error => exitHandler(1, 'Unhandled Promise', watcher, error))
 
 const program = createProgram({
-  setWatcher: (w: FSWatcher) => watcher = w
+  setWatcher: (w: FSWatcher) => { watcher = w },
 })
 
-program.parseAsync(process.argv)
+program.parseAsync(process.argv).catch(error =>
+  exitHandler(1, 'Program Parse Error', watcher, error)
+)

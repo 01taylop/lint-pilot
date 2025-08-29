@@ -35,7 +35,7 @@ const processResults = (results: Array<LintResult>, ruleMetadata: RuleMetadata):
 
       reportResults[file].push(formatResult({
         column,
-        lineNumber: line,
+        line,
         message: text.replace(`(${rule})`, ''),
         rule,
         severity: isWarning ? RuleSeverity.WARNING : RuleSeverity.ERROR,

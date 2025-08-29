@@ -26,7 +26,7 @@ jest.mock('chalk', () => ({
 
 jest.mock('space-log')
 
-jest.useFakeTimers().setSystemTime(1718971200)
+jest.unmock('@Utils/colour-log')
 
 describe('colourLog', () => {
 
@@ -203,8 +203,7 @@ describe('colourLog', () => {
 
   describe('summary', () => {
 
-    const startTime = new Date().getTime()
-    jest.advanceTimersByTime(1000)
+    let startTime: number
 
     const expectResult = () => {
       expect(chalk.cyan).toHaveBeenCalledWith('Finished eslint')
@@ -212,6 +211,12 @@ describe('colourLog', () => {
       expect(mockedConsoleLog).toHaveBeenCalledTimes(2)
       expect(mockedConsoleLog).toHaveBeenNthCalledWith(1, '\nFinished eslint', '[1 file, 1000ms]')
     }
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(1718971200)
+      startTime = new Date().getTime()
+      jest.advanceTimersByTime(1000)
+    })
 
     it('logs the finished lint message along with the file count and duration (single file)', () => {
       colourLog.summary(commonSummary, startTime)

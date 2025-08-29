@@ -11,7 +11,6 @@ import type { LintResult } from 'stylelint'
 jest.mock('stylelint', () => ({
   lint: jest.fn(),
 }))
-jest.mock('@Utils/colour-log')
 
 describe('lintFiles', () => {
 

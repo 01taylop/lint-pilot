@@ -12,15 +12,10 @@ import type { FilePatterns } from '@Types/lint'
 jest.mock('node:fs')
 jest.mock('chokidar')
 
+type Event = Record<string, unknown>
+
 describe('watchFiles', () => {
   let mockWatcher: FSWatcher
-
-  const getEventPromise = (eventHandler: jest.Mock): Promise<void> => new Promise<void>(resolve => {
-    fileWatcherEvents.on(EVENTS.FILE_CHANGED, (params: Record<string, unknown>) => {
-      eventHandler(params)
-      resolve()
-    })
-  })
 
   const getIncludePatterns = (esPattern: string = '**/*.ts'): FilePatterns['includePatterns'] => ({
     [Linter.ESLint]: [esPattern],
@@ -28,17 +23,31 @@ describe('watchFiles', () => {
     [Linter.Stylelint]: ['**/*.css'],
   })
 
-  const saveFile = (path: string, content: string, event: 'add' | 'change' | 'unlink') => {
-    jest.mocked(readFile).mockImplementationOnce((_path: any, _encoding: any, callback?: (error: any, data: any) => void): void => {
-      if (callback) {
-        callback(null, content)
-      }
+  const collectEvents = () => {
+    const events: Array<Event> = []
+
+    fileWatcherEvents.on(EVENTS.FILE_CHANGED, (params: Event) => {
+      events.push(params)
     })
 
-    const changeEvent = (mockWatcher.on as jest.Mock).mock.calls.find(call => call[0] === event)
-    if (changeEvent && changeEvent[1]) {
-      changeEvent[1](path)
+    return events
+  }
+
+  const triggerFileEvent = (event: 'add' | 'change' | 'unlink', path: string, content: string, debounceTime: number, error?: Error) => {
+    if (event === 'change') {
+      jest.mocked(readFile).mockImplementation((_path: any, _encoding: any, callback?: (error: Error | null, data: string) => void): void => {
+        if (callback) {
+          callback(error || null, content)
+        }
+      })
     }
+
+    const eventHandler = (mockWatcher.on as jest.Mock).mock.calls.find(([name, _handler]) => name === event)?.[1]
+    if (eventHandler) {
+      eventHandler(path)
+    }
+
+    jest.advanceTimersByTime(debounceTime)
   }
 
   beforeEach(() => {
@@ -50,10 +59,12 @@ describe('watchFiles', () => {
     } as Partial<FSWatcher> as FSWatcher
 
     jest.mocked(chokidar.watch).mockReturnValue(mockWatcher)
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
     fileWatcherEvents.removeAllListeners()
+    jest.mocked(readFile).mockReset()
   })
 
   it('returns the watcher instance', () => {
@@ -95,121 +106,158 @@ describe('watchFiles', () => {
     })
   })
 
-  it('emits a "FILE_CHANGED" event when saving an existing file (because there is no hash map yet)', async () => {
-    expect.assertions(2)
+  describe('when a file is added', () => {
 
-    const eventHandler = jest.fn()
-    const eventPromise = getEventPromise(eventHandler)
-    const mockPath = 'mock/existing-file.ts'
+    it('emits a "FILE_CHANGED" event', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/new-file.ts'
 
-    watchFiles({
-      includePatterns: getIncludePatterns(mockPath),
-      ignorePatterns: [],
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('add', mockPath, 'new-content', 0)
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been added.`,
+        path: mockPath,
+      }])
     })
-    saveFile(mockPath, 'hello-world', 'change')
 
-    await eventPromise
-
-    expect(eventHandler).toHaveBeenCalledTimes(1)
-    expect(eventHandler).toHaveBeenNthCalledWith(1, {
-      message: `File \`${mockPath}\` has been changed.`,
-      path: mockPath,
-    })
   })
 
-  it('emits a "FILE_CHANGED" event when saving a file if the file content changes', async () => {
-    expect.assertions(3)
+  describe('when a file is removed', () => {
 
-    const eventHandler = jest.fn()
-    const eventPromise = getEventPromise(eventHandler)
-    const mockPath = 'mock/update-file.ts'
+    it('emits a "FILE_CHANGED" event', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/old-file.ts'
 
-    watchFiles({
-      includePatterns: getIncludePatterns(mockPath),
-      ignorePatterns: [],
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('unlink', mockPath, 'old-content', 0)
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been removed.`,
+        path: mockPath,
+      }])
     })
-    saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
-    saveFile(mockPath, 'new-content', 'change') // Second save - content hash is different
 
-    await eventPromise
+    it('cancels any pending change events', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/old-file-2.ts'
 
-    expect(eventHandler).toHaveBeenCalledTimes(2)
-    expect(eventHandler).toHaveBeenNthCalledWith(1, {
-      message: `File \`${mockPath}\` has been changed.`,
-      path: mockPath,
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('change', mockPath, 'old-content', 200)
+      triggerFileEvent('unlink', mockPath, 'old-content', 0)
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been removed.`,
+        path: mockPath,
+      }])
     })
-    expect(eventHandler).toHaveBeenNthCalledWith(2, {
-      message: `File \`${mockPath}\` has been changed.`,
-      path: mockPath,
-    })
+
   })
 
-  it('does not emit a "FILE_CHANGED" event when saving a file if the file content did not change', async () => {
-    expect.assertions(2)
+  describe('when saving a file', () => {
 
-    const eventHandler = jest.fn()
-    const eventPromise = getEventPromise(eventHandler)
-    const mockPath = 'mock/unchanged-file.ts'
+    it('emits a "FILE_CHANGED" event on first save (no hash exists yet)', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/save-file.ts'
 
-    watchFiles({
-      includePatterns: getIncludePatterns(mockPath),
-      ignorePatterns: [],
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('change', mockPath, 'hello-world', 400)
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      }])
     })
-    saveFile(mockPath, 'old-content', 'change') // First save - no hash map yet
-    saveFile(mockPath, 'old-content', 'change') // Second save - content hash is the same
-    saveFile(mockPath, 'old-content', 'change') // Third save - content hash is still the same
 
-    await eventPromise
+    it('emits a "FILE_CHANGED" event if the file content changes', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/change-file.ts'
 
-    expect(eventHandler).toHaveBeenCalledTimes(1)
-    expect(eventHandler).toHaveBeenNthCalledWith(1, {
-      message: `File \`${mockPath}\` has been changed.`,
-      path: mockPath,
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('change', mockPath, 'old-content', 400) // First save - no hash map yet, will emit
+      triggerFileEvent('change', mockPath, 'old-content', 400) // Second save - content hash is the same, won't emit
+      triggerFileEvent('change', mockPath, 'new-content', 400) // Third save - content hash is different, will emit
+      triggerFileEvent('change', mockPath, 'new-content', 400) // Fourth save - content hash is the same, won't emit
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(2)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      }, {
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      }])
     })
-  })
 
-  it('emits a "FILE_CHANGED" event when a new file is added', async () => {
-    expect.assertions(2)
+    it('debounces rapid file changes to prevent multiple events', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/debounce-file.ts'
 
-    const eventHandler = jest.fn()
-    const eventPromise = getEventPromise(eventHandler)
-    const mockPath = 'mock/new-file.ts'
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('change', mockPath, 'content-1', 100) // 100ms - cancelled by next change
+      triggerFileEvent('change', mockPath, 'content-2', 100) // 100ms - cancelled by next change
+      triggerFileEvent('change', mockPath, 'content-3', 400) // 400ms - this one should fire
 
-    watchFiles({
-      includePatterns: getIncludePatterns(mockPath),
-      ignorePatterns: [],
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been changed.`,
+        path: mockPath,
+      }])
     })
-    saveFile(mockPath, 'new-content', 'add')
 
-    await eventPromise
+    it('emits a "FILE_CHANGED" event when the file cannot be read', () => {
+      const events = collectEvents()
+      const mockPath = 'mock/unreadable-file.ts'
 
-    expect(eventHandler).toHaveBeenCalledTimes(1)
-    expect(eventHandler).toHaveBeenNthCalledWith(1, {
-      message: `File \`${mockPath}\` has been added.`,
-      path: mockPath,
+      watchFiles({
+        includePatterns: getIncludePatterns(mockPath),
+        ignorePatterns: [],
+      })
+      triggerFileEvent('change', mockPath, 'current-content', 400, new Error('Permission denied'))
+
+      jest.runAllTimers()
+
+      expect(events).toHaveLength(1)
+      expect(events).toStrictEqual([{
+        message: `File \`${mockPath}\` has been changed (content unreadable).`,
+        path: mockPath,
+      }])
     })
-  })
 
-  it('emits a "FILE_CHANGED" event when a file is removed', async () => {
-    expect.assertions(2)
-
-    const eventHandler = jest.fn()
-    const eventPromise = getEventPromise(eventHandler)
-    const mockPath = 'mock/legacy-file.ts'
-
-    watchFiles({
-      includePatterns: getIncludePatterns(mockPath),
-      ignorePatterns: [],
-    })
-    saveFile(mockPath, 'legacy-content', 'unlink')
-
-    await eventPromise
-
-    expect(eventHandler).toHaveBeenCalledTimes(1)
-    expect(eventHandler).toHaveBeenNthCalledWith(1, {
-      message: `File \`${mockPath}\` has been removed.`,
-      path: mockPath,
-    })
   })
 
 })

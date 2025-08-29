@@ -8,7 +8,6 @@ import { sourceFiles } from '../source-files'
 import type { FilePatterns } from '@Types/lint'
 
 jest.mock('glob')
-jest.mock('@Utils/colour-log')
 
 describe('sourceFiles', () => {
 
@@ -96,7 +95,7 @@ describe('sourceFiles', () => {
     try {
       await sourceFiles(getFilePatterns(), Linter.ESLint)
     } catch {
-      expect(colourLog.error).toHaveBeenCalledOnceWith('An error occurred while sourcing files for ESLint', error)
+      expect(colourLog.error).toHaveBeenCalledOnceWith('Failed to source files for ESLint', error)
       expect(process.exit).toHaveBeenCalledOnceWith(1)
     }
   })

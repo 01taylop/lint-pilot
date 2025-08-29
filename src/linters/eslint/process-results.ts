@@ -37,7 +37,7 @@ const processResults = (results: Array<ESLint.LintResult>): LintReport => {
 
       reportResults[file].push(formatResult({
         column,
-        lineNumber: line,
+        line,
         message,
         rule: ruleId || 'core-error',
         severity: severity === 1 ? RuleSeverity.WARNING : RuleSeverity.ERROR,

@@ -42,15 +42,11 @@ const getFilePatterns = ({ eslintInclude = [], ignoreDirs = [], ignorePatterns =
     ],
   }
 
-  if (!linters || linters.includes(Linter.ESLint)) {
-    colourLog.config('ESLint Patterns', filePatterns.includePatterns[Linter.ESLint])
-  }
-  if (!linters || linters.includes(Linter.Markdownlint)) {
-    colourLog.config('Markdownlint Patterns', filePatterns.includePatterns[Linter.Markdownlint])
-  }
-  if (!linters || linters.includes(Linter.Stylelint)) {
-    colourLog.config('Stylelint Patterns', filePatterns.includePatterns[Linter.Stylelint])
-  }
+  Object.values(Linter).forEach(linter => {
+    if (!linters || linters.includes(linter)) {
+      colourLog.config(`${linter} Patterns`, filePatterns.includePatterns[linter])
+    }
+  })
   colourLog.config('Ignore', filePatterns.ignorePatterns)
   console.log()
 

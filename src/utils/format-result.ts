@@ -6,16 +6,16 @@ import type { FormattedResult } from '@Types/lint'
 
 interface Result {
   column?: number
-  lineNumber: number
+  line?: number
   message: string
   rule: string
   severity: RuleSeverity
 }
 
-const formatResult = ({ column, lineNumber, message, rule, severity }: Result): FormattedResult => ({
+const formatResult = ({ column, line = 0, message, rule, severity }: Result): FormattedResult => ({
   message: message.trim(),
   messageTheme: chalk.white,
-  position: column ? `${lineNumber}:${column}` : lineNumber.toString(),
+  position: column ? `${line}:${column}` : line.toString(),
   positionTheme: chalk.dim,
   rule,
   ruleTheme: chalk.dim,
