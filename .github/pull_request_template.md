@@ -5,5 +5,5 @@
 -
 
 ### Why are you making these changes?
-<!-- List reasons in past tense -->
+<!-- List reasons in present tense -->
 -
