@@ -1,0 +1,22 @@
+{
+  "ignoreBinaries": [],
+  "ignoreDependencies": [
+    "@jest/globals",
+    "@stylistic/stylelint-plugin",
+    "@types/eslint",
+    "babel-jest",
+    "jest-config",
+    "stylelint-config-property-sort-order-smacss",
+    "stylelint-declaration-strict-value",
+    "stylelint-order",
+    "stylelint-scss",
+    "ts-node"
+  ],
+  "ignore": [],
+  "entry": [
+    "config/all-legacy.ts",
+    "config/all.ts",
+    "config/stylelint.config.js",
+    "src/index.ts"
+  ]
+}
