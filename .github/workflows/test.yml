@@ -10,10 +10,13 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x, 24.x]
 
     steps:
     - name: Checkout repository
@@ -24,22 +27,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Install dependencies
-      run: |
-        YARN_VERSION=$(jq -r '.packageManager' package.json | cut -d '@' -f2)
-        echo -e "\033[34mYarn version:\033[0m $YARN_VERSION"
+      run: yarn install --immutable
 
-        echo -e "\033[35mEnabling Corepack\033[0m"
-        corepack enable
-        corepack prepare yarn@$YARN_VERSION --activate
+    - name: Type check
+      run: yarn tsc --noEmit
 
-        echo -e "\033[35mInstalling dependencies\033[0m"
-        yarn install --immutable
-
-    - name: Check TypeScript types
-      run: npx tsc --noEmit
-
-    - name: Run tests with coverage
+    - name: Unit tests
       run: yarn test --coverage
 
     - name: Build project
