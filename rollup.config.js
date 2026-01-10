@@ -13,8 +13,6 @@ const OUTPUT_DIR = 'lib'
 
 const COPY_FILES = [
   'config/markdownlint.json',
-  'package.json',
-  'README.md',
 ]
 
 const createConfig = (configFile, format) => ({
