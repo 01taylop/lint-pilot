@@ -2,6 +2,10 @@
 
 [![Test](https://github.com/01taylop/lint-pilot/actions/workflows/test.yml/badge.svg)](https://github.com/01taylop/lint-pilot/actions/workflows/test.yml)
 
+![Node Versions Supported](https://img.shields.io/static/v1?label=node&message=>=18.18.0&color=blue)
+
+Your co-pilot for maintaining high code quality with seamless ESLint, Stylelint, and Markdownlint integration.
+
 ## 🚧 Coming Soon
 
 Lint Pilot is currently under construction. Stay tuned for more information.
