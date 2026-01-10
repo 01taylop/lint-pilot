@@ -39,7 +39,7 @@ interface LinterInterface {
  * REPORTING
  */
 
-interface FormattedResult {
+type FormattedResult = {
   message: string
   messageTheme: (message: string) => string
   position: string

@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import spaceLog from 'space-log'
+import { spaceLog } from 'space-log'
 
 import { Linter, type ReportSummary } from '@Types/lint'
 
