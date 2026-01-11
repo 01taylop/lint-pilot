@@ -1,8 +1,6 @@
-import { defaults } from 'jest-config'
+import type { Config } from 'jest'
 
-import type { JestConfigWithTsJest } from 'ts-jest'
-
-const config: JestConfigWithTsJest = {
+const config: Config = {
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*',
@@ -18,23 +16,26 @@ const config: JestConfigWithTsJest = {
       statements: 100,
     },
   },
-  moduleFileExtensions: ['ts', ...defaults.moduleFileExtensions],
   moduleNameMapper: {
     '^@Jest(.*)$': '<rootDir>/jest-config$1',
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },
-  modulePathIgnorePatterns: [
-    '<rootDir>/lib/',
-  ],
   setupFilesAfterEnv: [
     '<rootDir>/jest-config/setup.ts',
   ],
+  testEnvironment: 'node',
   transform: {
-    '^.+\\.(js|ts)$': 'babel-jest',
+    '^.+\\.(j|t)s$': ['ts-jest', {
+      tsconfig: {
+        rootDir: '.',
+      },
+      useESM: true,
+    }],
   },
   transformIgnorePatterns: [
-    './node_modules/(?!(chalk)/)',
+    '/lib/',
+    '/node_modules/(?!(chalk)/)',
   ],
 }
 

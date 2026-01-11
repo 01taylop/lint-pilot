@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 import markdownlint from 'markdownlint'
 
@@ -8,6 +7,8 @@ import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
 
 import type { Configuration } from 'markdownlint'
+
+import defaultConfig from '../../../config/markdownlint.json'
 
 const loadConfig = (): Configuration => {
   try {
@@ -21,12 +22,8 @@ const loadConfig = (): Configuration => {
     }
 
     // Default config
-    const __dirname = path.dirname(fileURLToPath(import.meta.url))
-    const localConfigPath = path.resolve(__dirname, './markdownlint.json')
-    const config = markdownlint.readConfigSync(localConfigPath)
-
-    colourLog.configDebug(`Using default ${Linter.Markdownlint} config:`, config)
-    return config
+    colourLog.configDebug(`Using default ${Linter.Markdownlint} config:`, defaultConfig)
+    return defaultConfig as Configuration
   } catch (error) {
     colourLog.error(`An error occurred while loading the ${Linter.Markdownlint} config`, error)
     process.exit(1)

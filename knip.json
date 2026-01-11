@@ -4,8 +4,6 @@
     "@jest/globals",
     "@stylistic/stylelint-plugin",
     "@types/eslint",
-    "babel-jest",
-    "jest-config",
     "stylelint-config-property-sort-order-smacss",
     "stylelint-declaration-strict-value",
     "stylelint-order",
