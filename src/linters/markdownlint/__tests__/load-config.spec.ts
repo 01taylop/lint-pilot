@@ -5,6 +5,7 @@ import markdownlint from 'markdownlint'
 
 import colourLog from '@Utils/colour-log'
 
+import defaultConfig from '../../../../config/markdownlint.json'
 import { loadConfig } from '../load-config'
 
 jest.mock('node:fs')
@@ -29,9 +30,8 @@ describe('loadConfig', () => {
 
     const config = loadConfig()
 
-    expect(markdownlint.readConfigSync).toHaveBeenCalledWith(expect.stringContaining('markdownlint/markdownlint.json'))
-    expect(colourLog.configDebug).toHaveBeenCalledWith('Using default Markdownlint config:', { default: true })
-    expect(config).toStrictEqual({ default: true })
+    expect(colourLog.configDebug).toHaveBeenCalledWith('Using default Markdownlint config:', expect.objectContaining(defaultConfig))
+    expect(config).toStrictEqual(expect.objectContaining(defaultConfig))
   })
 
   test.each([
