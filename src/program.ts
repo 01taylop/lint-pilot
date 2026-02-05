@@ -1,4 +1,5 @@
 import { Command } from 'commander'
+import { ProcessSupervisor } from 'process-supervisor'
 
 import { Linter } from '@Types/lint'
 import { clearCacheDirectory } from '@Utils/cache'
@@ -15,11 +16,10 @@ import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 import { description, name, version } from '../package.json'
 import linters from './linters/index'
 
-import type { FSWatcher } from 'chokidar'
 import type { FileChangedEventPayload } from '@Utils/watch-files'
 
 interface CreateProgramOptions {
-  setWatcher: (watcher: FSWatcher) => void
+  supervisor: ProcessSupervisor
 }
 
 const runLinter = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, linter }: RunLinter) => {
@@ -80,7 +80,7 @@ const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, 
   })
 }
 
-const createProgram = ({ setWatcher }: CreateProgramOptions): Command => {
+const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
   const program = new Command()
 
   program
@@ -135,8 +135,13 @@ const createProgram = ({ setWatcher }: CreateProgramOptions): Command => {
       runLintPilot(lintPilotOptions)
 
       if (watch) {
-        const watcher = watchFiles(filePatterns)
-        setWatcher(watcher)
+        supervisor.register('file-watcher', {
+          start: () => watchFiles(filePatterns),
+          stop: async watcher => {
+            await watcher.close()
+          },
+        })
+        supervisor.start('file-watcher')
 
         fileWatcherEvents.on(EVENTS.FILE_CHANGED, ({ message }: FileChangedEventPayload) => {
           clearTerminal()
