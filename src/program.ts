@@ -4,6 +4,7 @@ import { ProcessSupervisor } from 'process-supervisor'
 import { Linter } from '@Types/lint'
 import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
+import { logResults, logSummary, logSummaryBlock } from '@Utils/reporting'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
@@ -35,7 +36,7 @@ const runLinter = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, lint
     fix,
   })
 
-  colourLog.summary(report.summary, startTime)
+  logSummary(report.summary, startTime)
 
   return report
 }
@@ -63,11 +64,11 @@ const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, 
     }),
   ]).then((reports) => {
     reports.forEach(report => {
-      colourLog.results(report)
+      logResults(report)
     })
 
     reports.forEach(({ summary }) => {
-      colourLog.summaryBlock(summary)
+      logSummaryBlock(summary)
     })
 
     const exitCode = notifyResults(reports, title)
