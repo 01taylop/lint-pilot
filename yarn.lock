@@ -5593,6 +5593,7 @@ __metadata:
     node-notifier: "npm:10.0.1"
     postcss-less: "npm:6.0.0"
     postcss-scss: "npm:4.0.9"
+    process-supervisor: "npm:1.0.0"
     rimraf: "npm:5.0.10"
     rollup: "npm:4.55.1"
     rollup-plugin-copy: "npm:3.5.0"
@@ -6601,6 +6602,13 @@ __metadata:
   version: 5.0.0
   resolution: "proc-log@npm:5.0.0"
   checksum: 10c0/bbe5edb944b0ad63387a1d5b1911ae93e05ce8d0f60de1035b218cdcceedfe39dbd2c697853355b70f1a090f8f58fe90da487c85216bf9671f9499d1a897e9e3
+  languageName: node
+  linkType: hard
+
+"process-supervisor@npm:1.0.0":
+  version: 1.0.0
+  resolution: "process-supervisor@npm:1.0.0"
+  checksum: 10c0/216f020f835c39a3ae6a6641c5263f1620b890f3499a93a364e9194910f7a83e25f94aaac2575b6812f3cd9b6b8d1e5335b6bfdeb48e4460538f43d74c0e4bb4
   languageName: node
   linkType: hard
 
