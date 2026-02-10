@@ -33,7 +33,9 @@ const processResults = (results: Array<ESLint.LintResult>): LintReport => {
 
     // Process messages
     messages.forEach(({ column, line, message, ruleId, severity }) => {
-      reportResults[file] = []
+      if (!reportResults[file]) {
+        reportResults[file] = []
+      }
 
       reportResults[file].push(formatResult({
         column,
