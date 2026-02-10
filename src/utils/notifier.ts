@@ -20,7 +20,7 @@ const notifyResults = (reports: Array<LintReport>, title: string): ExitCode => {
   const totalErrorCount = reports.reduce((total, { summary: { errorCount } }) => total + errorCount, 0)
   if (totalErrorCount > 0) {
     notifyFailSafe({
-      message: `${totalErrorCount} ${pluralise('error', totalErrorCount)} found. Please fix ${totalErrorCount === 1 ? 'it ' : 'them '}before continuing.`,
+      message: `${totalErrorCount} ${pluralise('error', totalErrorCount)} found. Please fix ${totalErrorCount === 1 ? 'it' : 'them'} before continuing.`,
       sound: 'Frog',
       title: `🚨 ${title}`,
     })
