@@ -25,7 +25,7 @@ const lintFiles = async ({ files, fix }: LintFilesOptions): Promise<LintReport> 
 
       for (const [file, errors] of Object.entries(results)) {
         if (errors.some(error => error.fixInfo)) {
-          fixFile({ file, errors })
+          fixFile({ errors, file })
           filesWereFixed = true
         }
       }
