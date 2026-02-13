@@ -155,6 +155,79 @@ describe('processResults', () => {
     })
   })
 
+  it('formats multiple messages for a single file', () => {
+    const report = processResults([{
+      ...commonResult,
+      errorCount: 2,
+      filePath: path.join(process.cwd(), 'file.js'),
+      messages: [{
+        column: 1,
+        line: 10,
+        message: 'First warning',
+        ruleId: 'rule-1',
+        severity: 1,
+      }, {
+        column: 1,
+        line: 11,
+        message: 'Second warning',
+        ruleId: 'rule-2',
+        severity: 1,
+      }, {
+        column: 1,
+        line: 20,
+        message: 'First error',
+        ruleId: 'rule-3',
+        severity: 2,
+      }, {
+        column: 1,
+        line: 21,
+        message: 'Second error',
+        ruleId: 'rule-4',
+        severity: 2,
+      }],
+      warningCount: 2,
+    }])
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.js': [{
+          ...expectedResultThemes,
+          position: '10:1',
+          message: 'First warning',
+          rule: 'rule-1',
+          severity: '  ⚠',
+        }, {
+          ...expectedResultThemes,
+          position: '11:1',
+          message: 'Second warning',
+          rule: 'rule-2',
+          severity: '  ⚠',
+        }, {
+          ...expectedResultThemes,
+          position: '20:1',
+          message: 'First error',
+          rule: 'rule-3',
+          severity: '  ×',
+        }, {
+          ...expectedResultThemes,
+          position: '21:1',
+          message: 'Second error',
+          rule: 'rule-4',
+          severity: '  ×',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 2,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'ESLint',
+        warningCount: 2,
+      },
+    })
+  })
+
   it('formats error messages', () => {
     const report = processResults([{
       ...commonResult,

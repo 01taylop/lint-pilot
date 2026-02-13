@@ -1,12 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import markdownlint from 'markdownlint'
+import markdownlint, { type Configuration } from 'markdownlint'
 
 import { Linter } from '@Types/lint'
 import colourLog from '@Utils/colour-log'
-
-import type { Configuration } from 'markdownlint'
 
 import defaultConfig from '../../../config/markdownlint.json'
 

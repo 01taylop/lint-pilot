@@ -212,6 +212,77 @@ describe('processResults', () => {
     })
   })
 
+  it('formats multiple messages for a single file', () => {
+    const report = processResults([{
+      ...commonResult,
+      source: path.join(process.cwd(), 'file.scss'),
+      warnings: [{
+        column: 1,
+        line: 10,
+        rule: 'rule-1',
+        severity: 'warning',
+        text: 'First warning',
+      }, {
+        column: 1,
+        line: 11,
+        rule: 'rule-2',
+        severity: 'warning',
+        text: 'Second warning',
+      }, {
+        column: 1,
+        line: 20,
+        rule: 'rule-3',
+        severity: 'error',
+        text: 'First error',
+      }, {
+        column: 1,
+        line: 21,
+        rule: 'rule-4',
+        severity: 'error',
+        text: 'Second error',
+      }],
+    }], {})
+
+    expect(report).toStrictEqual({
+      results: {
+        'file.scss': [{
+          ...expectedResultThemes,
+          position: '10:1',
+          message: 'First warning',
+          rule: 'rule-1',
+          severity: '  ⚠',
+        }, {
+          ...expectedResultThemes,
+          position: '11:1',
+          message: 'Second warning',
+          rule: 'rule-2',
+          severity: '  ⚠',
+        }, {
+          ...expectedResultThemes,
+          position: '20:1',
+          message: 'First error',
+          rule: 'rule-3',
+          severity: '  ×',
+        }, {
+          ...expectedResultThemes,
+          position: '21:1',
+          message: 'Second error',
+          rule: 'rule-4',
+          severity: '  ×',
+        }],
+      },
+      summary: {
+        deprecatedRules: [],
+        errorCount: 2,
+        fileCount: 1,
+        fixableErrorCount: 0,
+        fixableWarningCount: 0,
+        linter: 'Stylelint',
+        warningCount: 2,
+      },
+    })
+  })
+
   it('accumulates deprecated rules without duplicates', () => {
     const report = processResults([{
       ...commonResult,

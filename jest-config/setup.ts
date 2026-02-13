@@ -30,7 +30,7 @@ expect.extend({
     const pass = calls.length === 1 && expected.every((arg, index) => this.equals(calls[0][index], arg))
 
     const printExpected = this.utils.printExpected(expected)
-    const printReceived = this.utils.printReceived(calls)
+    const printReceived = this.utils.printReceived(calls[0])
 
     return {
       message: () => `expected ${received.getMockName()} to have been called once with arguments. Expected:\n\n${printExpected}\n\nReceived:\n\n${printReceived}\n`,

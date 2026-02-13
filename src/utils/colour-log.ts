@@ -1,31 +1,44 @@
 import chalk from 'chalk'
 
-const colourLog = {
-  config: (key: string, configArray: Array<string>) => {
-    const configString = configArray.length > 1
-      ? `[${configArray.join(', ')}]`
-      : configArray[0]
+const formatError = (error: Error | string | unknown): string => {
+  if (error instanceof Error) {
+    return error.stack || error.message
+  }
+  if (typeof error === 'string') {
+    return error
+  }
+  try {
+    return JSON.stringify(error, null, 2)
+  } catch {
+    return 'Unable to stringify error'
+  }
+}
 
-    console.log(chalk.magenta(`${key}: `), chalk.dim(configString))
+const colourLog = {
+  config: (key: string, config: Array<string>) => {
+    const configString = config.length > 1
+      ? `[${config.join(', ')}]`
+      : config[0]
+
+    console.log(chalk.magenta(`${key}:`), chalk.dim(configString))
   },
 
-  configDebug: (message: string, config: any) => {
+  configDebug: (message: string, config: unknown) => {
     if (global.debug) {
       console.log(`\n${chalk.blue(message)}`)
       console.log(config)
     }
   },
 
-  error: (text: string, error?: Error | unknown) => {
-    let errorMessage = `\n${text}.`
+  error: (text: string, error?: Error | string | unknown) => {
+    let errorMessage = `\n× ${text}.`
     if (error && global.debug === false) {
       errorMessage += ' Run with --debug for more information.'
     }
 
-    console.log(chalk.red(errorMessage))
+    console.error(chalk.red(errorMessage))
     if (error && global.debug === true) {
-      console.log()
-      console.log(error)
+      console.error(`\n${chalk.gray(formatError(error))}`)
     }
   },
 
