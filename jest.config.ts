@@ -20,6 +20,7 @@ const config: Config = {
   },
   moduleNameMapper: {
     '^@Jest(.*)$': '<rootDir>/jest-config$1',
+    '^@Linters(.*)$': '<rootDir>/src/linters$1',
     '^@Types(.*)$': '<rootDir>/src/types$1',
     '^@Utils(.*)$': '<rootDir>/src/utils$1',
   },

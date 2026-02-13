@@ -1,84 +1,20 @@
 import { Command } from 'commander'
 import { ProcessSupervisor } from 'process-supervisor'
 
-import { Linter } from '@Types/lint'
 import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
-import { logResults, logSummary, logSummaryBlock } from '@Utils/reporting'
-import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
-import type { RunLinter, RunLintPilot } from '@Types'
-import type { LintReport } from '@Types/lint'
 import { getFilePatterns } from '@Utils/file-patterns'
-import { sourceFiles } from '@Utils/source-files'
 import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import { description, name, version } from '../package.json'
-import linters from './linters/index'
+import { executeAllLinters } from './commands/lint/execute-all'
 
 import type { FileChangedEventPayload } from '@Utils/watch-files'
 
 interface CreateProgramOptions {
   supervisor: ProcessSupervisor
-}
-
-const runLinter = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, linter }: RunLinter) => {
-  const startTime = new Date().getTime()
-  colourLog.info(`Running ${linter.toLowerCase()}...`)
-
-  const files = await sourceFiles(filePatterns, linter)
-
-  const report: LintReport = await linters[linter].lintFiles({
-    cache,
-    eslintUseLegacyConfig,
-    files,
-    fix,
-  })
-
-  logSummary(report.summary, startTime)
-
-  return report
-}
-
-const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, watch }: RunLintPilot) => {
-  const commonArgs = {
-    cache,
-    fix,
-    filePatterns,
-  }
-
-  Promise.all([
-    runLinter({
-      ...commonArgs,
-      eslintUseLegacyConfig,
-      linter: Linter.ESLint,
-    }),
-    runLinter({
-      ...commonArgs,
-      linter: Linter.Markdownlint,
-    }),
-    runLinter({
-      ...commonArgs,
-      linter: Linter.Stylelint,
-    }),
-  ]).then((reports) => {
-    reports.forEach(report => {
-      logResults(report)
-    })
-
-    reports.forEach(({ summary }) => {
-      logSummaryBlock(summary)
-    })
-
-    const exitCode = notifyResults(reports, title)
-
-    if (watch) {
-      colourLog.info('Watching for changes...')
-    } else {
-      process.exit(exitCode)
-    }
-  })
 }
 
 const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
@@ -91,32 +27,36 @@ const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
     .addHelpText('beforeAll', '\n✈️ Lint Pilot ✈️\n')
     .showHelpAfterError('\n💡 Run `lint-pilot --help` for more information.\n')
 
-    .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
-    .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
-
+    // Core Behaviour Options
     .option('--fix', 'automatically fix problems', false)
     .option('-w, --watch', 'watch for file changes and re-run the linters', false)
 
+    // Customisation Options
+    .option('-e, --emoji <string>', 'customise the emoji displayed when running lint-pilot', '✈️')
+    .option('-t, --title <string>', 'customise the title displayed when running lint-pilot', 'Lint Pilot')
+
+    // Caching Options
     .option('--cache', 'cache linting results', false)
-    .option('--clearCache', 'clear the cache', false)
+    .option('--clear-cache', 'clear the cache', false)
 
-    .option('--ignore-dirs <directories...>', 'directories to ignore globally')
-    .option('--ignore-patterns <patterns...>', 'file patterns to ignore globally')
-    .option('--eslint-include <patterns...>', 'file patterns to include for ESLint')
+    // Ignore and Include Options
+    .option('--ignore-dirs <directories...>', 'define directories to ignore')
+    .option('--ignore-patterns <patterns...>', 'define file patterns to ignore')
+    .option('--eslint-include <patterns...>', 'define additional file patterns for ESLint')
 
-    .option('--debug', 'output additional debug information including the list of files being linted', false)
-    .option('--eslint-use-legacy-config', 'set to true to use the legacy ESLint configuration', false)
+    // Debugging and Legacy Options
+    .option('--debug', 'output additional debug information', false)
+    .option('--eslint-use-legacy-config', 'use legacy ESLint config', false)
 
     .action(({ cache, clearCache, debug, emoji, eslintInclude, eslintUseLegacyConfig, fix, ignoreDirs, ignorePatterns, title, watch }) => {
+      global.debug = debug
+
       clearTerminal()
-      colourLog.title(`${emoji} ${title} ${emoji}`)
-      console.log()
+      colourLog.title(`${emoji} ${title}\n`)
 
       if (clearCache) {
         clearCacheDirectory()
       }
-
-      global.debug = debug
 
       const filePatterns = getFilePatterns({
         eslintInclude,
@@ -124,7 +64,7 @@ const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
         ignorePatterns,
       })
 
-      const lintPilotOptions = {
+      const lintOptions = {
         cache,
         eslintUseLegacyConfig,
         filePatterns,
@@ -133,7 +73,7 @@ const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
         watch,
       }
 
-      runLintPilot(lintPilotOptions)
+      executeAllLinters(lintOptions)
 
       if (watch) {
         supervisor.register('file-watcher', {
@@ -148,7 +88,7 @@ const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
           clearTerminal()
           colourLog.info(message)
           console.log()
-          runLintPilot(lintPilotOptions)
+          executeAllLinters(lintOptions)
         })
       }
     })
