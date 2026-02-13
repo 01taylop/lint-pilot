@@ -4,18 +4,16 @@ import { ProcessSupervisor } from 'process-supervisor'
 import { Linter } from '@Types/lint'
 import { clearCacheDirectory } from '@Utils/cache'
 import colourLog from '@Utils/colour-log'
-import { logResults, logSummary, logSummaryBlock } from '@Utils/reporting'
+import { logResults, logSummaryBlock } from '@Utils/reporting'
 import { notifyResults } from '@Utils/notifier'
 import { clearTerminal } from '@Utils/terminal'
 
-import type { RunLinter, RunLintPilot } from '@Types'
-import type { LintReport } from '@Types/lint'
+import type { RunLintPilot } from '@Types'
 import { getFilePatterns } from '@Utils/file-patterns'
-import { sourceFiles } from '@Utils/source-files'
 import { EVENTS, fileWatcherEvents, watchFiles } from '@Utils/watch-files'
 
 import { description, name, version } from '../package.json'
-import linters from './linters/index'
+import { executeLinter } from './linters'
 
 import type { FileChangedEventPayload } from '@Utils/watch-files'
 
@@ -23,45 +21,18 @@ interface CreateProgramOptions {
   supervisor: ProcessSupervisor
 }
 
-const runLinter = async ({ cache, eslintUseLegacyConfig, filePatterns, fix, linter }: RunLinter) => {
-  const startTime = new Date().getTime()
-  colourLog.info(`Running ${linter.toLowerCase()}...`)
-
-  const files = await sourceFiles(filePatterns, linter)
-
-  const report: LintReport = await linters[linter].lintFiles({
-    cache,
-    eslintUseLegacyConfig,
-    files,
-    fix,
-  })
-
-  logSummary(report.summary, startTime)
-
-  return report
-}
-
 const runLintPilot = ({ cache, eslintUseLegacyConfig, filePatterns, fix, title, watch }: RunLintPilot) => {
   const commonArgs = {
     cache,
+    eslintUseLegacyConfig,
     fix,
     filePatterns,
   }
 
   Promise.all([
-    runLinter({
-      ...commonArgs,
-      eslintUseLegacyConfig,
-      linter: Linter.ESLint,
-    }),
-    runLinter({
-      ...commonArgs,
-      linter: Linter.Markdownlint,
-    }),
-    runLinter({
-      ...commonArgs,
-      linter: Linter.Stylelint,
-    }),
+    executeLinter(Linter.ESLint, commonArgs),
+    executeLinter(Linter.Markdownlint, commonArgs),
+    executeLinter(Linter.Stylelint, commonArgs),
   ]).then((reports) => {
     reports.forEach(report => {
       logResults(report)

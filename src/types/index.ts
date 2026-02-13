@@ -11,14 +11,6 @@ interface FilePatterns {
   ignorePatterns: Array<string>
 }
 
-interface RunLinter {
-  cache: boolean
-  eslintUseLegacyConfig?: boolean
-  filePatterns: FilePatterns
-  fix: boolean
-  linter: Linter
-}
-
 interface RunLintPilot {
   cache: boolean
   eslintUseLegacyConfig: boolean
@@ -29,6 +21,5 @@ interface RunLintPilot {
 }
 
 export type {
-  RunLinter,
   RunLintPilot,
 }
