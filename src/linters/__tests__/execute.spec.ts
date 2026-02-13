@@ -3,8 +3,8 @@ import colourLog from '@Utils/colour-log'
 import { logSummary } from '@Utils/reporting'
 import { sourceFiles } from '@Utils/source-files'
 
+import { executeLinter } from '../execute'
 import linters from '../linters'
-import { executeLinter } from '..'
 
 jest.mock('@Utils/reporting')
 jest.mock('@Utils/source-files')

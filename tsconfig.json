@@ -7,7 +7,7 @@
     "noEmit": true,
     "paths": {
       "@Jest/*": ["./jest-config/*"],
-      "@Types": ["./src/types/index.ts"],
+      "@Linters/*": ["./src/linters/*"],
       "@Types/*": ["./src/types/*"],
       "@Utils/*": ["./src/utils/*"],
     },
