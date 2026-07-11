@@ -9093,9 +9093,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yunalint@workspace:.":
+"zedlint@workspace:.":
   version: 0.0.0-use.local
-  resolution: "yunalint@workspace:."
+  resolution: "zedlint@workspace:."
   dependencies:
     "@changesets/cli": "npm:2.31.0"
     "@rollup/plugin-json": "npm:6.1.0"
@@ -9143,7 +9143,7 @@ __metadata:
     tsx: "npm:4.22.3"
     typescript: "npm:6.0.3"
   bin:
-    yuna: ./lib/index.js
+    zedlint: ./lib/index.js
   languageName: unknown
   linkType: soft
 

@@ -18,7 +18,7 @@ describe('executeAllLinters', () => {
     eslintUseLegacyConfig: false,
     filePatterns: mockFilePatterns,
     fix: false,
-    title: 'Yuna',
+    title: 'Zedlint',
     watch: false,
   }
 

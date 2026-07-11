@@ -7,27 +7,27 @@ import { lintAction } from './action'
 const helpText = `
 Examples:
   Automatically fix problems:
-    ${chalk.gray('$ yuna lint --fix')}
+    ${chalk.gray('$ zedlint lint --fix')}
   Watch for file changes and re-run the linters:
-    ${chalk.gray('$ yuna lint --watch')}
+    ${chalk.gray('$ zedlint lint --watch')}
   Customise the emoji and title:
-    ${chalk.gray('$ yuna lint -e 🚀 -t "Rocket Lint"')}
+    ${chalk.gray('$ zedlint lint -e 🚀 -t "Rocket Lint"')}
   Enable caching for faster linting:
-    ${chalk.gray('$ yuna lint --cache')}
+    ${chalk.gray('$ zedlint lint --cache')}
   Clear the cache:
-    ${chalk.gray('$ yuna lint --clear-cache')}
+    ${chalk.gray('$ zedlint lint --clear-cache')}
   Ignore specific directories:
-    ${chalk.gray('$ yuna lint --ignore-dirs generated')}
+    ${chalk.gray('$ zedlint lint --ignore-dirs generated')}
   Ignore specific file patterns:
-    ${chalk.gray('$ yuna lint --ignore-patterns "*.cjs"')}
+    ${chalk.gray('$ zedlint lint --ignore-patterns "*.cjs"')}
   Include additional file patterns for ESLint:
-    ${chalk.gray('$ yuna lint --eslint-include "**/*.mdx"')}
+    ${chalk.gray('$ zedlint lint --eslint-include "**/*.mdx"')}
   Output debug information (e.g., configuration details, error stacks, file paths):
-    ${chalk.gray('$ yuna lint --debug')}
+    ${chalk.gray('$ zedlint lint --debug')}
   Use legacy ESLint config:
-    ${chalk.gray('$ yuna lint --eslint-use-legacy-config')}
+    ${chalk.gray('$ zedlint lint --eslint-use-legacy-config')}
   Run all linters with caching, fixing, and watching for changes:
-    ${chalk.gray('$ yuna lint --cache --fix --watch')}`
+    ${chalk.gray('$ zedlint lint --cache --fix --watch')}`
 
 const lintCommand = (program: Command, supervisor: ProcessSupervisor) => {
   program
@@ -40,8 +40,8 @@ const lintCommand = (program: Command, supervisor: ProcessSupervisor) => {
     .option('-w, --watch', 'watch for file changes and re-run the linters', false)
 
     // Customisation Options
-    .option('-e, --emoji <string>', 'customise the emoji displayed when running yuna', '🌺')
-    .option('-t, --title <string>', 'customise the title displayed when running yuna', 'Yuna')
+    .option('-e, --emoji <string>', 'customise the emoji displayed when running zedlint', '🏂')
+    .option('-t, --title <string>', 'customise the title displayed when running zedlint', 'Zedlint')
 
     // Caching Options
     .option('--cache', 'cache linting results', false)
@@ -60,7 +60,7 @@ const lintCommand = (program: Command, supervisor: ProcessSupervisor) => {
 
     .addHelpText('before', 'Command: lint')
     .addHelpText('after', helpText)
-    .showHelpAfterError(`\n💡 Run \`yuna lint --help\` for more information.`)
+    .showHelpAfterError(`\n💡 Run \`zedlint lint --help\` for more information.`)
 }
 
 export {

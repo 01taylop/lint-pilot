@@ -67,7 +67,7 @@ describe('createProgram', () => {
     }
 
     expect(writeOutMock).toHaveBeenCalledTimes(3)
-    expect(writeOutMock).toHaveBeenNthCalledWith(1, expect.stringMatching('\n🌺 Yuna\n'))
+    expect(writeOutMock).toHaveBeenNthCalledWith(1, expect.stringMatching('\n🏂 Zedlint\n'))
     expect(writeOutMock).toHaveBeenNthCalledWith(2, EXPECTED_HELP_TEXT)
     expect(writeOutMock).toHaveBeenNthCalledWith(3, expect.stringContaining('Examples:'))
   })
@@ -106,7 +106,7 @@ describe('createProgram', () => {
 
     expect(chalk.red).toHaveBeenCalledOnceWith(expect.stringContaining('× unknown option \'--unknown\''))
     expect(writeErrMock).toHaveBeenNthCalledWith(1, expect.stringContaining('× unknown option \'--unknown\''))
-    expect(writeErrMock).toHaveBeenNthCalledWith(2, expect.stringContaining('\n💡 Run `yuna lint --help` for more information.'))
+    expect(writeErrMock).toHaveBeenNthCalledWith(2, expect.stringContaining('\n💡 Run `zedlint lint --help` for more information.'))
   })
 
   it('registers the lint command', () => {

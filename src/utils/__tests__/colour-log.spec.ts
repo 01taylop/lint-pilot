@@ -153,10 +153,10 @@ describe('colourLog', () => {
   describe('title', () => {
 
     it('logs the title in cyan', () => {
-      colourLog.title('🌺 Yuna')
+      colourLog.title('🏂 Zedlint')
 
-      expect(chalk.cyan).toHaveBeenCalledOnceWith('🌺 Yuna')
-      expect(mockConsoleLog).toHaveBeenCalledOnceWith('🌺 Yuna')
+      expect(chalk.cyan).toHaveBeenCalledOnceWith('🏂 Zedlint')
+      expect(mockConsoleLog).toHaveBeenCalledOnceWith('🏂 Zedlint')
     })
 
   })

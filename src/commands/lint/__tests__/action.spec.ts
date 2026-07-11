@@ -68,7 +68,7 @@ describe('lint action', () => {
 
       await lintAction(supervisor, defaultLintCommandOptions)
 
-      expect(colourLog.title).toHaveBeenCalledWith('🌺 Yuna\n')
+      expect(colourLog.title).toHaveBeenCalledWith('🏂 Zedlint\n')
     })
 
     it('logs a custom title and emoji', async () => {
@@ -134,7 +134,7 @@ describe('lint action', () => {
         eslintUseLegacyConfig: false,
         filePatterns: mockFilePatterns,
         fix: false,
-        title: 'Yuna',
+        title: 'Zedlint',
         watch: false,
       })
     })
@@ -154,7 +154,7 @@ describe('lint action', () => {
         eslintUseLegacyConfig: true,
         filePatterns: mockFilePatterns,
         fix: true,
-        title: 'Yuna',
+        title: 'Zedlint',
         watch: false,
       })
     })

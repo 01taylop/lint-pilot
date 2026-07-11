@@ -13,13 +13,13 @@ interface CreateProgramOptions {
 const helpText = `
 Examples:
   Run all linters (default command):
-    ${chalk.gray('$ yuna')}
+    ${chalk.gray('$ zedlint')}
   Run all linters (explicitly):
-    ${chalk.gray('$ yuna lint')}
+    ${chalk.gray('$ zedlint lint')}
   Automatically fix problems and watch for changes:
-    ${chalk.gray('$ yuna --fix --watch')}
+    ${chalk.gray('$ zedlint --fix --watch')}
   Enable caching for faster linting:
-    ${chalk.gray('$ yuna --cache --fix --watch')}`
+    ${chalk.gray('$ zedlint --cache --fix --watch')}`
 
 const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
   const program = new Command()
@@ -29,7 +29,7 @@ const createProgram = ({ supervisor }: CreateProgramOptions): Command => {
     .description(description)
     .version(version)
 
-    .addHelpText('beforeAll', '\n🌺 Yuna\n')
+    .addHelpText('beforeAll', '\n🏂 Zedlint\n')
     .addHelpText('after', helpText)
     .configureOutput({
       outputError: (str, write) => write(chalk.red(`\n× ${str.replace(/^error: /i, '')}`)),

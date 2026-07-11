@@ -16,7 +16,7 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint, { errorCount: 1 }),
       generateLintReport(Linter.Stylelint, { warningCount: 1 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(exitCode).toBe(1)
   })
@@ -26,7 +26,7 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint),
       generateLintReport(Linter.Stylelint, { warningCount: 1 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(exitCode).toBe(0)
   })
@@ -36,7 +36,7 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint),
       generateLintReport(Linter.Stylelint),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(exitCode).toBe(0)
   })
@@ -46,12 +46,12 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint, { errorCount: 1, warningCount: 1 }),
       generateLintReport(Linter.Stylelint, { warningCount: 1 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '1 error found. Please fix it before continuing.',
       sound: 'Frog',
-      title: '🚨 Yuna',
+      title: '🚨 Zedlint',
     })
   })
 
@@ -60,12 +60,12 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint, { errorCount: 5 }),
       generateLintReport(Linter.Stylelint, { errorCount: 2, warningCount: 1 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '7 errors found. Please fix them before continuing.',
       sound: 'Frog',
-      title: '🚨 Yuna',
+      title: '🚨 Zedlint',
     })
   })
 
@@ -74,12 +74,12 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint),
       generateLintReport(Linter.Stylelint, { warningCount: 1 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '1 warning found. Please review before continuing.',
       sound: 'Frog',
-      title: '⚠️ Yuna',
+      title: '⚠️ Zedlint',
     })
   })
 
@@ -88,12 +88,12 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint, { warningCount: 7 }),
       generateLintReport(Linter.Stylelint, { warningCount: 2 }),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: '9 warnings found. Please review them before continuing.',
       sound: 'Frog',
-      title: '⚠️ Yuna',
+      title: '⚠️ Zedlint',
     })
   })
 
@@ -102,12 +102,12 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint),
       generateLintReport(Linter.Stylelint),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(notifier.notify).toHaveBeenCalledOnceWith({
       message: 'All lint checks have passed. Your code is clean!',
       sound: 'Purr',
-      title: '✅ Yuna',
+      title: '✅ Zedlint',
     })
   })
 
@@ -120,7 +120,7 @@ describe('notifyResults', () => {
       generateLintReport(Linter.ESLint),
       generateLintReport(Linter.Markdownlint),
       generateLintReport(Linter.Stylelint),
-    ], 'Yuna')
+    ], 'Zedlint')
 
     expect(exitCode).toBe(0)
   })

@@ -7,13 +7,13 @@ const defaultLintCommandOptions: LintCommandOptions = {
   cache: false,
   clearCache: false,
   debug: false,
-  emoji: '🌺',
+  emoji: '🏂',
   eslintInclude: undefined,
   eslintUseLegacyConfig: false,
   fix: false,
   ignoreDirs: undefined,
   ignorePatterns: undefined,
-  title: 'Yuna',
+  title: 'Zedlint',
   watch: false,
 }
 
